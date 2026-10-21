@@ -8,6 +8,7 @@ import { Spinner } from '../components/ui/Spinner';
 import { HomePage } from '../features/home/HomePage';
 import { LoginPage } from '../features/auth/LoginPage';
 import { RegisterPage } from '../features/auth/RegisterPage';
+import { AuthCallbackPage } from '../features/auth/AuthCallbackPage';
 import { StudentPortfolioPage } from '../features/student-portfolio/StudentPortfolioPage';
 import { CompanyInternshipsPage } from '../features/company-internships/CompanyInternshipsPage';
 import { SearchMatchingPage } from '../features/search-matching/SearchMatchingPage';
@@ -42,6 +43,7 @@ export const AppRoutes = () => {
         <Route index element={<HomePage />} />
         <Route path="login" element={<LoginPage />} />
         <Route path="register" element={<RegisterPage />} />
+        <Route path="auth/callback" element={<AuthCallbackPage />} />
         <Route path="search" element={<SearchMatchingPage />} />
 
         {/* Protected Student Routes */}
