@@ -1,75 +1,166 @@
-import React from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../../hooks/useAuth';
-import { Card } from '../../components/ui/Card';
-import { Badge } from '../../components/ui/Badge';
-import { Button } from '../../components/ui/Button';
-import { User, Award, BookOpen, ExternalLink, FileText } from 'lucide-react';
+import studentPortfolioService from './services/studentPortfolioService';
+import { ProfileHeader } from './components/ProfileHeader';
+import { ProfileEditModal } from './components/ProfileEditModal';
+import { SkillTagsSection } from './components/SkillTagsSection';
+import { ProjectsSection } from './components/ProjectsSection';
+import { CvUploader } from './components/CvUploader';
+import { EducationExperienceSection } from './components/EducationExperienceSection';
+import { CertificatesBadgesSection } from './components/CertificatesBadgesSection';
+import { Spinner } from '../../components/ui/Spinner';
+import { Alert } from '../../components/ui/Alert';
+import { CheckCircle, AlertCircle } from 'lucide-react';
 
 export const StudentPortfolioPage = () => {
   const { user } = useAuth();
+  const [profile, setProfile] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
+  const [isUploadingCv, setIsUploadingCv] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [feedback, setFeedback] = useState({ type: '', message: '' });
+
+  const loadProfile = useCallback(async () => {
+    try {
+      setIsLoading(true);
+      const data = await studentPortfolioService.getMyProfile();
+      setProfile(data);
+    } catch (err) {
+      setFeedback({
+        type: 'danger',
+        message: err.message || 'Failed to load profile. Please refresh.',
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    loadProfile();
+  }, [loadProfile]);
+
+  const showFeedback = (type, message) => {
+    setFeedback({ type, message });
+    setTimeout(() => {
+      setFeedback({ type: '', message: '' });
+    }, 5000);
+  };
+
+  const handleUpdateProfile = async (updateData) => {
+    try {
+      setIsSaving(true);
+      const updated = await studentPortfolioService.updateMyProfile(updateData);
+      setProfile(updated);
+      setIsEditModalOpen(false);
+      showFeedback('success', 'Profile updated successfully!');
+    } catch (err) {
+      showFeedback('danger', err.message || 'Failed to update profile.');
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleUploadCv = async (file) => {
+    try {
+      setIsUploadingCv(true);
+      const result = await studentPortfolioService.uploadCv(file);
+      if (result?.profile) {
+        setProfile(result.profile);
+      } else if (result?.cvUrl) {
+        setProfile((prev) => ({ ...prev, cvUrl: result.cvUrl }));
+      }
+      showFeedback('success', 'CV uploaded successfully to your profile!');
+    } catch (err) {
+      showFeedback('danger', err.message || 'Failed to upload CV.');
+      throw err;
+    } finally {
+      setIsUploadingCv(false);
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[400px] space-y-3">
+        <Spinner size="lg" />
+        <p className="text-sm text-gray-500 font-medium">Loading your student career portfolio...</p>
+      </div>
+    );
+  }
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">Student Career Portfolio</h1>
-          <p className="text-sm text-gray-500">Module 1 (SEU/IS/22/ICT/032) — Manage profile, projects, and skills</p>
-        </div>
-        <Button variant="primary" size="sm">
-          Edit Portfolio
-        </Button>
-      </div>
+    <div className="space-y-6 max-w-6xl mx-auto pb-12">
+      {/* Top Notification Feedback */}
+      {feedback.message && (
+        <Alert type={feedback.type}>
+          <div className="flex items-center gap-2 text-sm font-medium">
+            {feedback.type === 'success' ? (
+              <CheckCircle className="w-4 h-4 text-emerald-600 flex-shrink-0" />
+            ) : (
+              <AlertCircle className="w-4 h-4 text-red-600 flex-shrink-0" />
+            )}
+            <span>{feedback.message}</span>
+          </div>
+        </Alert>
+      )}
 
+      {/* Main Profile Header Card */}
+      <ProfileHeader
+        profile={profile}
+        user={user}
+        onEditClick={() => setIsEditModalOpen(true)}
+      />
+
+      {/* Grid Layout: Left / Right Columns */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Left Column: Profile Card */}
-        <Card className="space-y-4">
-          <div className="flex items-center gap-4">
-            <div className="w-16 h-16 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold text-2xl">
-              {user?.name?.charAt(0) || 'S'}
-            </div>
-            <div>
-              <h2 className="text-lg font-bold text-gray-900">{user?.name}</h2>
-              <p className="text-sm text-gray-500">{user?.email}</p>
-              <Badge variant="info" size="sm" className="mt-1 capitalize">
-                {user?.role}
-              </Badge>
-            </div>
-          </div>
+        {/* Left Column (Skills & CV Uploader) */}
+        <div className="space-y-6">
+          <CvUploader
+            cvUrl={profile?.cvUrl}
+            onUploadCv={handleUploadCv}
+            isLoading={isUploadingCv}
+          />
 
-          <div className="border-t pt-4 space-y-2 text-sm text-gray-600">
-            <div className="flex items-center gap-2">
-              <BookOpen className="w-4 h-4 text-gray-400" />
-              <span>South Eastern University of Sri Lanka</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <FileText className="w-4 h-4 text-gray-400" />
-              <span>BSc in Information & Communication Technology</span>
-            </div>
-          </div>
-        </Card>
+          <SkillTagsSection
+            skills={profile?.skills || []}
+            onSaveSkills={(skills) => handleUpdateProfile({ skills })}
+            isLoading={isSaving}
+          />
 
-        {/* Right Column: Portfolio Details */}
+          <CertificatesBadgesSection
+            certificates={profile?.certificates || []}
+            badges={profile?.badges || []}
+            onSaveCertificates={(certificates) => handleUpdateProfile({ certificates })}
+            isLoading={isSaving}
+          />
+        </div>
+
+        {/* Right Column (Featured Projects & Education / Experience) */}
         <div className="lg:col-span-2 space-y-6">
-          <Card>
-            <h3 className="text-md font-bold text-gray-900 mb-3">Skills & Expertise</h3>
-            <div className="flex flex-wrap gap-2">
-              {['React.js', 'Node.js', 'Express', 'MongoDB', 'Tailwind CSS', 'Git'].map((skill) => (
-                <Badge key={skill} variant="neutral" size="md">
-                  {skill}
-                </Badge>
-              ))}
-            </div>
-          </Card>
+          <ProjectsSection
+            projects={profile?.projects || []}
+            onSaveProjects={(projects) => handleUpdateProfile({ projects })}
+            isLoading={isSaving}
+          />
 
-          <Card>
-            <div className="flex justify-between items-center mb-3">
-              <h3 className="text-md font-bold text-gray-900">Projects & Experience</h3>
-              <Button variant="ghost" size="sm">+ Add Project</Button>
-            </div>
-            <p className="text-sm text-gray-500 italic">No projects added yet. Click above to showcase your work.</p>
-          </Card>
+          <EducationExperienceSection
+            education={profile?.education || []}
+            experience={profile?.experience || []}
+            onSaveEducation={(education) => handleUpdateProfile({ education })}
+            onSaveExperience={(experience) => handleUpdateProfile({ experience })}
+            isLoading={isSaving}
+          />
         </div>
       </div>
+
+      {/* Edit Profile Modal */}
+      <ProfileEditModal
+        isOpen={isEditModalOpen}
+        onClose={() => setIsEditModalOpen(false)}
+        profile={profile}
+        onSave={handleUpdateProfile}
+        isLoading={isSaving}
+      />
     </div>
   );
 };
