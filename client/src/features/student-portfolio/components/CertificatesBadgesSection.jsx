@@ -58,12 +58,12 @@ export const CertificatesBadgesSection = ({
   };
 
   return (
-    <Card className="space-y-4">
+    <Card className="space-y-4 !rounded-none">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Award className="w-5 h-5 text-indigo-600" />
           <h3 className="text-lg font-bold text-gray-900">Certificates & Accreditations</h3>
-          <span className="text-xs px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-700 font-medium">
+          <span className="text-xs px-2 py-0.5 !rounded-none bg-indigo-50 text-indigo-700 font-medium">
             {certificates.length}
           </span>
         </div>
@@ -71,7 +71,7 @@ export const CertificatesBadgesSection = ({
           variant="ghost"
           size="sm"
           onClick={() => setIsModalOpen(true)}
-          className="text-indigo-600 hover:text-indigo-800 gap-1 text-xs"
+          className="text-indigo-600 hover:text-indigo-800 gap-1 text-xs !rounded-none"
         >
           <Plus className="w-3.5 h-3.5" />
           Add Certificate
@@ -87,7 +87,7 @@ export const CertificatesBadgesSection = ({
           {certificates.map((cert, idx) => (
             <div
               key={idx}
-              className="p-3 rounded-lg border border-gray-100 bg-gray-50/50 flex items-start justify-between gap-3"
+              className="p-3 !rounded-none border border-gray-100 bg-gray-50/50 flex items-start justify-between gap-3"
             >
               <div>
                 <h4 className="text-xs font-semibold text-gray-900">{cert.title}</h4>
@@ -103,17 +103,18 @@ export const CertificatesBadgesSection = ({
                     href={cert.credentialUrl.startsWith('http') ? cert.credentialUrl : `https://${cert.credentialUrl}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 text-[11px] text-indigo-600 hover:text-indigo-800 mt-2 font-medium"
+                    className="inline-flex items-center gap-1 text-[11px] text-indigo-600 hover:text-indigo-800 font-medium mt-1.5"
                   >
                     <ExternalLink className="w-3 h-3" />
-                    Verify Credential
+                    View Credential
                   </a>
                 )}
               </div>
+
               <button
                 type="button"
                 onClick={() => handleDeleteCertificate(idx)}
-                className="p-1 text-gray-400 hover:text-red-500 rounded transition-colors"
+                className="p-1 text-gray-400 hover:text-red-500 !rounded-none transition-colors"
                 title="Remove certificate"
               >
                 <Trash2 className="w-3.5 h-3.5" />
@@ -123,22 +124,21 @@ export const CertificatesBadgesSection = ({
         </div>
       )}
 
-      {/* Badges Section */}
+      {/* Badges Earned Strip */}
       {badges && badges.length > 0 && (
-        <div className="pt-3 border-t border-gray-100">
-          <div className="flex items-center gap-1.5 text-xs font-semibold text-gray-700 mb-2">
+        <div className="pt-3 border-t border-gray-100 space-y-2">
+          <div className="flex items-center gap-1.5 text-xs font-semibold text-gray-700">
             <ShieldCheck className="w-4 h-4 text-emerald-600" />
-            <span>Earned Platform Badges</span>
+            <span>Platform Badges Earned ({badges.length})</span>
           </div>
           <div className="flex flex-wrap gap-2">
             {badges.map((b, i) => (
               <span
                 key={i}
-                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-50 text-emerald-800 border border-emerald-200"
+                className="inline-flex items-center gap-1.5 px-2.5 py-1 !rounded-none text-xs font-medium bg-emerald-50 text-emerald-800 border border-emerald-200"
               >
-                <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
-                <span>{b.name}</span>
-                <span className="text-emerald-500 text-[10px]">({b.issuedBy})</span>
+                <ShieldCheck className="w-3 h-3 text-emerald-600" />
+                {b.name || 'Achievement Badge'}
               </span>
             ))}
           </div>
@@ -149,44 +149,48 @@ export const CertificatesBadgesSection = ({
       <Modal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        title="Add Certification / Accreditation"
+        title="Add Certificate / Accreditation"
         footer={
           <>
-            <Button variant="secondary" onClick={() => setIsModalOpen(false)} disabled={isLoading}>
+            <Button variant="secondary" onClick={() => setIsModalOpen(false)} disabled={isLoading} className="!rounded-none">
               Cancel
             </Button>
-            <Button variant="primary" onClick={handleAddCertificate} isLoading={isLoading}>
+            <Button variant="primary" onClick={handleAddCertificate} isLoading={isLoading} className="!rounded-none">
               Add Certificate
             </Button>
           </>
         }
       >
-        <form onSubmit={handleAddCertificate} className="space-y-3">
+        <form onSubmit={handleAddCertificate} className="space-y-4">
           <Input
-            label="Certificate Title"
+            label="Certificate / Course Title"
             value={certFormData.title}
             onChange={(e) => setCertFormData({ ...certFormData, title: e.target.value })}
             placeholder="e.g. AWS Certified Cloud Practitioner"
             required
+            className="!rounded-none"
           />
           <Input
             label="Issuing Organization"
             value={certFormData.issuer}
             onChange={(e) => setCertFormData({ ...certFormData, issuer: e.target.value })}
-            placeholder="e.g. Amazon Web Services, Coursera, freeCodeCamp"
+            placeholder="e.g. Amazon Web Services, Coursera, Meta"
             required
+            className="!rounded-none"
           />
           <Input
             label="Issue Date"
             type="date"
             value={certFormData.issueDate}
             onChange={(e) => setCertFormData({ ...certFormData, issueDate: e.target.value })}
+            className="!rounded-none"
           />
           <Input
-            label="Credential URL / Verification Link"
+            label="Credential Verification URL"
             value={certFormData.credentialUrl}
             onChange={(e) => setCertFormData({ ...certFormData, credentialUrl: e.target.value })}
             placeholder="https://www.credly.com/badges/..."
+            className="!rounded-none"
           />
         </form>
       </Modal>
