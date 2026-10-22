@@ -217,11 +217,34 @@ export const ProfileHeader = ({ profile, user, onEditClick }) => {
             Other Profile
           </a>
         )}
-        {!links.github && !links.linkedin && !links.portfolio && !links.behance && !links.other && (
-          <span className="text-xs text-gray-400 italic">
-            No external links added yet. Click &quot;Edit Profile&quot; to add.
-          </span>
-        )}
+        {Array.isArray(links.customLinks) &&
+          links.customLinks.map((item, idx) => {
+            if (!item?.url) return null;
+            const href = item.url.startsWith('http') ? item.url : `https://${item.url}`;
+            const label = item.label?.trim() || 'Custom Link';
+            return (
+              <a
+                key={idx}
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 text-xs text-indigo-700 hover:text-indigo-900 bg-indigo-50/70 hover:bg-indigo-100 px-2.5 py-1 rounded-md border border-indigo-200 transition-colors"
+              >
+                <ExternalLink className="w-3.5 h-3.5" />
+                {label}
+              </a>
+            );
+          })}
+        {!links.github &&
+          !links.linkedin &&
+          !links.portfolio &&
+          !links.behance &&
+          !links.other &&
+          (!Array.isArray(links.customLinks) || links.customLinks.filter((l) => l?.url).length === 0) && (
+            <span className="text-xs text-gray-400 italic">
+              No external links added yet. Click &quot;Edit Profile&quot; to add.
+            </span>
+          )}
       </div>
     </Card>
   );

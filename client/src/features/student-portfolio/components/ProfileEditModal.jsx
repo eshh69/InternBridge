@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Modal } from '../../../components/ui/Modal';
 import { Input } from '../../../components/ui/Input';
 import { Button } from '../../../components/ui/Button';
-import { User, Phone, GraduationCap, Globe } from 'lucide-react';
+import { User, Phone, GraduationCap, Globe, Plus, Trash2 } from 'lucide-react';
 
 const ACADEMIC_YEARS = ['1st Year', '2nd Year', '3rd Year', '4th Year', 'Graduate'];
 
@@ -28,6 +28,7 @@ export const ProfileEditModal = ({ isOpen, onClose, profile, user, onSave, isLoa
     other: '',
   });
 
+  const [customLinks, setCustomLinks] = useState([]);
   const [errors, setErrors] = useState({});
 
   useEffect(() => {
@@ -50,6 +51,15 @@ export const ProfileEditModal = ({ isOpen, onClose, profile, user, onSave, isLoa
         behance: profile?.links?.behance || '',
         other: profile?.links?.other || '',
       });
+
+      let existingCustom = [];
+      if (Array.isArray(profile?.links?.customLinks) && profile.links.customLinks.length > 0) {
+        existingCustom = profile.links.customLinks;
+      } else if (profile?.links?.other) {
+        existingCustom = [{ label: 'Other', url: profile.links.other }];
+      }
+      setCustomLinks(existingCustom);
+
       setErrors({});
       setActiveTab('personal');
     }
@@ -61,6 +71,22 @@ export const ProfileEditModal = ({ isOpen, onClose, profile, user, onSave, isLoa
     if (errors[name]) {
       setErrors((prev) => ({ ...prev, [name]: null }));
     }
+  };
+
+  const handleAddCustomLink = () => {
+    setCustomLinks((prev) => [...prev, { label: '', url: '' }]);
+  };
+
+  const handleRemoveCustomLink = (index) => {
+    setCustomLinks((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const handleCustomLinkChange = (index, field, value) => {
+    setCustomLinks((prev) => {
+      const updated = [...prev];
+      updated[index] = { ...updated[index], [field]: value };
+      return updated;
+    });
   };
 
   const validate = () => {
@@ -96,6 +122,13 @@ export const ProfileEditModal = ({ isOpen, onClose, profile, user, onSave, isLoa
     e.preventDefault();
     if (!validate()) return;
 
+    const filteredCustomLinks = customLinks
+      .filter((item) => item && (item.url?.trim() || item.label?.trim()))
+      .map((item) => ({
+        label: item.label?.trim() || 'Link',
+        url: item.url?.trim() || '',
+      }));
+
     onSave({
       name: formData.name.trim(),
       age: formData.age === '' ? null : parseInt(formData.age, 10),
@@ -114,6 +147,7 @@ export const ProfileEditModal = ({ isOpen, onClose, profile, user, onSave, isLoa
         portfolio: formData.portfolio.trim(),
         behance: formData.behance.trim(),
         other: formData.other.trim(),
+        customLinks: filteredCustomLinks,
       },
     });
   };
@@ -379,17 +413,76 @@ export const ProfileEditModal = ({ isOpen, onClose, profile, user, onSave, isLoa
                   placeholder="https://behance.net/username"
                   helperText="UI/UX, 3D, Design, or Media portfolio"
                 />
+              </div>
 
-                <div className="md:col-span-2">
-                  <Input
-                    label="Other Creative / Social Platform URL"
-                    name="other"
-                    value={formData.other}
-                    onChange={handleChange}
-                    placeholder="https://medium.com/@username or Kaggle / Twitter"
-                    helperText="Technical blogs, Kaggle, ArtStation, or YouTube channel"
-                  />
+              {/* Dynamic Multiple Custom Platforms Section */}
+              <div className="pt-4 border-t border-gray-100 space-y-3">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h4 className="text-xs font-semibold text-gray-800">
+                      Additional Creative & Social Platform URLs
+                    </h4>
+                    <p className="text-[11px] text-gray-400">
+                      Add links for Medium, YouTube, Kaggle, ArtStation, Twitter / X, etc.
+                    </p>
+                  </div>
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    size="sm"
+                    onClick={handleAddCustomLink}
+                    className="text-xs text-indigo-600 border-indigo-200 hover:bg-indigo-50 gap-1.5"
+                  >
+                    <Plus className="w-3.5 h-3.5" />
+                    + Add Link Row
+                  </Button>
                 </div>
+
+                {customLinks.length === 0 ? (
+                  <div className="p-4 rounded-xl border border-dashed border-gray-200 bg-gray-50/50 text-center">
+                    <p className="text-xs text-gray-400">
+                      No additional platform links added. Click{' '}
+                      <span className="font-semibold text-indigo-600">&quot;+ Add Link Row&quot;</span>{' '}
+                      above to add custom platforms.
+                    </p>
+                  </div>
+                ) : (
+                  <div className="space-y-2">
+                    {customLinks.map((link, idx) => (
+                      <div
+                        key={idx}
+                        className="flex items-center gap-2 bg-gray-50/80 p-2 rounded-lg border border-gray-200/80 transition-all hover:border-indigo-200"
+                      >
+                        <div className="w-1/3">
+                          <input
+                            type="text"
+                            placeholder="Platform (e.g. Kaggle)"
+                            value={link.label}
+                            onChange={(e) => handleCustomLinkChange(idx, 'label', e.target.value)}
+                            className="w-full px-3 py-1.5 border border-gray-300 rounded-md text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white"
+                          />
+                        </div>
+                        <div className="flex-1">
+                          <input
+                            type="url"
+                            placeholder="https://..."
+                            value={link.url}
+                            onChange={(e) => handleCustomLinkChange(idx, 'url', e.target.value)}
+                            className="w-full px-3 py-1.5 border border-gray-300 rounded-md text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white"
+                          />
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveCustomLink(idx)}
+                          className="p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded transition-colors"
+                          title="Remove this link row"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
           )}

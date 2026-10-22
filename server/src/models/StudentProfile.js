@@ -118,6 +118,12 @@ const studentProfileSchema = new mongoose.Schema(
       portfolio: { type: String, default: '' },
       behance: { type: String, default: '' },
       other: { type: String, default: '' },
+      customLinks: [
+        {
+          label: { type: String, trim: true, default: '' },
+          url: { type: String, trim: true, default: '' },
+        },
+      ],
     },
     cvUrl: {
       type: String,

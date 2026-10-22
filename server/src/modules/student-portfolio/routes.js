@@ -80,6 +80,7 @@ router.get('/me', protect, authorize('student'), async (req, res, next) => {
           portfolio: '',
           behance: '',
           other: '',
+          customLinks: [],
         },
       });
 
@@ -172,12 +173,23 @@ router.put('/me', protect, authorize('student'), async (req, res, next) => {
     }
 
     if (links !== undefined && typeof links === 'object') {
+      let customLinks = [];
+      if (Array.isArray(links.customLinks)) {
+        customLinks = links.customLinks
+          .filter((item) => item && (item.url || item.label))
+          .map((item) => ({
+            label: item.label ? item.label.trim() : 'Platform',
+            url: item.url ? item.url.trim() : '',
+          }));
+      }
+
       updateFields.links = {
         github: links.github ? links.github.trim() : '',
         linkedin: links.linkedin ? links.linkedin.trim() : '',
         portfolio: links.portfolio ? links.portfolio.trim() : '',
         behance: links.behance ? links.behance.trim() : '',
         other: links.other ? links.other.trim() : '',
+        customLinks,
       };
     }
 
