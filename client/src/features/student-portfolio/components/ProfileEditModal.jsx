@@ -2,11 +2,19 @@ import React, { useState, useEffect } from 'react';
 import { Modal } from '../../../components/ui/Modal';
 import { Input } from '../../../components/ui/Input';
 import { Button } from '../../../components/ui/Button';
+import { User, Phone, GraduationCap, Globe } from 'lucide-react';
 
 const ACADEMIC_YEARS = ['1st Year', '2nd Year', '3rd Year', '4th Year', 'Graduate'];
 
-export const ProfileEditModal = ({ isOpen, onClose, profile, onSave, isLoading }) => {
+export const ProfileEditModal = ({ isOpen, onClose, profile, user, onSave, isLoading }) => {
+  const [activeTab, setActiveTab] = useState('personal');
+
   const [formData, setFormData] = useState({
+    name: '',
+    age: '',
+    address: '',
+    phone: '',
+    whatsapp: '',
     university: '',
     degree: '',
     fieldOfStudy: '',
@@ -16,26 +24,36 @@ export const ProfileEditModal = ({ isOpen, onClose, profile, onSave, isLoading }
     github: '',
     linkedin: '',
     portfolio: '',
+    behance: '',
+    other: '',
   });
 
   const [errors, setErrors] = useState({});
 
   useEffect(() => {
-    if (profile) {
+    if (profile || user) {
       setFormData({
-        university: profile.university || '',
-        degree: profile.degree || '',
-        fieldOfStudy: profile.fieldOfStudy || '',
-        academicYear: profile.academicYear || '3rd Year',
-        gpa: profile.gpa !== null && profile.gpa !== undefined ? String(profile.gpa) : '',
-        bio: profile.bio || '',
-        github: profile.links?.github || '',
-        linkedin: profile.links?.linkedin || '',
-        portfolio: profile.links?.portfolio || '',
+        name: user?.name || profile?.user?.name || '',
+        age: profile?.age !== null && profile?.age !== undefined ? String(profile.age) : '',
+        address: profile?.address || '',
+        phone: profile?.phone || '',
+        whatsapp: profile?.whatsapp || '',
+        university: profile?.university || '',
+        degree: profile?.degree || '',
+        fieldOfStudy: profile?.fieldOfStudy || '',
+        academicYear: profile?.academicYear || '3rd Year',
+        gpa: profile?.gpa !== null && profile?.gpa !== undefined ? String(profile.gpa) : '',
+        bio: profile?.bio || '',
+        github: profile?.links?.github || '',
+        linkedin: profile?.links?.linkedin || '',
+        portfolio: profile?.links?.portfolio || '',
+        behance: profile?.links?.behance || '',
+        other: profile?.links?.other || '',
       });
       setErrors({});
+      setActiveTab('personal');
     }
-  }, [profile, isOpen]);
+  }, [profile, user, isOpen]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -47,9 +65,17 @@ export const ProfileEditModal = ({ isOpen, onClose, profile, onSave, isLoading }
 
   const validate = () => {
     const newErrors = {};
+    if (!formData.name.trim()) newErrors.name = 'Full name is required';
     if (!formData.university.trim()) newErrors.university = 'University is required';
     if (!formData.degree.trim()) newErrors.degree = 'Degree is required';
     if (!formData.fieldOfStudy.trim()) newErrors.fieldOfStudy = 'Field of study is required';
+
+    if (formData.age !== '') {
+      const ageNum = parseInt(formData.age, 10);
+      if (isNaN(ageNum) || ageNum < 16 || ageNum > 100) {
+        newErrors.age = 'Please enter a valid age (16–100)';
+      }
+    }
 
     if (formData.gpa !== '') {
       const gpaNum = parseFloat(formData.gpa);
@@ -71,16 +97,23 @@ export const ProfileEditModal = ({ isOpen, onClose, profile, onSave, isLoading }
     if (!validate()) return;
 
     onSave({
-      university: formData.university,
-      degree: formData.degree,
-      fieldOfStudy: formData.fieldOfStudy,
+      name: formData.name.trim(),
+      age: formData.age === '' ? null : parseInt(formData.age, 10),
+      address: formData.address.trim(),
+      phone: formData.phone.trim(),
+      whatsapp: formData.whatsapp.trim(),
+      university: formData.university.trim(),
+      degree: formData.degree.trim(),
+      fieldOfStudy: formData.fieldOfStudy.trim(),
       academicYear: formData.academicYear,
       gpa: formData.gpa === '' ? null : parseFloat(formData.gpa),
-      bio: formData.bio,
+      bio: formData.bio.trim(),
       links: {
-        github: formData.github,
-        linkedin: formData.linkedin,
-        portfolio: formData.portfolio,
+        github: formData.github.trim(),
+        linkedin: formData.linkedin.trim(),
+        portfolio: formData.portfolio.trim(),
+        behance: formData.behance.trim(),
+        other: formData.other.trim(),
       },
     });
   };
@@ -90,136 +123,278 @@ export const ProfileEditModal = ({ isOpen, onClose, profile, onSave, isLoading }
       isOpen={isOpen}
       onClose={onClose}
       title="Edit Student Profile"
-      maxWidth="max-w-2xl"
+      maxWidth="max-w-3xl"
       footer={
         <>
           <Button variant="secondary" onClick={onClose} disabled={isLoading}>
             Cancel
           </Button>
           <Button variant="primary" onClick={handleSubmit} isLoading={isLoading}>
-            Save Changes
+            Save All Changes
           </Button>
         </>
       }
     >
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <Input
-            label="University / Higher Education"
-            name="university"
-            value={formData.university}
-            onChange={handleChange}
-            placeholder="e.g. South Eastern University of Sri Lanka"
-            error={errors.university}
-            required
-          />
-
-          <Input
-            label="Degree Program"
-            name="degree"
-            value={formData.degree}
-            onChange={handleChange}
-            placeholder="e.g. BSc in Information & Communication Technology"
-            error={errors.degree}
-            required
-          />
-
-          <Input
-            label="Field of Study / Major"
-            name="fieldOfStudy"
-            value={formData.fieldOfStudy}
-            onChange={handleChange}
-            placeholder="e.g. Software Engineering / ICT"
-            error={errors.fieldOfStudy}
-            required
-          />
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Academic Year <span className="text-red-500">*</span>
-            </label>
-            <select
-              name="academicYear"
-              value={formData.academicYear}
-              onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
-            >
-              {ACADEMIC_YEARS.map((year) => (
-                <option key={year} value={year}>
-                  {year}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <Input
-            label="Cumulative GPA (out of 4.0)"
-            name="gpa"
-            type="number"
-            step="0.01"
-            min="0"
-            max="4.0"
-            value={formData.gpa}
-            onChange={handleChange}
-            placeholder="e.g. 3.75"
-            error={errors.gpa}
-            helperText="Optional, leave blank if not applicable"
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Professional Bio
-          </label>
-          <textarea
-            name="bio"
-            rows="3"
-            value={formData.bio}
-            onChange={handleChange}
-            placeholder="Briefly describe your career objectives, technical passions, and internship goals..."
-            className={`w-full px-3 py-2 border rounded-lg shadow-sm text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors ${
-              errors.bio ? 'border-red-500' : 'border-gray-300'
+      <div className="space-y-5">
+        {/* Navigation Tabs */}
+        <div className="flex border-b border-gray-200">
+          <button
+            type="button"
+            onClick={() => setActiveTab('personal')}
+            className={`flex items-center gap-2 py-2.5 px-4 text-xs font-semibold border-b-2 transition-colors ${
+              activeTab === 'personal'
+                ? 'border-indigo-600 text-indigo-600 bg-indigo-50/40 rounded-t-lg'
+                : 'border-transparent text-gray-500 hover:text-gray-700'
             }`}
-          />
-          <div className="flex justify-between items-center mt-1">
-            {errors.bio ? (
-              <p className="text-xs text-red-600">{errors.bio}</p>
-            ) : (
-              <span />
-            )}
-            <p className="text-xs text-gray-400">
-              {formData.bio.length} / 1000 characters
-            </p>
-          </div>
+          >
+            <User className="w-3.5 h-3.5" />
+            Personal & Contact
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setActiveTab('academic')}
+            className={`flex items-center gap-2 py-2.5 px-4 text-xs font-semibold border-b-2 transition-colors ${
+              activeTab === 'academic'
+                ? 'border-indigo-600 text-indigo-600 bg-indigo-50/40 rounded-t-lg'
+                : 'border-transparent text-gray-500 hover:text-gray-700'
+            }`}
+          >
+            <GraduationCap className="w-3.5 h-3.5" />
+            Academic Details
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setActiveTab('links')}
+            className={`flex items-center gap-2 py-2.5 px-4 text-xs font-semibold border-b-2 transition-colors ${
+              activeTab === 'links'
+                ? 'border-indigo-600 text-indigo-600 bg-indigo-50/40 rounded-t-lg'
+                : 'border-transparent text-gray-500 hover:text-gray-700'
+            }`}
+          >
+            <Globe className="w-3.5 h-3.5" />
+            Social & Creative Platforms
+          </button>
         </div>
 
-        <div className="border-t border-gray-100 pt-4">
-          <h4 className="text-sm font-semibold text-gray-900 mb-3">Online Presence & Links</h4>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-            <Input
-              label="GitHub URL"
-              name="github"
-              value={formData.github}
-              onChange={handleChange}
-              placeholder="https://github.com/username"
-            />
-            <Input
-              label="LinkedIn URL"
-              name="linkedin"
-              value={formData.linkedin}
-              onChange={handleChange}
-              placeholder="https://linkedin.com/in/username"
-            />
-            <Input
-              label="Portfolio / Website"
-              name="portfolio"
-              value={formData.portfolio}
-              onChange={handleChange}
-              placeholder="https://yourportfolio.dev"
-            />
-          </div>
-        </div>
-      </form>
+        <form onSubmit={handleSubmit} className="space-y-4 pt-1">
+          {/* TAB 1: Personal & Contact Details */}
+          {activeTab === 'personal' && (
+            <div className="space-y-4 animate-fade-in">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <Input
+                  label="Full Name"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  placeholder="e.g. S.A.I.C. Kumara"
+                  error={errors.name}
+                  required
+                />
+
+                <Input
+                  label="Age"
+                  name="age"
+                  type="number"
+                  min="16"
+                  max="100"
+                  value={formData.age}
+                  onChange={handleChange}
+                  placeholder="e.g. 23"
+                  error={errors.age}
+                  helperText="Optional"
+                />
+
+                <div className="md:col-span-2">
+                  <Input
+                    label="Current Address / Location"
+                    name="address"
+                    value={formData.address}
+                    onChange={handleChange}
+                    placeholder="e.g. Colombo, Sri Lanka (or Kandy / Oluvil)"
+                    helperText="Visible to recruiters for location compatibility"
+                  />
+                </div>
+
+                <Input
+                  label="Primary Phone Number"
+                  name="phone"
+                  type="tel"
+                  value={formData.phone}
+                  onChange={handleChange}
+                  placeholder="e.g. +94 77 123 4567"
+                  helperText="Direct contact number"
+                />
+
+                <Input
+                  label="WhatsApp Number"
+                  name="whatsapp"
+                  type="tel"
+                  value={formData.whatsapp}
+                  onChange={handleChange}
+                  placeholder="e.g. +94 77 123 4567"
+                  helperText="For quick recruiter communications"
+                />
+              </div>
+
+              <div className="p-3 bg-blue-50/60 border border-blue-100 rounded-lg text-xs text-blue-800">
+                💡 <strong>Tip:</strong> Your contact email is linked to your account ({user?.email || profile?.user?.email}).
+              </div>
+            </div>
+          )}
+
+          {/* TAB 2: Academic Details */}
+          {activeTab === 'academic' && (
+            <div className="space-y-4 animate-fade-in">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <Input
+                  label="University / Institution"
+                  name="university"
+                  value={formData.university}
+                  onChange={handleChange}
+                  placeholder="e.g. South Eastern University of Sri Lanka"
+                  error={errors.university}
+                  required
+                />
+
+                <Input
+                  label="Degree Program"
+                  name="degree"
+                  value={formData.degree}
+                  onChange={handleChange}
+                  placeholder="e.g. BSc in Information and Communication Technology"
+                  error={errors.degree}
+                  required
+                />
+
+                <Input
+                  label="Field of Study / Major"
+                  name="fieldOfStudy"
+                  value={formData.fieldOfStudy}
+                  onChange={handleChange}
+                  placeholder="e.g. Software Engineering / ICT"
+                  error={errors.fieldOfStudy}
+                  required
+                />
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Academic Year <span className="text-red-500">*</span>
+                  </label>
+                  <select
+                    name="academicYear"
+                    value={formData.academicYear}
+                    onChange={handleChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-2xs text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
+                  >
+                    {ACADEMIC_YEARS.map((year) => (
+                      <option key={year} value={year}>
+                        {year}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <Input
+                  label="Cumulative GPA (out of 4.0)"
+                  name="gpa"
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  max="4.0"
+                  value={formData.gpa}
+                  onChange={handleChange}
+                  placeholder="e.g. 3.75"
+                  error={errors.gpa}
+                  helperText="Optional, leave blank if not applicable"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Professional Bio & Career Objective
+                </label>
+                <textarea
+                  name="bio"
+                  rows="3"
+                  value={formData.bio}
+                  onChange={handleChange}
+                  placeholder="Describe your technical background, areas of passion, and internship aspirations..."
+                  className={`w-full px-3 py-2 border rounded-lg shadow-2xs text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors ${
+                    errors.bio ? 'border-red-500' : 'border-gray-300'
+                  }`}
+                />
+                <div className="flex justify-between items-center mt-1">
+                  {errors.bio ? (
+                    <p className="text-xs text-red-600">{errors.bio}</p>
+                  ) : (
+                    <span />
+                  )}
+                  <p className="text-xs text-gray-400">
+                    {formData.bio.length} / 1000 characters
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* TAB 3: Social & Creative Platforms */}
+          {activeTab === 'links' && (
+            <div className="space-y-4 animate-fade-in">
+              <p className="text-xs text-gray-500">
+                Showcase your code repositories, design portfolios, and online creative profiles to recruiters.
+              </p>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <Input
+                  label="GitHub Profile URL"
+                  name="github"
+                  value={formData.github}
+                  onChange={handleChange}
+                  placeholder="https://github.com/username"
+                />
+
+                <Input
+                  label="LinkedIn Profile URL"
+                  name="linkedin"
+                  value={formData.linkedin}
+                  onChange={handleChange}
+                  placeholder="https://linkedin.com/in/username"
+                />
+
+                <Input
+                  label="Personal Portfolio / Website"
+                  name="portfolio"
+                  value={formData.portfolio}
+                  onChange={handleChange}
+                  placeholder="https://yourportfolio.dev"
+                />
+
+                <Input
+                  label="Behance / Dribbble / Creative URL"
+                  name="behance"
+                  value={formData.behance}
+                  onChange={handleChange}
+                  placeholder="https://behance.net/username"
+                  helperText="UI/UX, 3D, Design, or Media portfolio"
+                />
+
+                <div className="md:col-span-2">
+                  <Input
+                    label="Other Creative / Social Platform URL"
+                    name="other"
+                    value={formData.other}
+                    onChange={handleChange}
+                    placeholder="https://medium.com/@username or Kaggle / Twitter"
+                    helperText="Technical blogs, Kaggle, ArtStation, or YouTube channel"
+                  />
+                </div>
+              </div>
+            </div>
+          )}
+        </form>
+      </div>
     </Modal>
   );
 };

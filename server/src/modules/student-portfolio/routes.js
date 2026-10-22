@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import multer from 'multer';
 import { protect, authorize } from '../../middleware/auth.js';
 import { StudentProfile } from '../../models/StudentProfile.js';
+import { User } from '../../models/User.js';
 import { uploadFileToStorage } from '../../services/storageService.js';
 import { sendSuccess, sendError } from '../../utils/apiResponse.js';
 
@@ -63,6 +64,10 @@ router.get('/me', protect, authorize('student'), async (req, res, next) => {
         academicYear: '3rd Year',
         gpa: null,
         bio: '',
+        phone: '',
+        whatsapp: '',
+        address: '',
+        age: null,
         skills: [],
         education: [],
         projects: [],
@@ -73,6 +78,8 @@ router.get('/me', protect, authorize('student'), async (req, res, next) => {
           github: '',
           linkedin: '',
           portfolio: '',
+          behance: '',
+          other: '',
         },
       });
 
@@ -91,12 +98,17 @@ router.get('/me', protect, authorize('student'), async (req, res, next) => {
 router.put('/me', protect, authorize('student'), async (req, res, next) => {
   try {
     const {
+      name,
       university,
       degree,
       fieldOfStudy,
       academicYear,
       gpa,
       bio,
+      phone,
+      whatsapp,
+      address,
+      age,
       skills,
       education,
       projects,
@@ -106,6 +118,11 @@ router.put('/me', protect, authorize('student'), async (req, res, next) => {
       links,
     } = req.body;
 
+    // Update User's full name if provided
+    if (name !== undefined && typeof name === 'string' && name.trim()) {
+      await User.findByIdAndUpdate(req.user._id, { name: name.trim() });
+    }
+
     const updateFields = {};
 
     if (university !== undefined) updateFields.university = university.trim();
@@ -114,6 +131,10 @@ router.put('/me', protect, authorize('student'), async (req, res, next) => {
     if (academicYear !== undefined) updateFields.academicYear = academicYear;
     if (gpa !== undefined) updateFields.gpa = gpa === '' || gpa === null ? null : Number(gpa);
     if (bio !== undefined) updateFields.bio = bio.trim();
+    if (phone !== undefined) updateFields.phone = phone.trim();
+    if (whatsapp !== undefined) updateFields.whatsapp = whatsapp.trim();
+    if (address !== undefined) updateFields.address = address.trim();
+    if (age !== undefined) updateFields.age = age === '' || age === null ? null : Number(age);
 
     // Sanitize skills: ensure array of lowercase, trimmed, unique strings
     if (skills !== undefined) {
@@ -152,9 +173,11 @@ router.put('/me', protect, authorize('student'), async (req, res, next) => {
 
     if (links !== undefined && typeof links === 'object') {
       updateFields.links = {
-        github: links.github || '',
-        linkedin: links.linkedin || '',
-        portfolio: links.portfolio || '',
+        github: links.github ? links.github.trim() : '',
+        linkedin: links.linkedin ? links.linkedin.trim() : '',
+        portfolio: links.portfolio ? links.portfolio.trim() : '',
+        behance: links.behance ? links.behance.trim() : '',
+        other: links.other ? links.other.trim() : '',
       };
     }
 
