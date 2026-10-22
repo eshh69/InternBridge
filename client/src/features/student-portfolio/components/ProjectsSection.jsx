@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Card } from '../../../components/ui/Card';
-import { Badge } from '../../../components/ui/Badge';
 import { Button } from '../../../components/ui/Button';
 import { Input } from '../../../components/ui/Input';
 import { Modal } from '../../../components/ui/Modal';
@@ -97,29 +96,34 @@ export const ProjectsSection = ({ projects = [], onSaveProjects, isLoading }) =>
   };
 
   return (
-    <Card className="space-y-4">
+    <Card className="space-y-4 !rounded-none">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <FolderGit2 className="w-5 h-5 text-indigo-600" />
           <h3 className="text-lg font-bold text-gray-900">Featured Projects</h3>
-          <span className="text-xs px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-700 font-medium">
+          <span className="text-xs px-2 py-0.5 !rounded-none bg-indigo-50 text-indigo-700 font-medium">
             {projects.length}
           </span>
         </div>
-        <Button variant="ghost" size="sm" onClick={handleOpenAdd} className="gap-1.5 text-indigo-600 hover:text-indigo-800">
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={handleOpenAdd}
+          className="gap-1.5 text-indigo-600 hover:text-indigo-800 !rounded-none"
+        >
           <Plus className="w-4 h-4" />
           Add Project
         </Button>
       </div>
 
       {projects.length === 0 ? (
-        <div className="text-center py-8 px-4 rounded-xl border border-dashed border-gray-200 bg-gray-50/50">
+        <div className="text-center py-8 px-4 !rounded-none border border-dashed border-gray-200 bg-gray-50/50">
           <Code2 className="w-10 h-10 text-gray-300 mx-auto mb-2" />
           <h4 className="text-sm font-semibold text-gray-700">No projects showcase yet</h4>
           <p className="text-xs text-gray-400 mt-1 max-w-sm mx-auto">
             Adding academic or personal projects significantly increases your visibility to hiring companies.
           </p>
-          <Button variant="primary" size="sm" onClick={handleOpenAdd} className="mt-3 gap-1.5">
+          <Button variant="primary" size="sm" onClick={handleOpenAdd} className="mt-3 gap-1.5 !rounded-none">
             <Plus className="w-3.5 h-3.5" />
             Add First Project
           </Button>
@@ -129,7 +133,7 @@ export const ProjectsSection = ({ projects = [], onSaveProjects, isLoading }) =>
           {projects.map((proj, idx) => (
             <div
               key={idx}
-              className="p-4 rounded-xl border border-gray-200/90 bg-white hover:border-indigo-200 hover:shadow-xs transition-all flex flex-col justify-between"
+              className="p-4 !rounded-none border border-gray-200/90 bg-white hover:border-indigo-200 hover:shadow-xs transition-all flex flex-col justify-between"
             >
               <div>
                 <div className="flex items-start justify-between gap-2">
@@ -138,7 +142,7 @@ export const ProjectsSection = ({ projects = [], onSaveProjects, isLoading }) =>
                     <button
                       type="button"
                       onClick={() => handleOpenEdit(idx)}
-                      className="p-1 text-gray-400 hover:text-indigo-600 rounded transition-colors"
+                      className="p-1 text-gray-400 hover:text-indigo-600 !rounded-none transition-colors"
                       title="Edit project"
                     >
                       <Edit2 className="w-3.5 h-3.5" />
@@ -146,7 +150,7 @@ export const ProjectsSection = ({ projects = [], onSaveProjects, isLoading }) =>
                     <button
                       type="button"
                       onClick={() => handleDelete(idx)}
-                      className="p-1 text-gray-400 hover:text-red-500 rounded transition-colors"
+                      className="p-1 text-gray-400 hover:text-red-500 !rounded-none transition-colors"
                       title="Delete project"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
@@ -163,7 +167,7 @@ export const ProjectsSection = ({ projects = [], onSaveProjects, isLoading }) =>
                     {proj.technologies.map((t, i) => (
                       <span
                         key={i}
-                        className="px-2 py-0.5 rounded text-[11px] font-medium bg-gray-100 text-gray-700 border border-gray-200/60"
+                        className="px-2 py-0.5 !rounded-none text-[11px] font-medium bg-gray-100 text-gray-700 border border-gray-200/60"
                       >
                         {t}
                       </span>
@@ -206,13 +210,14 @@ export const ProjectsSection = ({ projects = [], onSaveProjects, isLoading }) =>
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         title={editingIndex !== null ? 'Edit Project' : 'Add New Project'}
+        maxWidth="max-w-lg"
         footer={
           <>
-            <Button variant="secondary" onClick={() => setIsModalOpen(false)} disabled={isLoading}>
+            <Button variant="secondary" onClick={() => setIsModalOpen(false)} disabled={isLoading} className="!rounded-none">
               Cancel
             </Button>
-            <Button variant="primary" onClick={handleSubmit} isLoading={isLoading}>
-              {editingIndex !== null ? 'Save Changes' : 'Add Project'}
+            <Button variant="primary" onClick={handleSubmit} isLoading={isLoading} className="!rounded-none">
+              {editingIndex !== null ? 'Update Project' : 'Add Project'}
             </Button>
           </>
         }
@@ -223,9 +228,10 @@ export const ProjectsSection = ({ projects = [], onSaveProjects, isLoading }) =>
             name="title"
             value={formData.title}
             onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-            placeholder="e.g. InternBridge Placement Portal"
+            placeholder="e.g. InternBridge Platform"
             error={errors.title}
             required
+            className="!rounded-none"
           />
 
           <div>
@@ -233,42 +239,45 @@ export const ProjectsSection = ({ projects = [], onSaveProjects, isLoading }) =>
               Description <span className="text-red-500">*</span>
             </label>
             <textarea
-              rows="3"
+              rows={3}
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-              placeholder="What problem does this project solve? What was your key contribution?"
-              className={`w-full px-3 py-2 border rounded-lg shadow-sm text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors ${
+              placeholder="Describe the problem solved, architecture, and your contributions..."
+              className={`w-full px-3 py-2 border !rounded-none shadow-sm text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors ${
                 errors.description ? 'border-red-500' : 'border-gray-300'
               }`}
             />
             {errors.description && (
-              <p className="mt-1 text-xs text-red-600">{errors.description}</p>
+              <p className="text-xs text-red-600 mt-1">{errors.description}</p>
             )}
           </div>
 
           <Input
-            label="Technologies Used"
+            label="Technologies Used (Comma-separated)"
             name="technologies"
             value={formData.technologies}
             onChange={(e) => setFormData({ ...formData, technologies: e.target.value })}
-            placeholder="e.g. React, Node.js, Express, MongoDB, Tailwind (comma separated)"
-            helperText="Separate multiple technologies with commas"
+            placeholder="e.g. React, Node.js, Socket.IO, MongoDB"
+            helperText="Separate tools and libraries with commas"
+            className="!rounded-none"
           />
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <Input
-              label="GitHub Repository Link"
-              name="githubUrl"
-              value={formData.githubUrl}
-              onChange={(e) => setFormData({ ...formData, githubUrl: e.target.value })}
-              placeholder="https://github.com/username/project"
-            />
-            <Input
-              label="Live Demo / Website Link"
+              label="Live Project URL"
               name="projectUrl"
               value={formData.projectUrl}
               onChange={(e) => setFormData({ ...formData, projectUrl: e.target.value })}
-              placeholder="https://myproject.demo.com"
+              placeholder="https://myproject.com"
+              className="!rounded-none"
+            />
+            <Input
+              label="GitHub Repository URL"
+              name="githubUrl"
+              value={formData.githubUrl}
+              onChange={(e) => setFormData({ ...formData, githubUrl: e.target.value })}
+              placeholder="https://github.com/user/repo"
+              className="!rounded-none"
             />
           </div>
         </form>

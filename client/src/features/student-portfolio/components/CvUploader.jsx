@@ -83,14 +83,14 @@ export const CvUploader = ({ cvUrl, onUploadCv, isLoading }) => {
   };
 
   return (
-    <Card className="space-y-4">
+    <Card className="space-y-4 !rounded-none">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <FileText className="w-5 h-5 text-indigo-600" />
           <h3 className="text-lg font-bold text-gray-900">Curriculum Vitae (CV / Resume)</h3>
         </div>
         {cvUrl && (
-          <span className="inline-flex items-center gap-1 text-xs font-medium text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200">
+          <span className="inline-flex items-center gap-1 text-xs font-medium text-emerald-700 bg-emerald-50 px-2.5 py-1 !rounded-none border border-emerald-200">
             <CheckCircle className="w-3.5 h-3.5" />
             Uploaded & Ready
           </span>
@@ -121,9 +121,9 @@ export const CvUploader = ({ cvUrl, onUploadCv, isLoading }) => {
 
       {/* Existing CV Banner */}
       {cvUrl && !selectedFile && (
-        <div className="p-4 rounded-xl border border-indigo-100 bg-indigo-50/40 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div className="p-4 !rounded-none border border-indigo-100 bg-indigo-50/40 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="p-2.5 bg-white rounded-lg border border-indigo-100 shadow-2xs text-indigo-600">
+            <div className="p-2.5 bg-white !rounded-none border border-indigo-100 shadow-2xs text-indigo-600">
               <FileCheck className="w-6 h-6" />
             </div>
             <div>
@@ -137,7 +137,7 @@ export const CvUploader = ({ cvUrl, onUploadCv, isLoading }) => {
               href={cvUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-white hover:bg-gray-50 text-gray-700 border border-gray-200 shadow-2xs transition-colors"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 !rounded-none text-xs font-medium bg-white hover:bg-gray-50 text-gray-700 border border-gray-200 shadow-2xs transition-colors"
             >
               <ExternalLink className="w-3.5 h-3.5" />
               Preview / Download
@@ -146,7 +146,7 @@ export const CvUploader = ({ cvUrl, onUploadCv, isLoading }) => {
               variant="secondary"
               size="sm"
               onClick={() => fileInputRef.current?.click()}
-              className="gap-1.5 text-xs"
+              className="gap-1.5 text-xs !rounded-none"
             >
               <RefreshCw className="w-3.5 h-3.5" />
               Replace CV
@@ -161,7 +161,7 @@ export const CvUploader = ({ cvUrl, onUploadCv, isLoading }) => {
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
         onClick={() => !selectedFile && fileInputRef.current?.click()}
-        className={`border-2 border-dashed rounded-xl p-6 text-center transition-all ${
+        className={`border-2 border-dashed !rounded-none p-6 text-center transition-all ${
           selectedFile
             ? 'border-indigo-300 bg-indigo-50/20'
             : dragOver
@@ -196,7 +196,7 @@ export const CvUploader = ({ cvUrl, onUploadCv, isLoading }) => {
                   handleUpload();
                 }}
                 isLoading={isLoading}
-                className="gap-1.5"
+                className="gap-1.5 !rounded-none"
               >
                 <UploadCloud className="w-4 h-4" />
                 Confirm & Upload
@@ -210,6 +210,7 @@ export const CvUploader = ({ cvUrl, onUploadCv, isLoading }) => {
                   setSelectedFile(null);
                   if (fileInputRef.current) fileInputRef.current.value = '';
                 }}
+                className="!rounded-none"
               >
                 Cancel
               </Button>

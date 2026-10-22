@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Card } from '../../../components/ui/Card';
-import { Badge } from '../../../components/ui/Badge';
 import { Button } from '../../../components/ui/Button';
 import { Input } from '../../../components/ui/Input';
 import { X, Plus, Sparkles, Check } from 'lucide-react';
@@ -67,12 +66,12 @@ export const SkillTagsSection = ({ skills = [], onSaveSkills, isLoading }) => {
   };
 
   return (
-    <Card className="space-y-4">
+    <Card className="space-y-4 !rounded-none">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
           <div className="flex items-center gap-2">
             <h3 className="text-lg font-bold text-gray-900">Skills & Competencies</h3>
-            <span className="text-xs px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-700 font-medium">
+            <span className="text-xs px-2 py-0.5 !rounded-none bg-indigo-50 text-indigo-700 font-medium">
               {currentSkills.length} Added
             </span>
           </div>
@@ -87,7 +86,7 @@ export const SkillTagsSection = ({ skills = [], onSaveSkills, isLoading }) => {
             size="sm"
             onClick={handleSave}
             isLoading={isLoading}
-            className="gap-1.5 self-start sm:self-auto"
+            className="gap-1.5 self-start sm:self-auto !rounded-none"
           >
             <Check className="w-3.5 h-3.5" />
             Save Skills
@@ -103,6 +102,7 @@ export const SkillTagsSection = ({ skills = [], onSaveSkills, isLoading }) => {
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             onKeyDown={handleKeyDown}
+            className="!rounded-none"
           />
         </div>
         <Button
@@ -110,7 +110,7 @@ export const SkillTagsSection = ({ skills = [], onSaveSkills, isLoading }) => {
           size="md"
           onClick={() => handleAddSkill()}
           disabled={!inputValue.trim()}
-          className="gap-1 px-4"
+          className="gap-1 px-4 !rounded-none"
         >
           <Plus className="w-4 h-4" />
           Add
@@ -118,18 +118,18 @@ export const SkillTagsSection = ({ skills = [], onSaveSkills, isLoading }) => {
       </div>
 
       {/* Current Skill Badges */}
-      <div className="min-h-[50px] p-3 rounded-lg bg-gray-50/70 border border-gray-100 flex flex-wrap gap-2 items-center">
+      <div className="min-h-[50px] p-3 !rounded-none bg-gray-50/70 border border-gray-100 flex flex-wrap gap-2 items-center">
         {currentSkills.length > 0 ? (
           currentSkills.map((skill) => (
             <span
               key={skill}
-              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-white text-indigo-700 border border-indigo-200/80 shadow-xs group transition-all"
+              className="inline-flex items-center gap-1.5 px-3 py-1 !rounded-none text-xs font-medium bg-white text-indigo-700 border border-indigo-200/80 shadow-xs group transition-all"
             >
               <span className="capitalize">{skill}</span>
               <button
                 type="button"
                 onClick={() => handleRemoveSkill(skill)}
-                className="text-gray-400 hover:text-red-500 rounded-full p-0.5 transition-colors"
+                className="text-gray-400 hover:text-red-500 !rounded-none p-0.5 transition-colors"
                 title={`Remove ${skill}`}
               >
                 <X className="w-3 h-3" />
@@ -155,7 +155,7 @@ export const SkillTagsSection = ({ skills = [], onSaveSkills, isLoading }) => {
               key={skill}
               type="button"
               onClick={() => handleAddSkill(skill)}
-              className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs bg-gray-100/80 hover:bg-indigo-50 text-gray-700 hover:text-indigo-600 border border-transparent hover:border-indigo-200 transition-colors"
+              className="inline-flex items-center gap-1 px-2.5 py-1 !rounded-none text-xs bg-gray-100/80 hover:bg-indigo-50 text-gray-700 hover:text-indigo-600 border border-transparent hover:border-indigo-200 transition-colors"
             >
               <Plus className="w-3 h-3 text-gray-400" />
               <span className="capitalize">{skill}</span>
