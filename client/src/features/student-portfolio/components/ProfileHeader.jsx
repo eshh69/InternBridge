@@ -75,10 +75,10 @@ export const ProfileHeader = ({ profile, user, onEditClick }) => {
         </div>
 
         {/* =========================================================================
-            SECTION 2 (MIDDLE): Name, Small Description, Degree & Univ + GPA, Skills
+            SECTION 2 (MIDDLE): Name, Position, Small Description, Degree & Univ + GPA, Skills
            ========================================================================= */}
-        <div className="lg:col-span-5 flex flex-col justify-between space-y-3.5">
-          {/* 1. Name & Badges */}
+        <div className="lg:col-span-5 flex flex-col justify-between space-y-3">
+          {/* 1. Name & Badges + Position placed under the name */}
           <div className="space-y-1">
             <div className="flex flex-wrap items-center gap-2">
               <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight">
@@ -100,6 +100,13 @@ export const ProfileHeader = ({ profile, user, onEditClick }) => {
                 </div>
               )}
             </div>
+
+            {/* Position placed under the name */}
+            {fieldOfStudy && (
+              <p className="text-sm font-semibold text-indigo-600 tracking-wide">
+                {fieldOfStudy}
+              </p>
+            )}
           </div>
 
           {/* 2. Small Description */}
@@ -141,42 +148,29 @@ export const ProfileHeader = ({ profile, user, onEditClick }) => {
             )}
           </div>
 
-          {/* 4. Skilled areas or job position skills */}
-          <div className="space-y-1.5">
-            <div className="flex items-center justify-between">
-              <span className="text-[11px] font-bold text-gray-400 uppercase tracking-wider">
-                Skilled Areas & Position Skills
-              </span>
-              {fieldOfStudy && (
-                <span className="text-xs text-indigo-700 font-semibold bg-indigo-50 px-2 py-0.5 rounded border border-indigo-200/60">
-                  {fieldOfStudy}
-                </span>
-              )}
-            </div>
-
-            <div className="flex flex-wrap items-center gap-1.5">
-              {skills && skills.length > 0 ? (
-                <>
-                  {skills.slice(0, 6).map((skill, idx) => (
-                    <span
-                      key={idx}
-                      className={`text-xs font-semibold px-2.5 py-0.5 rounded-md border shadow-2xs ${
-                        SKILL_COLOR_PALETTES[idx % SKILL_COLOR_PALETTES.length]
-                      }`}
-                    >
-                      {skill}
-                    </span>
-                  ))}
-                  {skills.length > 6 && (
-                    <span className="text-xs text-gray-500 font-medium px-2 py-0.5 bg-gray-100 rounded-md border border-gray-200">
-                      +{skills.length - 6} more
-                    </span>
-                  )}
-                </>
-              ) : (
-                <span className="text-xs text-gray-400 italic">No skills listed yet</span>
-              )}
-            </div>
+          {/* 4. Skills tags (without the redundant heading text) */}
+          <div className="flex flex-wrap items-center gap-1.5 pt-0.5">
+            {skills && skills.length > 0 ? (
+              <>
+                {skills.slice(0, 7).map((skill, idx) => (
+                  <span
+                    key={idx}
+                    className={`text-xs font-semibold px-2.5 py-0.5 rounded-md border shadow-2xs ${
+                      SKILL_COLOR_PALETTES[idx % SKILL_COLOR_PALETTES.length]
+                    }`}
+                  >
+                    {skill}
+                  </span>
+                ))}
+                {skills.length > 7 && (
+                  <span className="text-xs text-gray-500 font-medium px-2 py-0.5 bg-gray-100 rounded-md border border-gray-200">
+                    +{skills.length - 7} more
+                  </span>
+                )}
+              </>
+            ) : (
+              <span className="text-xs text-gray-400 italic">No skills listed yet</span>
+            )}
           </div>
         </div>
 
