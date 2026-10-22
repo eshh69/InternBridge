@@ -10,7 +10,7 @@ export const VerificationRatingPage = () => {
       <div>
         <h1 className="text-2xl font-bold text-gray-900">Verification & Ratings Portal</h1>
         <p className="text-sm text-gray-500">
-          Module 5 (SEU/IS/22/ICT/057) — Academic evaluations and reviewer trust metrics
+          Academic evaluations and reviewer trust metrics
         </p>
       </div>
 

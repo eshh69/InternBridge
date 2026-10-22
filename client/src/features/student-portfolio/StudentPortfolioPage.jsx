@@ -13,7 +13,7 @@ export const StudentPortfolioPage = () => {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Student Career Portfolio</h1>
-          <p className="text-sm text-gray-500">Module 1 (SEU/IS/22/ICT/032) — Manage profile, projects, and skills</p>
+          <p className="text-sm text-gray-500">Manage your profile, projects, and skills</p>
         </div>
         <Button variant="primary" size="sm">
           Edit Portfolio
