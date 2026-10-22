@@ -28,7 +28,7 @@ export const ProfileEditModal = ({ isOpen, onClose, profile, user, onSave, isLoa
     other: '',
   });
 
-  const [customLinks, setCustomLinks] = useState([]);
+  const [customLinks, setCustomLinks] = useState([{ label: '', url: '' }]);
   const [errors, setErrors] = useState({});
 
   useEffect(() => {
@@ -57,6 +57,8 @@ export const ProfileEditModal = ({ isOpen, onClose, profile, user, onSave, isLoa
         existingCustom = profile.links.customLinks;
       } else if (profile?.links?.other) {
         existingCustom = [{ label: 'Other', url: profile.links.other }];
+      } else {
+        existingCustom = [{ label: '', url: '' }];
       }
       setCustomLinks(existingCustom);
 
@@ -78,7 +80,10 @@ export const ProfileEditModal = ({ isOpen, onClose, profile, user, onSave, isLoa
   };
 
   const handleRemoveCustomLink = (index) => {
-    setCustomLinks((prev) => prev.filter((_, i) => i !== index));
+    setCustomLinks((prev) => {
+      const updated = prev.filter((_, i) => i !== index);
+      return updated.length > 0 ? updated : [{ label: '', url: '' }];
+    });
   };
 
   const handleCustomLinkChange = (index, field, value) => {
@@ -434,7 +439,7 @@ export const ProfileEditModal = ({ isOpen, onClose, profile, user, onSave, isLoa
                     className="text-xs text-indigo-600 border-indigo-200 hover:bg-indigo-50 gap-1.5"
                   >
                     <Plus className="w-3.5 h-3.5" />
-                    + Add Link Row
+                    Add Link Row
                   </Button>
                 </div>
 
