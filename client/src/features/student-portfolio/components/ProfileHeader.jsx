@@ -50,11 +50,11 @@ export const ProfileHeader = ({ profile, user, onEditClick }) => {
     <Card className="relative overflow-hidden bg-gradient-to-br from-white via-slate-50/50 to-indigo-50/30 border border-gray-200/90 shadow-sm !p-5 sm:!p-6">
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
         {/* =========================================================================
-            SECTION 1 (LEFT): Profile Picture
+            SECTION 1 (LEFT): Profile Picture (Increased Large Size)
            ========================================================================= */}
         <div className="lg:col-span-3 flex flex-col items-center justify-center">
-          <div className="relative w-40 h-40 sm:w-48 sm:h-48 lg:w-full lg:max-w-[220px] aspect-square rounded-2xl overflow-hidden p-1 bg-gradient-to-tr from-indigo-500 via-purple-500 to-pink-500 shadow-md">
-            <div className="w-full h-full rounded-xl overflow-hidden bg-white">
+          <div className="relative w-52 h-52 sm:w-60 sm:h-60 md:w-64 md:h-64 lg:w-full lg:max-w-[270px] xl:max-w-[290px] aspect-square rounded-3xl overflow-hidden p-1.5 bg-gradient-to-tr from-indigo-500 via-purple-500 to-pink-500 shadow-lg">
+            <div className="w-full h-full rounded-2xl overflow-hidden bg-white">
               {user?.avatarUrl || profile?.user?.avatarUrl ? (
                 <img
                   src={user?.avatarUrl || profile?.user?.avatarUrl}
@@ -62,13 +62,13 @@ export const ProfileHeader = ({ profile, user, onEditClick }) => {
                   className="w-full h-full object-cover"
                 />
               ) : (
-                <div className="w-full h-full bg-gradient-to-br from-indigo-600 via-indigo-700 to-purple-700 text-white font-black text-6xl sm:text-7xl flex items-center justify-center shadow-inner">
+                <div className="w-full h-full bg-gradient-to-br from-indigo-600 via-indigo-700 to-purple-700 text-white font-black text-7xl sm:text-8xl flex items-center justify-center shadow-inner">
                   {name?.charAt(0).toUpperCase() || 'S'}
                 </div>
               )}
             </div>
             <span
-              className="absolute bottom-2.5 right-2.5 block w-4 h-4 bg-emerald-500 rounded-full border-2 border-white shadow-xs"
+              className="absolute bottom-3 right-3 block w-5 h-5 bg-emerald-500 rounded-full border-3 border-white shadow-md"
               title="Active Student"
             />
           </div>
