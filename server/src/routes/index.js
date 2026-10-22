@@ -1,7 +1,7 @@
 import express from 'express';
 import authRoutes from './authRoutes.js';
 import studentPortfolioRoutes from '../modules/student-portfolio/routes.js';
-import companyInternshipRoutes from '../modules/company-internships/routes.js';
+import companyRoutes, { internshipRoutes } from '../modules/company-internships/routes.js';
 import searchMatchingRoutes from '../modules/search-matching/routes.js';
 import applicationsRoutes from '../modules/applications/routes.js';
 import verificationRatingRoutes from '../modules/verification-rating/routes.js';
@@ -20,7 +20,8 @@ router.get('/health', (req, res) => {
 // Mount modules
 router.use('/auth', authRoutes);
 router.use('/students', studentPortfolioRoutes);
-router.use('/companies', companyInternshipRoutes);
+router.use('/companies', companyRoutes);
+router.use('/internships', internshipRoutes);
 router.use('/search', searchMatchingRoutes);
 router.use('/applications', applicationsRoutes);
 router.use('/verifications', verificationRatingRoutes);

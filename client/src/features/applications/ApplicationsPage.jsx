@@ -10,7 +10,7 @@ export const ApplicationsPage = () => {
       <div>
         <h1 className="text-2xl font-bold text-gray-900">Application & Recruitment Tracker</h1>
         <p className="text-sm text-gray-500">
-          Module 4 (SEU/IS/22/ICT/030) — Track submission history and recruitment stages
+          Track submission history and recruitment stages
         </p>
       </div>
 

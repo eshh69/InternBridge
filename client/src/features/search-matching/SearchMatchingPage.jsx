@@ -13,7 +13,7 @@ export const SearchMatchingPage = () => {
       <div>
         <h1 className="text-2xl font-bold text-gray-900">Explore & Match Internships</h1>
         <p className="text-sm text-gray-500">
-          Module 3 (SEU/IS/22/ICT/035) — Algorithmic skills matching and opportunity discovery
+          Algorithmic skills matching and opportunity discovery
         </p>
       </div>
 
