@@ -39,6 +39,27 @@ const studentProfileSchema = new mongoose.Schema(
       maxlength: [1000, 'Bio cannot exceed 1000 characters'],
       default: '',
     },
+    phone: {
+      type: String,
+      trim: true,
+      default: '',
+    },
+    whatsapp: {
+      type: String,
+      trim: true,
+      default: '',
+    },
+    address: {
+      type: String,
+      trim: true,
+      default: '',
+    },
+    age: {
+      type: Number,
+      min: 16,
+      max: 100,
+      default: null,
+    },
     skills: [
       {
         type: String,
@@ -95,6 +116,14 @@ const studentProfileSchema = new mongoose.Schema(
       github: { type: String, default: '' },
       linkedin: { type: String, default: '' },
       portfolio: { type: String, default: '' },
+      behance: { type: String, default: '' },
+      other: { type: String, default: '' },
+      customLinks: [
+        {
+          label: { type: String, trim: true, default: '' },
+          url: { type: String, trim: true, default: '' },
+        },
+      ],
     },
     cvUrl: {
       type: String,

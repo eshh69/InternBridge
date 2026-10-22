@@ -52,6 +52,21 @@ export const StudentPortfolioPage = () => {
       setIsSaving(true);
       const updated = await studentPortfolioService.updateMyProfile(updateData);
       setProfile(updated);
+      if (updated?.user?.name && user) {
+        user.name = updated.user.name;
+        try {
+          const stored = localStorage.getItem('internbridge_user');
+          if (stored) {
+            const parsed = JSON.parse(stored);
+            localStorage.setItem(
+              'internbridge_user',
+              JSON.stringify({ ...parsed, name: updated.user.name })
+            );
+          }
+        } catch {
+          // ignore storage error
+        }
+      }
       setIsEditModalOpen(false);
       showFeedback('success', 'Profile updated successfully!');
     } catch (err) {
@@ -89,7 +104,7 @@ export const StudentPortfolioPage = () => {
   }
 
   return (
-    <div className="space-y-6 max-w-6xl mx-auto pb-12">
+    <div className="space-y-6 w-full pb-12">
       {/* Top Notification Feedback */}
       {feedback.message && (
         <Alert type={feedback.type}>
@@ -158,6 +173,7 @@ export const StudentPortfolioPage = () => {
         isOpen={isEditModalOpen}
         onClose={() => setIsEditModalOpen(false)}
         profile={profile}
+        user={user}
         onSave={handleUpdateProfile}
         isLoading={isSaving}
       />
