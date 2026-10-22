@@ -175,7 +175,7 @@ export const ProfileHeader = ({ profile, user, onEditClick }) => {
         </div>
 
         {/* =========================================================================
-            SECTION 3 (RIGHT): Contact Details & Other Link Cards
+            SECTION 3 (RIGHT): Contact Details & External Links
             (Contact details as clean text without box borders, Only buttons styled)
            ========================================================================= */}
         <div className="lg:col-span-4 flex flex-col justify-between space-y-4 border-t lg:border-t-0 lg:border-l border-gray-200/80 lg:pl-6 pt-4 lg:pt-0">
@@ -246,11 +246,8 @@ export const ProfileHeader = ({ profile, user, onEditClick }) => {
             )}
           </div>
 
-          {/* And other link cards (Styled as buttons, with !rounded-none) */}
-          <div className="space-y-1.5 pt-3 border-t border-gray-150">
-            <span className="text-[11px] font-bold text-gray-500 uppercase tracking-wider block">
-              And Other Link Cards
-            </span>
+          {/* External Links (Styled as buttons, with !rounded-none) */}
+          <div className="pt-3 border-t border-gray-150">
             <div className="flex flex-wrap items-center gap-1.5">
               {links.github && (
                 <a
