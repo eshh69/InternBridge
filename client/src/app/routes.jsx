@@ -76,7 +76,7 @@ export const AppRoutes = () => {
         <Route
           path="verifications"
           element={
-            <ProtectedRoute allowedRoles={['reviewer', 'admin']}>
+            <ProtectedRoute allowedRoles={['student', 'company', 'reviewer', 'admin']}>
               <VerificationRatingPage />
             </ProtectedRoute>
           }
