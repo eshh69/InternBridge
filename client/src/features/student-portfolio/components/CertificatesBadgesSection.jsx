@@ -58,7 +58,7 @@ export const CertificatesBadgesSection = ({
   };
 
   return (
-    <Card className="space-y-4 !rounded-none">
+    <Card className="space-y-4 !rounded-[10px]">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Award className="w-5 h-5 text-indigo-600" />
@@ -71,10 +71,11 @@ export const CertificatesBadgesSection = ({
           variant="ghost"
           size="sm"
           onClick={() => setIsModalOpen(true)}
-          className="text-indigo-600 hover:text-indigo-800 gap-1 text-xs !rounded-none"
+          className="p-1.5 text-indigo-600 hover:text-indigo-800 hover:bg-indigo-50 !rounded-none"
+          title="Add Certificate"
+          aria-label="Add Certificate"
         >
-          <Plus className="w-3.5 h-3.5" />
-          Add Certificate
+          <Plus className="w-5 h-5" />
         </Button>
       </div>
 
@@ -87,7 +88,7 @@ export const CertificatesBadgesSection = ({
           {certificates.map((cert, idx) => (
             <div
               key={idx}
-              className="p-3 !rounded-none border border-gray-100 bg-gray-50/50 flex items-start justify-between gap-3"
+              className="p-3 rounded-[10px] border border-gray-100 bg-gray-50/50 flex items-start justify-between gap-3"
             >
               <div>
                 <h4 className="text-xs font-semibold text-gray-900">{cert.title}</h4>

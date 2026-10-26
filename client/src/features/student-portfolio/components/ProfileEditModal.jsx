@@ -436,10 +436,11 @@ export const ProfileEditModal = ({ isOpen, onClose, profile, user, onSave, isLoa
                     variant="secondary"
                     size="sm"
                     onClick={handleAddCustomLink}
-                    className="text-xs text-indigo-600 border-indigo-200 hover:bg-indigo-50 gap-1.5"
+                    className="p-1.5 text-indigo-600 border-indigo-200 hover:bg-indigo-50 !rounded-none"
+                    title="Add Link Row"
+                    aria-label="Add Link Row"
                   >
-                    <Plus className="w-3.5 h-3.5" />
-                    Add Link Row
+                    <Plus className="w-4 h-4" />
                   </Button>
                 </div>
 

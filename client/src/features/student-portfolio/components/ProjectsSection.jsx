@@ -96,7 +96,7 @@ export const ProjectsSection = ({ projects = [], onSaveProjects, isLoading }) =>
   };
 
   return (
-    <Card className="space-y-4 !rounded-none">
+    <Card className="space-y-4 !rounded-[10px]">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <FolderGit2 className="w-5 h-5 text-indigo-600" />
@@ -109,23 +109,23 @@ export const ProjectsSection = ({ projects = [], onSaveProjects, isLoading }) =>
           variant="ghost"
           size="sm"
           onClick={handleOpenAdd}
-          className="gap-1.5 text-indigo-600 hover:text-indigo-800 !rounded-none"
+          className="p-1.5 text-indigo-600 hover:text-indigo-800 hover:bg-indigo-50 !rounded-none"
+          title="Add Project"
+          aria-label="Add Project"
         >
-          <Plus className="w-4 h-4" />
-          Add Project
+          <Plus className="w-5 h-5" />
         </Button>
       </div>
 
       {projects.length === 0 ? (
-        <div className="text-center py-8 px-4 !rounded-none border border-dashed border-gray-200 bg-gray-50/50">
+        <div className="text-center py-8 px-4 rounded-[10px] border border-dashed border-gray-200 bg-gray-50/50">
           <Code2 className="w-10 h-10 text-gray-300 mx-auto mb-2" />
           <h4 className="text-sm font-semibold text-gray-700">No projects showcase yet</h4>
           <p className="text-xs text-gray-400 mt-1 max-w-sm mx-auto">
             Adding academic or personal projects significantly increases your visibility to hiring companies.
           </p>
-          <Button variant="primary" size="sm" onClick={handleOpenAdd} className="mt-3 gap-1.5 !rounded-none">
-            <Plus className="w-3.5 h-3.5" />
-            Add First Project
+          <Button variant="primary" size="sm" onClick={handleOpenAdd} className="mt-3 px-3 py-1.5 !rounded-none" title="Add Project" aria-label="Add Project">
+            <Plus className="w-4 h-4" />
           </Button>
         </div>
       ) : (
@@ -133,7 +133,7 @@ export const ProjectsSection = ({ projects = [], onSaveProjects, isLoading }) =>
           {projects.map((proj, idx) => (
             <div
               key={idx}
-              className="p-4 !rounded-none border border-gray-200/90 bg-white hover:border-indigo-200 hover:shadow-xs transition-all flex flex-col justify-between"
+              className="p-4 rounded-[10px] border border-gray-200/90 bg-white hover:border-indigo-200 hover:shadow-xs transition-all flex flex-col justify-between"
             >
               <div>
                 <div className="flex items-start justify-between gap-2">

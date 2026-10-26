@@ -83,7 +83,7 @@ export const CvUploader = ({ cvUrl, onUploadCv, isLoading }) => {
   };
 
   return (
-    <Card className="space-y-4 !rounded-none">
+    <Card className="space-y-4 !rounded-[10px]">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <FileText className="w-5 h-5 text-indigo-600" />
@@ -96,10 +96,6 @@ export const CvUploader = ({ cvUrl, onUploadCv, isLoading }) => {
           </span>
         )}
       </div>
-
-      <p className="text-xs text-gray-500">
-        Your CV is shared with recruiters when you submit internship applications across InternBridge.
-      </p>
 
       {errorMsg && (
         <Alert type="danger">
@@ -121,7 +117,7 @@ export const CvUploader = ({ cvUrl, onUploadCv, isLoading }) => {
 
       {/* Existing CV Banner */}
       {cvUrl && !selectedFile && (
-        <div className="p-4 !rounded-none border border-indigo-100 bg-indigo-50/40 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div className="p-4 rounded-[10px] border border-indigo-100 bg-indigo-50/40 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <div className="p-2.5 bg-white !rounded-none border border-indigo-100 shadow-2xs text-indigo-600">
               <FileCheck className="w-6 h-6" />
@@ -161,7 +157,7 @@ export const CvUploader = ({ cvUrl, onUploadCv, isLoading }) => {
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
         onClick={() => !selectedFile && fileInputRef.current?.click()}
-        className={`border-2 border-dashed !rounded-none p-6 text-center transition-all ${
+        className={`border-2 border-dashed rounded-[10px] p-6 text-center transition-all ${
           selectedFile
             ? 'border-indigo-300 bg-indigo-50/20'
             : dragOver

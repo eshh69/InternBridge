@@ -66,18 +66,13 @@ export const SkillTagsSection = ({ skills = [], onSaveSkills, isLoading }) => {
   };
 
   return (
-    <Card className="space-y-4 !rounded-none">
+    <Card className="space-y-4 !rounded-[10px]">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <div>
-          <div className="flex items-center gap-2">
-            <h3 className="text-lg font-bold text-gray-900">Skills & Competencies</h3>
-            <span className="text-xs px-2 py-0.5 !rounded-none bg-indigo-50 text-indigo-700 font-medium">
-              {currentSkills.length} Added
-            </span>
-          </div>
-          <p className="text-xs text-gray-500 mt-0.5">
-            Key skills are directly matched with company internship criteria.
-          </p>
+        <div className="flex items-center gap-2">
+          <h3 className="text-lg font-bold text-gray-900">Skills & Competencies</h3>
+          <span className="text-xs px-2 py-0.5 !rounded-none bg-indigo-50 text-indigo-700 font-medium">
+            {currentSkills.length} Added
+          </span>
         </div>
 
         {hasChanges && (
@@ -110,15 +105,16 @@ export const SkillTagsSection = ({ skills = [], onSaveSkills, isLoading }) => {
           size="md"
           onClick={() => handleAddSkill()}
           disabled={!inputValue.trim()}
-          className="gap-1 px-4 !rounded-none"
+          className="px-3.5 !rounded-none"
+          title="Add Skill"
+          aria-label="Add Skill"
         >
-          <Plus className="w-4 h-4" />
-          Add
+          <Plus className="w-5 h-5" />
         </Button>
       </div>
 
       {/* Current Skill Badges */}
-      <div className="min-h-[50px] p-3 !rounded-none bg-gray-50/70 border border-gray-100 flex flex-wrap gap-2 items-center">
+      <div className="min-h-[50px] p-3 rounded-[10px] bg-gray-50/70 border border-gray-100 flex flex-wrap gap-2 items-center">
         {currentSkills.length > 0 ? (
           currentSkills.map((skill) => (
             <span

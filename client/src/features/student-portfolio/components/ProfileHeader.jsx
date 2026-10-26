@@ -46,7 +46,7 @@ export const ProfileHeader = ({ profile, user, onEditClick }) => {
   const name = user?.name || profile?.user?.name || 'Student';
 
   return (
-    <Card className="relative overflow-hidden bg-gradient-to-br from-white via-slate-50/50 to-indigo-50/30 border border-gray-200/90 shadow-sm !rounded-none !p-5 sm:!p-6">
+    <Card className="relative overflow-hidden bg-gradient-to-br from-white via-slate-50/50 to-indigo-50/30 border border-gray-200/90 shadow-sm !rounded-[10px] !p-5 sm:!p-6">
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
         {/* =========================================================================
             SECTION 1 (LEFT): Profile Picture (Exact Square, No Border Radius)

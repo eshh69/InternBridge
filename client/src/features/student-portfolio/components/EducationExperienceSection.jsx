@@ -110,7 +110,7 @@ export const EducationExperienceSection = ({
   };
 
   return (
-    <Card className="space-y-4 !rounded-none">
+    <Card className="space-y-4 !rounded-[10px]">
       {/* Tabs */}
       <div className="flex items-center justify-between border-b border-gray-100 pb-2">
         <div className="flex gap-4">
@@ -145,20 +145,22 @@ export const EducationExperienceSection = ({
             variant="ghost"
             size="sm"
             onClick={() => setIsEduModalOpen(true)}
-            className="text-indigo-600 hover:text-indigo-800 gap-1 text-xs !rounded-none"
+            className="p-1.5 text-indigo-600 hover:text-indigo-800 hover:bg-indigo-50 !rounded-none"
+            title="Add Education"
+            aria-label="Add Education"
           >
-            <Plus className="w-3.5 h-3.5" />
-            Add Education
+            <Plus className="w-5 h-5" />
           </Button>
         ) : (
           <Button
             variant="ghost"
             size="sm"
             onClick={() => setIsExpModalOpen(true)}
-            className="text-indigo-600 hover:text-indigo-800 gap-1 text-xs !rounded-none"
+            className="p-1.5 text-indigo-600 hover:text-indigo-800 hover:bg-indigo-50 !rounded-none"
+            title="Add Experience"
+            aria-label="Add Experience"
           >
-            <Plus className="w-3.5 h-3.5" />
-            Add Experience
+            <Plus className="w-5 h-5" />
           </Button>
         )}
       </div>
@@ -174,7 +176,7 @@ export const EducationExperienceSection = ({
             education.map((edu, idx) => (
               <div
                 key={idx}
-                className="p-3 !rounded-none border border-gray-100 bg-gray-50/50 flex items-start justify-between gap-3"
+                className="p-3 rounded-[10px] border border-gray-100 bg-gray-50/50 flex items-start justify-between gap-3"
               >
                 <div>
                   <h4 className="text-sm font-semibold text-gray-900">{edu.degree}</h4>
@@ -215,7 +217,7 @@ export const EducationExperienceSection = ({
             experience.map((exp, idx) => (
               <div
                 key={idx}
-                className="p-3 !rounded-none border border-gray-100 bg-gray-50/50 flex items-start justify-between gap-3"
+                className="p-3 rounded-[10px] border border-gray-100 bg-gray-50/50 flex items-start justify-between gap-3"
               >
                 <div>
                   <h4 className="text-sm font-semibold text-gray-900">{exp.title}</h4>
