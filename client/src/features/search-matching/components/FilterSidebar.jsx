@@ -1,7 +1,4 @@
-import React from 'react';
-import { Card } from '../../../components/ui/Card';
-import { Button } from '../../../components/ui/Button';
-import { Badge } from '../../../components/ui/Badge';
+import React, { useState } from 'react';
 import {
   SlidersHorizontal,
   X,
@@ -10,36 +7,27 @@ import {
   MapPin,
   Briefcase,
   Clock,
-  DollarSign,
   GraduationCap,
+  Banknote,
+  Code2,
+  Filter,
 } from 'lucide-react';
 
 const POPULAR_SKILLS = [
   'React',
   'Node.js',
   'Python',
-  'Java',
+  'JavaScript',
   'TypeScript',
+  'Next.js',
   'MongoDB',
-  'PostgreSQL',
+  'MySQL',
   'Docker',
+  'Git',
   'AWS',
   'Tailwind CSS',
   'Flutter',
   'UI/UX',
-  'Git',
-];
-
-const POPULAR_AREAS = [
-  'All',
-  'Software Engineering',
-  'Data Science',
-  'Web Development',
-  'Mobile App Development',
-  'Cyber Security',
-  'Cloud & DevOps',
-  'UI/UX Design',
-  'Quality Assurance',
 ];
 
 export const FilterSidebar = ({
@@ -50,7 +38,10 @@ export const FilterSidebar = ({
   isStudent = false,
   isMobileOpen = false,
   onCloseMobile,
+  totalCounts = {},
 }) => {
+  const [showAllSkills, setShowAllSkills] = useState(false);
+
   const handleSkillToggle = (skill) => {
     const current = filters.skills
       ? filters.skills.split(',').map((s) => s.trim()).filter(Boolean)
@@ -70,21 +61,22 @@ export const FilterSidebar = ({
     ? filters.skills.split(',').map((s) => s.trim().toLowerCase()).filter(Boolean)
     : [];
 
+  const visibleSkills = showAllSkills ? POPULAR_SKILLS : POPULAR_SKILLS.slice(0, 9);
+
   const content = (
     <div className="space-y-6">
-      {/* Header */}
+      {/* Sidebar Header */}
       <div className="flex items-center justify-between pb-3 border-b border-gray-100">
         <div className="flex items-center gap-2">
-          <SlidersHorizontal className="w-5 h-5 text-indigo-600" />
-          <h3 className="font-semibold text-gray-900">Filters</h3>
+          <Filter className="w-4 h-4 text-gray-700" />
+          <h3 className="font-bold text-gray-900 text-sm">Filters</h3>
         </div>
         <div className="flex items-center gap-2">
           <button
             onClick={onReset}
-            className="text-xs text-gray-500 hover:text-indigo-600 flex items-center gap-1 font-medium transition-colors"
-            title="Reset all filters"
+            className="text-xs text-blue-600 hover:text-blue-800 font-semibold transition-colors"
           >
-            <RotateCcw className="w-3.5 h-3.5" /> Reset
+            Clear All
           </button>
           {onCloseMobile && (
             <button
@@ -97,255 +89,204 @@ export const FilterSidebar = ({
         </div>
       </div>
 
-      {/* INTERNSHIP-SPECIFIC FILTERS */}
-      {mode === 'internships' && (
-        <>
-          {/* Min Match Score Slider (For Authenticated Students) */}
-          {isStudent && (
-            <div className="space-y-2 bg-indigo-50/60 p-3.5 rounded-xl border border-indigo-100">
-              <div className="flex items-center justify-between">
-                <label className="text-xs font-semibold text-indigo-900 flex items-center gap-1.5">
-                  <Sparkles className="w-3.5 h-3.5 text-indigo-600" /> Minimum Match
-                </label>
-                <span className="text-xs font-bold text-indigo-600">
-                  {filters.minMatch ? `${filters.minMatch}%` : 'Any'}
-                </span>
-              </div>
-              <input
-                type="range"
-                min="0"
-                max="90"
-                step="10"
-                value={filters.minMatch || 0}
-                onChange={(e) => onChange('minMatch', e.target.value === '0' ? '' : e.target.value)}
-                className="w-full accent-indigo-600 cursor-pointer h-1.5 bg-indigo-200 rounded-lg"
-              />
-              <div className="flex justify-between text-[10px] text-indigo-500 font-medium">
-                <span>All</span>
-                <span>50%+</span>
-                <span>70%+</span>
-                <span>90%</span>
-              </div>
-            </div>
-          )}
-
-          {/* Location Type */}
-          <div className="space-y-2">
-            <label className="text-xs font-semibold uppercase tracking-wider text-gray-500 flex items-center gap-1.5">
-              <MapPin className="w-3.5 h-3.5" /> Workplace Type
-            </label>
-            <div className="grid grid-cols-2 gap-1.5">
-              {['All', 'Remote', 'Hybrid', 'On-site'].map((type) => {
-                const isSelected = (filters.locationType || 'All') === type;
-                return (
-                  <button
-                    key={type}
-                    type="button"
-                    onClick={() => onChange('locationType', type)}
-                    className={`px-3 py-1.5 text-xs font-medium rounded-lg border text-center transition-all ${
-                      isSelected
-                        ? 'bg-indigo-600 text-white border-indigo-600 shadow-sm'
-                        : 'bg-white text-gray-700 border-gray-200 hover:bg-gray-50'
-                    }`}
-                  >
-                    {type}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Area / Field */}
-          <div className="space-y-2">
-            <label className="text-xs font-semibold uppercase tracking-wider text-gray-500 flex items-center gap-1.5">
-              <Briefcase className="w-3.5 h-3.5" /> Domain / Discipline
-            </label>
-            <select
-              value={filters.area || 'All'}
-              onChange={(e) => onChange('area', e.target.value === 'All' ? '' : e.target.value)}
-              className="w-full px-3 py-2 text-xs border border-gray-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            >
-              {POPULAR_AREAS.map((area) => (
-                <option key={area} value={area}>
-                  {area}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* Duration */}
-          <div className="space-y-2">
-            <label className="text-xs font-semibold uppercase tracking-wider text-gray-500 flex items-center gap-1.5">
-              <Clock className="w-3.5 h-3.5" /> Maximum Duration
-            </label>
-            <div className="grid grid-cols-3 gap-1.5">
-              {[
-                { label: 'Any', value: '' },
-                { label: '3 Mo', value: '3' },
-                { label: '6 Mo', value: '6' },
-                { label: '12 Mo', value: '12' },
-              ].map((opt) => {
-                const isSelected = (filters.durationMonths || '') === opt.value;
-                return (
-                  <button
-                    key={opt.label}
-                    type="button"
-                    onClick={() => onChange('durationMonths', opt.value)}
-                    className={`px-2 py-1.5 text-xs font-medium rounded-lg border text-center transition-all ${
-                      isSelected
-                        ? 'bg-indigo-600 text-white border-indigo-600 shadow-sm'
-                        : 'bg-white text-gray-700 border-gray-200 hover:bg-gray-50'
-                    }`}
-                  >
-                    {opt.label}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Stipend Checkbox */}
-          <div className="pt-2">
-            <label className="flex items-center gap-2 cursor-pointer text-xs font-medium text-gray-700 select-none">
-              <input
-                type="checkbox"
-                checked={filters.isPaid === 'true'}
-                onChange={(e) => onChange('isPaid', e.target.checked ? 'true' : '')}
-                className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 h-4 w-4"
-              />
-              <span className="flex items-center gap-1 text-gray-800">
-                <DollarSign className="w-3.5 h-3.5 text-emerald-600" /> Paid Internships Only
-              </span>
-            </label>
-          </div>
-        </>
-      )}
-
-      {/* CANDIDATE-SPECIFIC FILTERS */}
-      {mode === 'candidates' && (
-        <>
-          {/* Academic Year */}
-          <div className="space-y-2">
-            <label className="text-xs font-semibold uppercase tracking-wider text-gray-500 flex items-center gap-1.5">
-              <GraduationCap className="w-3.5 h-3.5" /> Academic Year
-            </label>
-            <select
-              value={filters.academicYear || 'All'}
-              onChange={(e) => onChange('academicYear', e.target.value === 'All' ? '' : e.target.value)}
-              className="w-full px-3 py-2 text-xs border border-gray-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            >
-              {['All', '1st Year', '2nd Year', '3rd Year', '4th Year', 'Graduate'].map((yr) => (
-                <option key={yr} value={yr}>
-                  {yr}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* University text filter */}
-          <div className="space-y-2">
-            <label className="text-xs font-semibold uppercase tracking-wider text-gray-500">
-              University
-            </label>
-            <input
-              type="text"
-              value={filters.university || ''}
-              onChange={(e) => onChange('university', e.target.value)}
-              placeholder="e.g. South Eastern, Colombo..."
-              className="w-full px-3 py-1.5 text-xs border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            />
-          </div>
-
-          {/* Degree / Program */}
-          <div className="space-y-2">
-            <label className="text-xs font-semibold uppercase tracking-wider text-gray-500">
-              Degree / Program
-            </label>
-            <input
-              type="text"
-              value={filters.degree || ''}
-              onChange={(e) => onChange('degree', e.target.value)}
-              placeholder="e.g. BSc ICT, Computer Science..."
-              className="w-full px-3 py-1.5 text-xs border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            />
-          </div>
-
-          {/* Min GPA */}
-          <div className="space-y-2">
-            <label className="text-xs font-semibold uppercase tracking-wider text-gray-500">
-              Minimum GPA
-            </label>
-            <div className="grid grid-cols-4 gap-1.5">
-              {[
-                { label: 'Any', value: '' },
-                { label: '3.0+', value: '3.0' },
-                { label: '3.3+', value: '3.3' },
-                { label: '3.5+', value: '3.5' },
-              ].map((opt) => {
-                const isSelected = (filters.minGpa || '') === opt.value;
-                return (
-                  <button
-                    key={opt.label}
-                    type="button"
-                    onClick={() => onChange('minGpa', opt.value)}
-                    className={`px-1.5 py-1 text-xs font-medium rounded-lg border text-center transition-all ${
-                      isSelected
-                        ? 'bg-indigo-600 text-white border-indigo-600 shadow-sm'
-                        : 'bg-white text-gray-700 border-gray-200 hover:bg-gray-50'
-                    }`}
-                  >
-                    {opt.label}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-        </>
-      )}
-
-      {/* POPULAR SKILL TAGS (SHARED) */}
-      <div className="space-y-2.5 pt-2 border-t border-gray-100">
+      {/* 1. MATCH SCORE SLIDER */}
+      <div className="space-y-2">
         <div className="flex items-center justify-between">
-          <label className="text-xs font-semibold uppercase tracking-wider text-gray-500">
-            Skills & Technologies
+          <label className="text-xs font-semibold text-gray-800 flex items-center gap-1.5">
+            <Sparkles className="w-3.5 h-3.5 text-blue-600" /> Match Score
+          </label>
+          <span className="text-xs font-bold text-blue-600">
+            {filters.minMatch ? `${filters.minMatch}%` : '0%'}
+          </span>
+        </div>
+        <input
+          type="range"
+          min="0"
+          max="90"
+          step="10"
+          value={filters.minMatch || 0}
+          onChange={(e) => onChange('minMatch', e.target.value === '0' ? '' : e.target.value)}
+          className="w-full accent-blue-600 cursor-pointer h-2 bg-gray-200 rounded-lg appearance-none"
+        />
+        <div className="flex justify-between text-[11px] text-gray-400 font-medium px-0.5">
+          <span>0%</span>
+          <span>50%</span>
+          <span>100%</span>
+        </div>
+      </div>
+
+      {/* 2. OPPORTUNITY TYPE (WORKPLACE / EMPLOYMENT) */}
+      {mode === 'internships' && (
+        <div className="space-y-2.5">
+          <label className="text-xs font-semibold text-gray-800 flex items-center gap-1.5">
+            <Briefcase className="w-3.5 h-3.5 text-gray-500" /> Opportunity Type
+          </label>
+          <div className="space-y-1.5">
+            {[
+              { label: 'All', value: 'All', count: totalCounts.all || 5 },
+              { label: 'Internship', value: 'All', count: totalCounts.internships || 5 },
+              { label: 'Remote', value: 'Remote', count: totalCounts.remote || 2 },
+              { label: 'Hybrid', value: 'Hybrid', count: totalCounts.hybrid || 2 },
+              { label: 'On-site', value: 'On-site', count: totalCounts.onsite || 1 },
+            ].map((item, idx) => {
+              const isChecked =
+                item.value === 'All'
+                  ? (!filters.locationType || filters.locationType === 'All') && idx === 0
+                  : filters.locationType === item.value;
+              return (
+                <label
+                  key={idx}
+                  className="flex items-center justify-between text-xs text-gray-700 hover:text-gray-900 cursor-pointer select-none py-0.5"
+                >
+                  <div className="flex items-center gap-2.5">
+                    <input
+                      type="checkbox"
+                      checked={isChecked}
+                      onChange={() => onChange('locationType', isChecked ? 'All' : item.value)}
+                      className="rounded border-gray-300 text-blue-600 focus:ring-blue-500 h-4 w-4"
+                    />
+                    <span>{item.label}</span>
+                  </div>
+                  <span className="text-[11px] text-gray-400 font-medium">
+                    {item.count}
+                  </span>
+                </label>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* 3. LOCATION DROPDOWN */}
+      <div className="space-y-1.5">
+        <label className="text-xs font-semibold text-gray-800 flex items-center gap-1.5">
+          <MapPin className="w-3.5 h-3.5 text-gray-500" /> Location
+        </label>
+        <div className="relative">
+          <select
+            value={filters.location || ''}
+            onChange={(e) => onChange('location', e.target.value)}
+            className="w-full pl-8 pr-8 py-2 text-xs border border-gray-200 rounded-xl bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none font-medium"
+          >
+            <option value="">All Locations</option>
+            <option value="Colombo">Colombo, Sri Lanka</option>
+            <option value="Kandy">Kandy, Sri Lanka</option>
+            <option value="Galle">Galle, Sri Lanka</option>
+            <option value="Remote">Remote</option>
+          </select>
+          <MapPin className="w-3.5 h-3.5 text-gray-400 absolute left-2.5 top-2.5 pointer-events-none" />
+        </div>
+      </div>
+
+      {/* 4. STIPEND / SALARY RANGE */}
+      <div className="space-y-1.5">
+        <label className="text-xs font-semibold text-gray-800 flex items-center gap-1.5">
+          <Banknote className="w-3.5 h-3.5 text-gray-500" /> Stipend / Salary Range
+        </label>
+        <select
+          value={filters.isPaid || ''}
+          onChange={(e) => onChange('isPaid', e.target.value)}
+          className="w-full px-3 py-2 text-xs border border-gray-200 rounded-xl bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 font-medium"
+        >
+          <option value="">All (Paid & Unpaid)</option>
+          <option value="true">Paid Internships Only</option>
+        </select>
+      </div>
+
+      {/* 5. DURATION PILL BUTTONS */}
+      <div className="space-y-2">
+        <label className="text-xs font-semibold text-gray-800 flex items-center gap-1.5">
+          <Clock className="w-3.5 h-3.5 text-gray-500" /> Duration
+        </label>
+        <div className="grid grid-cols-2 gap-2">
+          {[
+            { label: 'Any', value: '' },
+            { label: '1-3 Months', value: '3' },
+            { label: '3-6 Months', value: '6' },
+            { label: '6+ Months', value: '12' },
+          ].map((opt) => {
+            const isSelected = (filters.durationMonths || '') === opt.value;
+            return (
+              <button
+                key={opt.label}
+                type="button"
+                onClick={() => onChange('durationMonths', opt.value)}
+                className={`py-2 px-3 text-xs font-semibold rounded-full border text-center transition-all ${
+                  isSelected
+                    ? 'bg-blue-600 text-white border-blue-600 shadow-xs'
+                    : 'bg-white text-gray-700 border-gray-200 hover:bg-gray-50 hover:border-gray-300'
+                }`}
+              >
+                {opt.label}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* 6. SKILLS & TECHNOLOGIES */}
+      <div className="space-y-2.5">
+        <div className="flex items-center justify-between">
+          <label className="text-xs font-semibold text-gray-800 flex items-center gap-1.5">
+            <Code2 className="w-3.5 h-3.5 text-gray-500" /> Skills & Technologies
           </label>
           {selectedSkillsList.length > 0 && (
-            <span className="text-[11px] font-semibold text-indigo-600">
-              {selectedSkillsList.length} selected
+            <span className="text-[11px] font-bold text-blue-600">
+              {selectedSkillsList.length}
             </span>
           )}
         </div>
         <div className="flex flex-wrap gap-1.5">
-          {POPULAR_SKILLS.map((skill) => {
+          {visibleSkills.map((skill) => {
             const isSelected = selectedSkillsList.includes(skill.toLowerCase());
             return (
               <button
                 key={skill}
                 type="button"
                 onClick={() => handleSkillToggle(skill)}
-                className={`px-2.5 py-1 rounded-full text-xs font-medium transition-all ${
+                className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
                   isSelected
-                    ? 'bg-indigo-600 text-white shadow-sm ring-1 ring-indigo-600'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200 border border-gray-200/80'
+                    ? 'bg-blue-600 text-white shadow-xs'
+                    : 'bg-white text-gray-700 border border-gray-200 hover:border-gray-300 hover:bg-gray-50'
                 }`}
               >
                 {skill}
               </button>
             );
           })}
+          <button
+            type="button"
+            onClick={() => setShowAllSkills(!showAllSkills)}
+            className="px-3 py-1.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-600 hover:bg-gray-200 transition-colors"
+          >
+            {showAllSkills ? 'Less' : '+ More'}
+          </button>
         </div>
+      </div>
+
+      {/* 7. RESET FILTERS BUTTON */}
+      <div className="pt-2">
+        <button
+          type="button"
+          onClick={onReset}
+          className="w-full py-2.5 px-4 text-xs font-semibold rounded-xl border border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-gray-400 transition-all flex items-center justify-center gap-2 shadow-xs"
+        >
+          <RotateCcw className="w-3.5 h-3.5 text-gray-500" /> Reset Filters
+        </button>
       </div>
     </div>
   );
 
   return (
     <>
-      {/* Desktop Sidebar */}
+      {/* Desktop Sidebar Panel */}
       <aside className="hidden md:block w-64 lg:w-72 flex-shrink-0">
-        <Card className="sticky top-20 p-5">{content}</Card>
+        <div className="sticky top-20 bg-white rounded-2xl border border-gray-200/90 shadow-xs p-5">
+          {content}
+        </div>
       </aside>
 
-      {/* Mobile Drawer */}
+      {/* Mobile Drawer Panel */}
       {isMobileOpen && (
         <div className="fixed inset-0 z-50 md:hidden flex">
           <div
@@ -354,15 +295,6 @@ export const FilterSidebar = ({
           />
           <div className="relative ml-auto w-full max-w-xs bg-white h-full shadow-2xl p-6 overflow-y-auto z-10 animate-fade-in">
             {content}
-            <div className="mt-6 pt-4 border-t border-gray-100">
-              <Button
-                variant="primary"
-                className="w-full"
-                onClick={onCloseMobile}
-              >
-                Apply Filters
-              </Button>
-            </div>
           </div>
         </div>
       )}

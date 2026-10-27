@@ -6,7 +6,7 @@ import {
   Sparkles,
   MapPin,
   Clock,
-  DollarSign,
+  Banknote,
   Calendar,
   Building2,
   CheckCircle2,
@@ -145,7 +145,7 @@ export const InternshipDetailModal = ({
               Stipend
             </span>
             <p className="text-xs font-semibold text-gray-800 flex items-center gap-1">
-              <DollarSign className="w-3.5 h-3.5 text-emerald-500" />
+              <Banknote className="w-3.5 h-3.5 text-emerald-500" />
               {stipend?.isPaid
                 ? `${stipend?.currency || 'LKR'} ${Number(stipend?.amount || 0).toLocaleString()}`
                 : 'Unpaid'}
