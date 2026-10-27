@@ -226,7 +226,7 @@ export const CompanyInternshipsPage = () => {
   };
 
   const handleConfirmDelete = async () => {
-    if (!selectedForDelete) return;
+    if (!selectedForDelete || isSubmitting) return;
     setIsSubmitting(true);
     setErrorAlert('');
     try {

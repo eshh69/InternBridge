@@ -128,11 +128,18 @@ export const InternshipFormModal = ({
   }, [isOpen, initialData]);
 
   const handleAddSkill = (skillToAdd) => {
-    const trimmed = (skillToAdd || skillInput).trim().toLowerCase();
-    if (!trimmed) return;
-    if (!skills.map((s) => s.toLowerCase()).includes(trimmed)) {
-      setSkills((prev) => [...prev, trimmed]);
-    }
+    const raw = typeof skillToAdd === 'string' ? skillToAdd : skillInput;
+    if (!raw || !raw.trim()) return;
+    const splitSkills = raw
+      .split(',')
+      .map((s) => s.trim().toLowerCase())
+      .filter(Boolean);
+    if (splitSkills.length === 0) return;
+    setSkills((prev) => {
+      const existing = new Set(prev.map((s) => s.toLowerCase()));
+      const toAdd = splitSkills.filter((s) => !existing.has(s));
+      return [...prev, ...toAdd];
+    });
     setSkillInput('');
   };
 
@@ -148,6 +155,7 @@ export const InternshipFormModal = ({
   };
 
   const handleSubmit = (statusToSave) => {
+    if (isLoading) return;
     setError('');
 
     if (!formData.title.trim()) {

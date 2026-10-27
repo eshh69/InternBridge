@@ -107,6 +107,7 @@ export const CompanyProfileSection = ({
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
+    if (isLoading) return;
     setFormError('');
     setSaveSuccess(false);
 
