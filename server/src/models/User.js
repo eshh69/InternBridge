@@ -21,7 +21,9 @@ const userSchema = new mongoose.Schema(
     },
     passwordHash: {
       type: String,
-      required: [true, 'Please provide a password hash'],
+      required: function () {
+        return this.authProvider === 'local';
+      },
       minlength: 6,
     },
     role: {
@@ -39,6 +41,15 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: null,
     },
+    authProvider: {
+      type: String,
+      enum: ['local', 'google', 'supabase'],
+      default: 'local',
+    },
+    supabaseId: {
+      type: String,
+      default: null,
+    },
   },
   {
     timestamps: true,
@@ -47,6 +58,7 @@ const userSchema = new mongoose.Schema(
 
 // Method to verify password
 userSchema.methods.matchPassword = async function (enteredPassword) {
+  if (!this.passwordHash) return false;
   return await bcrypt.compare(enteredPassword, this.passwordHash);
 };
 

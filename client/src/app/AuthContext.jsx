@@ -64,6 +64,16 @@ export const AuthProvider = ({ children }) => {
     return registeredUser;
   };
 
+  const loginWithSupabase = async (payload) => {
+    const res = await apiClient.post('/auth/supabase-login', payload);
+    const { user: loggedInUser, token: authToken } = res.data;
+    setUser(loggedInUser);
+    setToken(authToken);
+    localStorage.setItem('internbridge_token', authToken);
+    localStorage.setItem('internbridge_user', JSON.stringify(loggedInUser));
+    return loggedInUser;
+  };
+
   const logout = () => {
     setUser(null);
     setToken(null);
@@ -80,6 +90,7 @@ export const AuthProvider = ({ children }) => {
         isLoading,
         login,
         register,
+        loginWithSupabase,
         logout,
       }}
     >
