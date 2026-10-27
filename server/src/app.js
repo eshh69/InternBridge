@@ -2,6 +2,8 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import apiRoutes from './routes/index.js';
+import verificationRoutes from './routes/verificationRoutes.js';
+import reviewRoutes from './routes/reviewRoutes.js';
 import { errorHandler } from './middleware/errorHandler.js';
 
 dotenv.config();
@@ -24,6 +26,10 @@ app.get('/', (req, res) => {
     docs: '/api/v1/health',
   });
 });
+
+// Module 5: Verification & Rating System Routes
+app.use('/api/verifications', verificationRoutes);
+app.use('/api/reviews', reviewRoutes);
 
 // API Routes
 app.use('/api/v1', apiRoutes);

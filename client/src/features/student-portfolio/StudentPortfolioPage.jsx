@@ -11,6 +11,7 @@ import { CertificatesBadgesSection } from './components/CertificatesBadgesSectio
 import { Spinner } from '../../components/ui/Spinner';
 import { Alert } from '../../components/ui/Alert';
 import { CheckCircle, AlertCircle } from 'lucide-react';
+import { ReputationAndReviewsCard } from '../verification-rating';
 
 export const StudentPortfolioPage = () => {
   const { user } = useAuth();
@@ -167,6 +168,17 @@ export const StudentPortfolioPage = () => {
           />
         </div>
       </div>
+
+      {/* Verified Academic Reputation & Reviews Card */}
+      {user?._id && (
+        <div className="mt-8">
+          <ReputationAndReviewsCard
+            targetId={user._id}
+            targetType="student"
+            title="Verified Academic Reputation & Faculty Evaluations"
+          />
+        </div>
+      )}
 
       {/* Edit Profile Modal */}
       <ProfileEditModal
