@@ -17,17 +17,21 @@ const POPULAR_SKILLS = [
   'React',
   'Node.js',
   'Python',
-  'JavaScript',
+  'Linux',
+  'Docker',
   'TypeScript',
+  'Network Security',
   'Next.js',
   'MongoDB',
   'MySQL',
-  'Docker',
+  'Tailwind CSS',
+  'Wireshark',
+  'Selenium',
+  'OWASP',
+  'SIEM',
+  'Go',
   'Git',
   'AWS',
-  'Tailwind CSS',
-  'Flutter',
-  'UI/UX',
 ];
 
 export const FilterSidebar = ({
@@ -123,11 +127,11 @@ export const FilterSidebar = ({
           </label>
           <div className="space-y-1.5">
             {[
-              { label: 'All', value: 'All', count: totalCounts.all || 5 },
-              { label: 'Internship', value: 'All', count: totalCounts.internships || 5 },
-              { label: 'Remote', value: 'Remote', count: totalCounts.remote || 2 },
-              { label: 'Hybrid', value: 'Hybrid', count: totalCounts.hybrid || 2 },
-              { label: 'On-site', value: 'On-site', count: totalCounts.onsite || 1 },
+              { label: 'All', value: 'All', count: totalCounts.all ?? 0 },
+              { label: 'Internship', value: 'All', count: totalCounts.internships ?? 0 },
+              { label: 'Remote', value: 'Remote', count: totalCounts.remote ?? 0 },
+              { label: 'Hybrid', value: 'Hybrid', count: totalCounts.hybrid ?? 0 },
+              { label: 'On-site', value: 'On-site', count: totalCounts.onsite ?? 0 },
             ].map((item, idx) => {
               const isChecked =
                 item.value === 'All'
@@ -170,8 +174,14 @@ export const FilterSidebar = ({
           >
             <option value="">All Locations</option>
             <option value="Colombo">Colombo, Sri Lanka</option>
-            <option value="Kandy">Kandy, Sri Lanka</option>
-            <option value="Galle">Galle, Sri Lanka</option>
+            <option value="Malabe">Malabe, Sri Lanka</option>
+            <option value="Nawala">Nawala, Sri Lanka</option>
+            <option value="United States">United States</option>
+            <option value="United Kingdom">United Kingdom</option>
+            <option value="Australia">Australia</option>
+            <option value="Singapore">Singapore / Global</option>
+            <option value="Japan">Japan (Tokyo)</option>
+            <option value="Europe">Europe (Ireland, Germany, France, Sweden)</option>
             <option value="Remote">Remote</option>
           </select>
           <MapPin className="w-3.5 h-3.5 text-gray-400 absolute left-2.5 top-2.5 pointer-events-none" />

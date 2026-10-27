@@ -47,6 +47,22 @@ export const InternshipCard = ({
       })
     : 'Open';
 
+  // Format stipend display cleanly (handles hourly rates e.g. $35/hr and monthly rates)
+  const formatStipend = (stipend) => {
+    if (!stipend?.isPaid) return 'Unpaid';
+    const curr = (stipend.currency || 'LKR').trim();
+    const amt = Number(stipend.amount || 0).toLocaleString();
+    if (curr.includes('/hr')) {
+      const symbol = curr.replace('/hr', '').trim();
+      return `${symbol} ${amt} / hr`;
+    }
+    if (curr.includes('/mo')) {
+      const symbol = curr.replace('/mo', '').trim();
+      return `${symbol} ${amt} / mo`;
+    }
+    return `${curr} ${amt} / mo`;
+  };
+
   // Compute match pill properties
   const getMatchPill = () => {
     if (matchScore === undefined || matchScore === null) return null;
@@ -207,9 +223,7 @@ export const InternshipCard = ({
             <div className="flex flex-wrap items-center gap-4 text-xs text-gray-600">
               <span className="flex items-center gap-1 font-semibold text-gray-800">
                 <Banknote className="w-3.5 h-3.5 text-gray-500" />
-                {stipend?.isPaid
-                  ? `${stipend?.currency || 'LKR'} ${Number(stipend?.amount || 0).toLocaleString()} / mo`
-                  : 'Unpaid'}
+                {formatStipend(stipend)}
               </span>
               <span className="flex items-center gap-1">
                 <Clock className="w-3.5 h-3.5 text-gray-400" />

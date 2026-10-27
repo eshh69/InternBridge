@@ -494,7 +494,14 @@ export const SearchMatchingPage = () => {
             <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-gray-200">
               {/* Left: Showing count */}
               <span className="text-xs text-gray-500 font-medium">
-                Showing 1 – {items.length} of {pagination.total} opportunities
+                Showing{' '}
+                {pagination.total > 0
+                  ? `${(page - 1) * (pagination.limit || 10) + 1} – ${Math.min(
+                      page * (pagination.limit || 10),
+                      pagination.total
+                    )}`
+                  : '0'}{' '}
+                of {pagination.total} opportunities
               </span>
 
               {/* Center: Pagination Buttons */}
