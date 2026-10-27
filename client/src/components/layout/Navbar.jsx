@@ -15,6 +15,7 @@ import {
   Users,
   Menu,
   X,
+  ShieldCheck,
 } from 'lucide-react';
 
 export const Navbar = () => {
@@ -122,9 +123,10 @@ export const Navbar = () => {
                 </>
               )}
 
-              {isAuthenticated && (user?.role === 'reviewer' || user?.role === 'admin') && (
+              {isAuthenticated && (user?.role === 'reviewer' || user?.role === 'admin' || user?.role === 'company') && (
                 <Link to="/verifications" className={getLinkClass('/verifications')}>
-                  {user.role === 'admin' ? 'Admin Moderation' : 'Reviewer Portal'}
+                  <ShieldCheck className="w-4 h-4 text-slate-400" />
+                  {user.role === 'admin' ? 'Admin Moderation' : user?.role === 'reviewer' ? 'Reviewer Portal' : 'Verification & Ratings'}
                 </Link>
               )}
             </nav>
@@ -261,13 +263,14 @@ export const Navbar = () => {
               </>
             )}
 
-            {isAuthenticated && (user?.role === 'reviewer' || user?.role === 'admin') && (
+            {isAuthenticated && (user?.role === 'reviewer' || user?.role === 'admin' || user?.role === 'company') && (
               <Link
                 to="/verifications"
                 onClick={closeMobileMenu}
                 className={getMobileLinkClass('/verifications')}
               >
-                {user.role === 'admin' ? 'Admin Moderation' : 'Reviewer Portal'}
+                <ShieldCheck className="w-4 h-4 text-slate-400" />
+                {user.role === 'admin' ? 'Admin Moderation' : user?.role === 'reviewer' ? 'Reviewer Portal' : 'Verification & Ratings'}
               </Link>
             )}
 
