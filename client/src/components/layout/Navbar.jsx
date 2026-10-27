@@ -73,12 +73,12 @@ export const Navbar = () => {
                 </>
               )}
 
-              {isAuthenticated && (user?.role === 'reviewer' || user?.role === 'admin') && (
+              {isAuthenticated && (user?.role === 'reviewer' || user?.role === 'admin' || user?.role === 'company') && (
                 <Link
                   to="/verifications"
                   className="text-gray-600 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium"
                 >
-                  {user.role === 'admin' ? 'Admin Moderation' : 'Reviewer Portal'}
+                  {user.role === 'admin' ? 'Admin Moderation' : user?.role === 'reviewer' ? 'Reviewer Portal' : 'Verification & Ratings'}
                 </Link>
               )}
             </nav>
