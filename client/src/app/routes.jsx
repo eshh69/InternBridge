@@ -51,6 +51,9 @@ export const AppRoutes = () => {
         <Route path="auth/callback" element={<AuthCallbackPage />} />
         <Route path="search" element={<SearchMatchingPage />} />
 
+        {/* Module 4: Application & Recruitment (Instantly testable & role-adaptive) */}
+        <Route path="applications" element={<ApplicationsPage />} />
+
         {/* Protected Student Routes */}
         <Route
           path="student/portfolio"
@@ -72,14 +75,6 @@ export const AppRoutes = () => {
         />
 
         {/* Shared Protected Routes */}
-        <Route
-          path="applications"
-          element={
-            <ProtectedRoute allowedRoles={['student', 'company']}>
-              <ApplicationsPage />
-            </ProtectedRoute>
-          }
-        />
         <Route
           path="verifications"
           element={

@@ -82,6 +82,13 @@ export const Navbar = () => {
                 Find Internships
               </Link>
 
+              {/* Accessible directly in demo/preview mode */}
+              {!isAuthenticated && (
+                <Link to="/applications" className={getLinkClass('/applications')}>
+                  Applications
+                </Link>
+              )}
+
               {isAuthenticated && user?.role === 'student' && (
                 <>
                   <Link to="/student/portfolio" className={getLinkClass('/student/portfolio')}>
@@ -206,6 +213,16 @@ export const Navbar = () => {
               <Search className="w-4 h-4 text-slate-400" />
               Find Internships
             </Link>
+
+            {!isAuthenticated && (
+              <Link
+                to="/applications"
+                onClick={closeMobileMenu}
+                className={getMobileLinkClass('/applications')}
+              >
+                Applications
+              </Link>
+            )}
 
             {isAuthenticated && user?.role === 'student' && (
               <>
