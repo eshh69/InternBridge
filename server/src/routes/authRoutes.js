@@ -2,6 +2,7 @@ import express from 'express';
 import jwt from 'jsonwebtoken';
 import { User } from '../models/User.js';
 import { StudentProfile } from '../models/StudentProfile.js';
+import { Company } from '../models/Company.js';
 import { protect } from '../middleware/auth.js';
 import { sendSuccess, sendError } from '../utils/apiResponse.js';
 
@@ -13,31 +14,113 @@ const generateToken = (id) => {
   });
 };
 
-// @desc    Register a new user
+// @desc    Check if user email already exists
+// @route   POST /api/v1/auth/check-user
+// @access  Public
+router.post('/check-user', async (req, res, next) => {
+  try {
+    const { email } = req.body;
+    if (!email) {
+      return sendError(res, 400, 'Email is required');
+    }
+    const user = await User.findOne({ email: email.toLowerCase().trim() });
+    return sendSuccess(res, 200, 'User check completed', {
+      exists: Boolean(user),
+      role: user ? user.role : null,
+      name: user ? user.name : null,
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+// @desc    Register a new user with role-specific details
 // @route   POST /api/v1/auth/register
 // @access  Public
 router.post('/register', async (req, res, next) => {
   try {
-    const { name, email, password, role } = req.body;
+    const {
+      name,
+      email,
+      password,
+      role = 'student',
+      age,
+      phone,
+      studentDetails,
+      companyDetails,
+      reviewerDetails,
+    } = req.body;
 
     if (!name || !email || !password) {
       return sendError(res, 400, 'Please provide name, email, and password');
     }
 
-    const existingUser = await User.findOne({ email });
+    const normalizedEmail = email.toLowerCase().trim();
+
+    const existingUser = await User.findOne({ email: normalizedEmail });
     if (existingUser) {
       return sendError(res, 400, 'User already exists with this email address');
     }
 
     const passwordHash = await User.hashPassword(password);
-    const userRole = role && ['student', 'company', 'reviewer'].includes(role) ? role : 'student';
+    const userRole = ['student', 'company', 'reviewer'].includes(role) ? role : 'student';
+
+    const parsedAge = age ? parseInt(age, 10) : null;
 
     const user = await User.create({
-      name,
-      email,
+      name: name.trim(),
+      email: normalizedEmail,
       passwordHash,
       role: userRole,
+      age: isNaN(parsedAge) ? null : parsedAge,
+      phone: phone ? phone.trim() : '',
+      authProvider: 'local',
     });
+
+    // Auto-create role-specific profile document
+    if (userRole === 'student') {
+      const skillsArray = Array.isArray(studentDetails?.skills)
+        ? studentDetails.skills.map((s) => s.trim().toLowerCase()).filter(Boolean)
+        : typeof studentDetails?.skills === 'string'
+        ? studentDetails.skills.split(',').map((s) => s.trim().toLowerCase()).filter(Boolean)
+        : [];
+
+      await StudentProfile.create({
+        user: user._id,
+        university: studentDetails?.university?.trim() || 'South Eastern University of Sri Lanka',
+        degree: studentDetails?.degree?.trim() || 'BSc in Information and Communication Technology',
+        fieldOfStudy: studentDetails?.fieldOfStudy?.trim() || 'Information and Communication Technology',
+        academicYear: studentDetails?.academicYear || '3rd Year',
+        phone: phone?.trim() || studentDetails?.phone?.trim() || '',
+        whatsapp: studentDetails?.whatsapp?.trim() || '',
+        bio: studentDetails?.bio?.trim() || '',
+        skills: skillsArray,
+        education: [],
+        projects: [],
+        certificates: [],
+        badges: [],
+        experience: [],
+        links: { github: '', linkedin: '', portfolio: '' },
+      });
+    } else if (userRole === 'company') {
+      await Company.create({
+        user: user._id,
+        name: companyDetails?.name?.trim() || name.trim(),
+        description:
+          companyDetails?.description?.trim() ||
+          'Innovative technology and business organization offering professional internships.',
+        industry: companyDetails?.industry?.trim() || 'Software Engineering',
+        location: {
+          address: companyDetails?.location?.address || 'Colombo, Sri Lanka',
+          city: companyDetails?.location?.city || 'Colombo',
+          country: companyDetails?.location?.country || 'Sri Lanka',
+        },
+        website: companyDetails?.website?.trim() || '',
+        contactEmail: companyDetails?.contactEmail?.trim() || normalizedEmail,
+        contactPhone: phone?.trim() || companyDetails?.contactPhone?.trim() || '',
+        verificationStatus: 'unverified',
+      });
+    }
 
     const token = generateToken(user._id);
 
@@ -47,6 +130,8 @@ router.post('/register', async (req, res, next) => {
         name: user.name,
         email: user.email,
         role: user.role,
+        age: user.age,
+        phone: user.phone,
         avatarUrl: user.avatarUrl,
       },
       token,
@@ -67,7 +152,8 @@ router.post('/login', async (req, res, next) => {
       return sendError(res, 400, 'Please provide email and password');
     }
 
-    const user = await User.findOne({ email });
+    const normalizedEmail = email.toLowerCase().trim();
+    const user = await User.findOne({ email: normalizedEmail });
     if (!user) {
       return sendError(res, 401, 'Invalid email or password');
     }
@@ -89,6 +175,8 @@ router.post('/login', async (req, res, next) => {
         name: user.name,
         email: user.email,
         role: user.role,
+        age: user.age,
+        phone: user.phone,
         avatarUrl: user.avatarUrl,
       },
       token,
@@ -103,7 +191,18 @@ router.post('/login', async (req, res, next) => {
 // @access  Public
 router.post('/supabase-login', async (req, res, next) => {
   try {
-    const { email, name, avatarUrl, role, supabaseId } = req.body;
+    const {
+      email,
+      name,
+      avatarUrl,
+      role,
+      supabaseId,
+      age,
+      phone,
+      studentDetails,
+      companyDetails,
+      reviewerDetails,
+    } = req.body;
 
     if (!email) {
       return sendError(res, 400, 'Email is required from Supabase authentication');
@@ -119,6 +218,8 @@ router.post('/supabase-login', async (req, res, next) => {
       ],
     });
 
+    const parsedAge = age ? parseInt(age, 10) : null;
+
     if (user) {
       if (user.status === 'suspended') {
         return sendError(res, 403, 'Account is suspended. Please contact administrator.');
@@ -131,6 +232,14 @@ router.post('/supabase-login', async (req, res, next) => {
       }
       if (!user.avatarUrl && avatarUrl) {
         user.avatarUrl = avatarUrl;
+        modified = true;
+      }
+      if (!user.age && !isNaN(parsedAge) && parsedAge) {
+        user.age = parsedAge;
+        modified = true;
+      }
+      if (!user.phone && phone) {
+        user.phone = phone.trim();
         modified = true;
       }
       if (modified) {
@@ -147,25 +256,54 @@ router.post('/supabase-login', async (req, res, next) => {
         email: normalizedEmail,
         avatarUrl: avatarUrl || null,
         role: assignedRole,
+        age: isNaN(parsedAge) ? null : parsedAge,
+        phone: phone ? phone.trim() : '',
         authProvider: 'supabase',
         supabaseId: supabaseId || null,
       });
 
       // Auto-initialize profile skeleton if student
       if (assignedRole === 'student') {
+        const skillsArray = Array.isArray(studentDetails?.skills)
+          ? studentDetails.skills.map((s) => s.trim().toLowerCase()).filter(Boolean)
+          : typeof studentDetails?.skills === 'string'
+          ? studentDetails.skills.split(',').map((s) => s.trim().toLowerCase()).filter(Boolean)
+          : [];
+
         await StudentProfile.create({
           user: user._id,
-          university: 'South Eastern University of Sri Lanka',
-          degree: 'BSc in Information and Communication Technology',
-          fieldOfStudy: 'Information and Communication Technology',
-          academicYear: '3rd Year',
-          skills: [],
+          university: studentDetails?.university?.trim() || 'South Eastern University of Sri Lanka',
+          degree: studentDetails?.degree?.trim() || 'BSc in Information and Communication Technology',
+          fieldOfStudy: studentDetails?.fieldOfStudy?.trim() || 'Information and Communication Technology',
+          academicYear: studentDetails?.academicYear || '3rd Year',
+          phone: phone?.trim() || studentDetails?.phone?.trim() || '',
+          whatsapp: studentDetails?.whatsapp?.trim() || '',
+          bio: studentDetails?.bio?.trim() || '',
+          skills: skillsArray,
           education: [],
           projects: [],
           certificates: [],
           badges: [],
           experience: [],
           links: { github: '', linkedin: '', portfolio: '' },
+        });
+      } else if (assignedRole === 'company') {
+        await Company.create({
+          user: user._id,
+          name: companyDetails?.name?.trim() || name || normalizedEmail.split('@')[0],
+          description:
+            companyDetails?.description?.trim() ||
+            'Leading business organization offering impactful internship and recruitment opportunities.',
+          industry: companyDetails?.industry?.trim() || 'Technology & Innovation',
+          location: {
+            address: companyDetails?.location?.address || 'Colombo, Sri Lanka',
+            city: companyDetails?.location?.city || 'Colombo',
+            country: companyDetails?.location?.country || 'Sri Lanka',
+          },
+          website: companyDetails?.website?.trim() || '',
+          contactEmail: companyDetails?.contactEmail?.trim() || normalizedEmail,
+          contactPhone: phone?.trim() || companyDetails?.contactPhone?.trim() || '',
+          verificationStatus: 'unverified',
         });
       }
     }
@@ -178,6 +316,8 @@ router.post('/supabase-login', async (req, res, next) => {
         name: user.name,
         email: user.email,
         role: user.role,
+        age: user.age,
+        phone: user.phone,
         avatarUrl: user.avatarUrl,
       },
       token,
@@ -197,6 +337,8 @@ router.get('/me', protect, async (req, res) => {
       name: req.user.name,
       email: req.user.email,
       role: req.user.role,
+      age: req.user.age,
+      phone: req.user.phone,
       avatarUrl: req.user.avatarUrl,
       createdAt: req.user.createdAt,
     },

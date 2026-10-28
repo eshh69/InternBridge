@@ -1,7 +1,12 @@
 import React, { useState } from 'react';
 import { supabase, isSupabaseConfigured } from '../../services/supabaseClient';
 
-export const SupabaseSignInButton = ({ role = 'student', onError }) => {
+export const SupabaseSignInButton = ({
+  role = 'student',
+  intent = 'login',
+  buttonText = 'Continue with Google',
+  onError,
+}) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSupabaseClick = async () => {
@@ -18,7 +23,9 @@ export const SupabaseSignInButton = ({ role = 'student', onError }) => {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: `${window.location.origin}/auth/callback?role=${encodeURIComponent(role)}`,
+          redirectTo: `${window.location.origin}/auth/callback?role=${encodeURIComponent(
+            role
+          )}&intent=${encodeURIComponent(intent)}`,
           queryParams: {
             access_type: 'offline',
             prompt: 'consent',
@@ -40,12 +47,16 @@ export const SupabaseSignInButton = ({ role = 'student', onError }) => {
       type="button"
       onClick={handleSupabaseClick}
       disabled={isLoading}
-      className="w-full flex items-center justify-center gap-3 px-4 py-2.5 border border-gray-300 rounded-lg shadow-2xs bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors disabled:opacity-50"
+      className="w-full flex items-center justify-center gap-3 px-4 py-2.5 border border-gray-300 rounded-[10px] shadow-2xs bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors disabled:opacity-50"
     >
       {isLoading ? (
         <svg className="animate-spin h-4 w-4 text-indigo-600" fill="none" viewBox="0 0 24 24">
           <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+          <path
+            className="opacity-75"
+            fill="currentColor"
+            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+          />
         </svg>
       ) : (
         /* Official Google SVG Logo */
@@ -68,7 +79,7 @@ export const SupabaseSignInButton = ({ role = 'student', onError }) => {
           />
         </svg>
       )}
-      <span>{isLoading ? 'Connecting to Google...' : 'Continue with Google via Supabase'}</span>
+      <span>{isLoading ? 'Connecting to Google...' : buttonText}</span>
     </button>
   );
 };
