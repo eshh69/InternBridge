@@ -8,11 +8,17 @@ import { Spinner } from '../components/ui/Spinner';
 import { HomePage } from '../features/home/HomePage';
 import { LoginPage } from '../features/auth/LoginPage';
 import { RegisterPage } from '../features/auth/RegisterPage';
+import { AuthCallbackPage } from '../features/auth/AuthCallbackPage';
 import { StudentPortfolioPage } from '../features/student-portfolio/StudentPortfolioPage';
 import { CompanyInternshipsPage } from '../features/company-internships/CompanyInternshipsPage';
 import { SearchMatchingPage } from '../features/search-matching/SearchMatchingPage';
 import { ApplicationsPage } from '../features/applications/ApplicationsPage';
-import { VerificationRatingPage } from '../features/verification-rating/VerificationRatingPage';
+import {
+  VerificationRatingPage,
+  AdminVerificationPanel,
+  VerificationRequestForm,
+  GiveReviewForm,
+} from '../features/verification-rating';
 import { ChatPage } from '../features/chat/ChatPage';
 
 // Protected Route Guard
@@ -42,6 +48,7 @@ export const AppRoutes = () => {
         <Route index element={<HomePage />} />
         <Route path="login" element={<LoginPage />} />
         <Route path="register" element={<RegisterPage />} />
+        <Route path="auth/callback" element={<AuthCallbackPage />} />
         <Route path="search" element={<SearchMatchingPage />} />
 
         {/* Protected Student Routes */}
@@ -76,8 +83,38 @@ export const AppRoutes = () => {
         <Route
           path="verifications"
           element={
-            <ProtectedRoute allowedRoles={['reviewer', 'admin']}>
+            <ProtectedRoute allowedRoles={['student', 'company', 'reviewer', 'admin']}>
               <VerificationRatingPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="verifications/request"
+          element={
+            <ProtectedRoute allowedRoles={['company', 'reviewer']}>
+              <div className="py-6 px-4">
+                <VerificationRequestForm standalone={true} />
+              </div>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="admin/verifications"
+          element={
+            <ProtectedRoute allowedRoles={['admin']}>
+              <div className="py-6 px-4">
+                <AdminVerificationPanel standalone={true} />
+              </div>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="reviews/give"
+          element={
+            <ProtectedRoute allowedRoles={['reviewer']}>
+              <div className="py-6 px-4">
+                <GiveReviewForm standalone={true} />
+              </div>
             </ProtectedRoute>
           }
         />

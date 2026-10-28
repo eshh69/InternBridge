@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import { io } from 'socket.io-client';
 import { useAuth } from './useAuth';
 
@@ -6,37 +6,37 @@ const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || 'http://localhost:5000';
 
 export const useSocket = () => {
   const { token, isAuthenticated } = useAuth();
-  const socketRef = useRef(null);
+  const [socket, setSocket] = useState(null);
 
   useEffect(() => {
     if (!isAuthenticated || !token) {
-      if (socketRef.current) {
-        socketRef.current.disconnect();
-        socketRef.current = null;
-      }
+      setSocket((prev) => {
+        if (prev) prev.disconnect();
+        return null;
+      });
       return;
     }
 
-    const socket = io(SOCKET_URL, {
+    const newSocket = io(SOCKET_URL, {
       auth: { token },
       transports: ['websocket', 'polling'],
     });
 
-    socket.on('connect', () => {
-      console.log('[Socket] Connected with ID:', socket.id);
+    newSocket.on('connect', () => {
+      console.log('[Socket] Connected with ID:', newSocket.id);
     });
 
-    socket.on('connect_error', (err) => {
+    newSocket.on('connect_error', (err) => {
       console.warn('[Socket Connection Error]:', err.message);
     });
 
-    socketRef.current = socket;
+    setSocket(newSocket);
 
     return () => {
-      socket.disconnect();
-      socketRef.current = null;
+      newSocket.disconnect();
+      setSocket(null);
     };
   }, [token, isAuthenticated]);
 
-  return socketRef.current;
+  return socket;
 };

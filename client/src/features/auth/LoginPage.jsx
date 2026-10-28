@@ -5,6 +5,7 @@ import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
 import { Card } from '../../components/ui/Card';
 import { Alert } from '../../components/ui/Alert';
+import { SupabaseSignInButton } from '../../components/ui/SupabaseSignInButton';
 import { Briefcase } from 'lucide-react';
 
 export const LoginPage = () => {
@@ -67,12 +68,23 @@ export const LoginPage = () => {
           />
 
           <Button type="submit" variant="primary" className="w-full" isLoading={isLoading}>
-            Sign In
+            Sign In with Email
           </Button>
         </form>
 
+        <div className="relative my-5">
+          <div className="absolute inset-0 flex items-center">
+            <div className="w-full border-t border-gray-200" />
+          </div>
+          <div className="relative flex justify-center text-xs uppercase">
+            <span className="bg-white px-2 text-gray-500 font-medium">Or continue with</span>
+          </div>
+        </div>
+
+        <SupabaseSignInButton role="student" onError={(msg) => setError(msg)} />
+
         <div className="mt-6 text-center text-sm text-gray-600">
-          Don't have an account?{' '}
+          Don&apos;t have an account?{' '}
           <Link to="/register" className="font-semibold text-indigo-600 hover:text-indigo-500">
             Create an account
           </Link>
