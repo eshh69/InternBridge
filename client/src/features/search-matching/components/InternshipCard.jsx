@@ -15,6 +15,52 @@ import {
   Briefcase,
 } from 'lucide-react';
 
+// Proper casing mapping for tech skill pills
+const SKILL_DISPLAY_NAMES = {
+  javascript: 'JavaScript',
+  'express.js': 'Express.js',
+  express: 'Express.js',
+  mysql: 'MySQL',
+  java: 'Java',
+  'c++': 'C++',
+  cpp: 'C++',
+  'html & css': 'HTML & CSS',
+  html: 'HTML',
+  css: 'CSS',
+  'rest api': 'REST API',
+  'machine learning': 'Machine Learning',
+  figma: 'Figma',
+  cybersecurity: 'Cybersecurity',
+  firebase: 'Firebase',
+  supabase: 'Supabase',
+  react: 'React',
+  'node.js': 'Node.js',
+  nodejs: 'Node.js',
+  python: 'Python',
+  linux: 'Linux',
+  docker: 'Docker',
+  typescript: 'TypeScript',
+  'next.js': 'Next.js',
+  nextjs: 'Next.js',
+  mongodb: 'MongoDB',
+  'tailwind css': 'Tailwind CSS',
+  tailwind: 'Tailwind CSS',
+  'network security': 'Network Security',
+  wireshark: 'Wireshark',
+  selenium: 'Selenium',
+  owasp: 'OWASP',
+  siem: 'SIEM',
+  go: 'Go',
+  git: 'Git',
+  aws: 'AWS',
+  'reverse engineering': 'Reverse Engineering',
+};
+
+const formatSkillName = (s = '') => {
+  const lower = s.toLowerCase().trim();
+  return SKILL_DISPLAY_NAMES[lower] || s;
+};
+
 export const InternshipCard = ({
   internship,
   onViewDetails,
@@ -206,7 +252,7 @@ export const InternshipCard = ({
                   title={isMatched ? 'Matches your portfolio skill' : 'Required skill'}
                 >
                   {isMatched && <Check className="w-3 h-3 text-emerald-600" />}
-                  {skill}
+                  {formatSkillName(skill)}
                 </span>
               );
             })}

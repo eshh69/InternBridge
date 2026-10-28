@@ -9,7 +9,7 @@ dotenv.config();
 
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/internbridge';
 
-// All 30 Companies specified in the Internship Catalog PDF
+// All Companies specified in the Internship Catalog
 const COMPANIES_DATA = [
   // --- Local Companies (Sri Lanka) ---
   {
@@ -46,7 +46,7 @@ const COMPANIES_DATA = [
   },
   {
     name: '99x',
-    email: 'careers@99x.io',
+    email: 'careers@99x.com',
     industry: 'Product Engineering & Cloud Solutions',
     location: { address: '65 Walukarama Road', city: 'Colombo', country: 'Sri Lanka' },
     website: 'https://99x.io',
@@ -256,15 +256,15 @@ const COMPANIES_DATA = [
   },
 ];
 
-// All 30 Internship Opportunities from PDF Catalog
-const ALL_30_INTERNSHIPS = [
+// All 34 Internship Opportunities enriched with required real-world skills
+const ALL_34_INTERNSHIPS = [
   // --- PART 1: SRI LANKA LOCAL INTERNSHIPS (1 - 15) ---
   {
     companyName: 'WSO2',
     title: 'Cyber Security Research Intern',
     description: 'Conduct vulnerability assessments, monitor API gateways, and assist in automated threat detection mechanisms.',
     area: 'Cyber Security',
-    requiredSkills: ['linux', 'network security', 'python'],
+    requiredSkills: ['cybersecurity', 'network security', 'linux', 'python', 'rest api'],
     qualifications: ['Undergraduate in Cybersecurity or IT', 'Hands-on understanding of Linux OS and network protocols'],
     locationType: 'On-site',
     location: 'Colombo, Sri Lanka',
@@ -279,7 +279,7 @@ const ALL_30_INTERNSHIPS = [
     title: 'Associate Security Analyst Intern',
     description: 'Assist the national CERT team in security incident response, network packet inspection with Wireshark, and threat analysis.',
     area: 'Cyber Security',
-    requiredSkills: ['python', 'wireshark', 'linux'],
+    requiredSkills: ['cybersecurity', 'python', 'wireshark', 'linux', 'network security'],
     qualifications: ['Undergraduate in Information Security or Computer Science', 'Familiarity with incident handling and packet analysis'],
     locationType: 'On-site',
     location: 'Colombo, Sri Lanka',
@@ -292,9 +292,9 @@ const ALL_30_INTERNSHIPS = [
   {
     companyName: 'IFS Sri Lanka',
     title: 'Software Engineering Intern (Web)',
-    description: 'Develop enterprise-grade cloud web applications using modern React, TypeScript, and Node.js microservices.',
+    description: 'Develop enterprise-grade cloud web applications using modern React, TypeScript, Java services, and REST APIs.',
     area: 'Web Development',
-    requiredSkills: ['react', 'typescript', 'node.js'],
+    requiredSkills: ['react', 'typescript', 'node.js', 'java', 'rest api', 'html & css'],
     qualifications: ['Undergraduate in Software Engineering or Computer Science', 'Strong OOP and modern web framework concepts'],
     locationType: 'Hybrid',
     location: 'Colombo, Sri Lanka',
@@ -307,9 +307,9 @@ const ALL_30_INTERNSHIPS = [
   {
     companyName: 'Sysco LABS Sri Lanka',
     title: 'Full-Stack Developer Intern',
-    description: 'Contribute to restaurant technology platforms using React for frontend and Node.js with Docker containers in production.',
+    description: 'Contribute to restaurant technology platforms using React for frontend and Node.js with Express.js and MySQL in production.',
     area: 'Full-Stack',
-    requiredSkills: ['react', 'node.js', 'docker'],
+    requiredSkills: ['react', 'node.js', 'express.js', 'javascript', 'docker', 'mysql', 'rest api'],
     qualifications: ['Undergraduate in CS/SE', 'Understanding of containerization and REST APIs'],
     locationType: 'Hybrid',
     location: 'Colombo, Sri Lanka',
@@ -322,9 +322,9 @@ const ALL_30_INTERNSHIPS = [
   {
     companyName: '99x',
     title: 'Frontend Engineering Intern',
-    description: 'Craft high-performance, pixel-perfect user experiences for Scandinavian clients with React, Next.js, and TypeScript.',
+    description: 'Craft high-performance, pixel-perfect user experiences for Scandinavian scale-ups with React, Next.js, and Figma design tokens.',
     area: 'Frontend Web',
-    requiredSkills: ['react', 'next.js', 'typescript'],
+    requiredSkills: ['react', 'next.js', 'typescript', 'javascript', 'html & css', 'figma'],
     qualifications: ['Passion for clean UI/UX and modern frontend architecture', 'Experience with React component life-cycle'],
     locationType: 'Hybrid',
     location: 'Colombo, Sri Lanka',
@@ -337,9 +337,9 @@ const ALL_30_INTERNSHIPS = [
   {
     companyName: 'Virtusa',
     title: 'Backend Developer Intern',
-    description: 'Design and implement scalable backend APIs, database schemas with MySQL, and microservices packaged in Docker.',
+    description: 'Design and implement scalable backend APIs with Node.js, Express.js, MySQL schemas, and microservices packaged in Docker.',
     area: 'Backend Web',
-    requiredSkills: ['node.js', 'mysql', 'docker'],
+    requiredSkills: ['node.js', 'express.js', 'mysql', 'javascript', 'docker', 'rest api'],
     qualifications: ['Proficiency in JavaScript/Node.js', 'Solid understanding of relational database normalization'],
     locationType: 'On-site',
     location: 'Colombo, Sri Lanka',
@@ -354,7 +354,7 @@ const ALL_30_INTERNSHIPS = [
     title: 'Cloud & DevOps Intern',
     description: 'Automate build pipelines, orchestrate Docker containers on Linux, and build cloud automation scripts in Python.',
     area: 'Cloud / DevOps',
-    requiredSkills: ['docker', 'linux', 'python'],
+    requiredSkills: ['docker', 'linux', 'python', 'rest api', 'git'],
     qualifications: ['Knowledge of CI/CD concepts', 'Basic cloud hosting and Bash scripting skills'],
     locationType: 'Remote',
     location: 'Sri Lanka (Remote)',
@@ -369,7 +369,7 @@ const ALL_30_INTERNSHIPS = [
     title: 'Information Security Intern',
     description: 'Monitor telecom network security perimeters, perform log analysis on Linux servers, and script security audits with Python.',
     area: 'Cyber Security',
-    requiredSkills: ['network security', 'linux', 'python'],
+    requiredSkills: ['cybersecurity', 'network security', 'linux', 'python', 'rest api'],
     qualifications: ['Undergraduate in Telecommunications, Networking, or Cyber Security'],
     locationType: 'On-site',
     location: 'Colombo, Sri Lanka',
@@ -382,9 +382,9 @@ const ALL_30_INTERNSHIPS = [
   {
     companyName: 'Calcey Technologies',
     title: 'React Developer Intern',
-    description: 'Build fast, responsive interfaces using React, TypeScript, and Tailwind CSS for US and Australian client projects.',
+    description: 'Build fast, responsive interfaces using React, JavaScript, TypeScript, and Tailwind CSS for US and Australian client projects.',
     area: 'Frontend Web',
-    requiredSkills: ['react', 'typescript', 'tailwind css'],
+    requiredSkills: ['react', 'javascript', 'typescript', 'html & css', 'tailwind css', 'figma'],
     qualifications: ['Strong JavaScript fundamentals', 'Attention to visual detail and responsive design'],
     locationType: 'Remote',
     location: 'Sri Lanka (Remote)',
@@ -397,9 +397,9 @@ const ALL_30_INTERNSHIPS = [
   {
     companyName: 'MillenniumIT ESP',
     title: 'Database & Backend Intern',
-    description: 'Work with enterprise core banking and database systems using MySQL, MongoDB, and high-performance Node.js services.',
+    description: 'Work with enterprise core banking and database systems using MySQL, MongoDB, Java, and Express.js backend services.',
     area: 'Database Systems',
-    requiredSkills: ['mysql', 'mongodb', 'node.js'],
+    requiredSkills: ['mysql', 'mongodb', 'node.js', 'express.js', 'java', 'rest api'],
     qualifications: ['Undergraduate in Computer Science / IT', 'Sound query optimization knowledge'],
     locationType: 'On-site',
     location: 'Malabe, Sri Lanka',
@@ -414,7 +414,7 @@ const ALL_30_INTERNSHIPS = [
     title: 'QA Automation Intern',
     description: 'Develop automated test suites using Python and Selenium, integrate test containers with Docker in continuous deployment.',
     area: 'QA / Testing',
-    requiredSkills: ['python', 'selenium', 'docker'],
+    requiredSkills: ['python', 'selenium', 'docker', 'rest api', 'linux'],
     qualifications: ['Interest in test automation frameworks', 'Analytical mindset and bug tracking proficiency'],
     locationType: 'Hybrid',
     location: 'Colombo, Sri Lanka',
@@ -427,9 +427,9 @@ const ALL_30_INTERNSHIPS = [
   {
     companyName: 'Fortude',
     title: 'Application Security Intern',
-    description: 'Execute OWASP Top 10 vulnerability assessments, perform static code analysis, and inspect Linux environments.',
+    description: 'Execute OWASP Top 10 vulnerability assessments, perform static code analysis, and inspect enterprise Java and Linux environments.',
     area: 'Cyber Security',
-    requiredSkills: ['owasp', 'python', 'linux'],
+    requiredSkills: ['cybersecurity', 'owasp', 'python', 'linux', 'java'],
     qualifications: ['Knowledge of web application vulnerabilities (XSS, SQLi, CSRF)', 'Basic scripting'],
     locationType: 'Hybrid',
     location: 'Colombo, Sri Lanka',
@@ -442,9 +442,9 @@ const ALL_30_INTERNSHIPS = [
   {
     companyName: 'Surge Global',
     title: 'MERN Stack Developer Intern',
-    description: 'Build modern data-driven web applications and dashboards using MongoDB, Express, React, and Node.js.',
+    description: 'Build modern data-driven web applications, dashboards, and auth workflows using MongoDB, Express.js, React, Node.js, and Firebase.',
     area: 'Full-Stack',
-    requiredSkills: ['mongodb', 'react', 'node.js'],
+    requiredSkills: ['mongodb', 'express.js', 'react', 'node.js', 'javascript', 'firebase'],
     qualifications: ['Familiarity with MERN stack fundamentals', 'Experience with Git collaboration'],
     locationType: 'Hybrid',
     location: 'Colombo, Sri Lanka',
@@ -457,9 +457,9 @@ const ALL_30_INTERNSHIPS = [
   {
     companyName: 'Zone24x7',
     title: 'Mobile & Web Intern',
-    description: 'Develop mobile and web interfaces with React, TypeScript, and Node.js, integrating IoT and enterprise retail solutions.',
+    description: 'Develop mobile and web interfaces with React, JavaScript, TypeScript, and Node.js, integrating Firebase and retail IoT solutions.',
     area: 'Web & Mobile',
-    requiredSkills: ['react', 'typescript', 'node.js'],
+    requiredSkills: ['react', 'javascript', 'typescript', 'node.js', 'firebase', 'rest api'],
     qualifications: ['Undergraduate in ICT or Computer Systems', 'Interest in mobile/web hybrid tech'],
     locationType: 'On-site',
     location: 'Nawala, Sri Lanka',
@@ -474,7 +474,7 @@ const ALL_30_INTERNSHIPS = [
     title: 'SOC Analyst Intern',
     description: 'Monitor Security Information and Event Management (SIEM) consoles, investigate alerts, and configure Linux defense sensors.',
     area: 'SOC Operations',
-    requiredSkills: ['network security', 'linux', 'siem'],
+    requiredSkills: ['cybersecurity', 'network security', 'linux', 'siem', 'python'],
     qualifications: ['Familiarity with SIEM concepts and log parsing', 'Undergraduate in Cyber Security'],
     locationType: 'On-site',
     location: 'Colombo, Sri Lanka',
@@ -489,9 +489,9 @@ const ALL_30_INTERNSHIPS = [
   {
     companyName: 'CrowdStrike',
     title: 'Cloud Security Intern',
-    description: 'Analyze cloud workload telemetry, build threat hunting detection scripts in Python, and secure container runtimes with Docker on Linux.',
+    description: 'Analyze cloud workload telemetry, build threat hunting detection scripts in Python and C++, and secure container runtimes with Docker on Linux.',
     area: 'Cyber Security',
-    requiredSkills: ['python', 'docker', 'linux'],
+    requiredSkills: ['cybersecurity', 'python', 'docker', 'linux', 'c++', 'rest api'],
     qualifications: ['Undergraduate in CS or Cybersecurity', 'Strong knowledge of Linux systems and cloud security concepts'],
     locationType: 'Remote',
     location: 'United States (Remote)',
@@ -504,9 +504,9 @@ const ALL_30_INTERNSHIPS = [
   {
     companyName: 'GitLab',
     title: 'Junior Frontend Engineer Intern',
-    description: 'Contribute to the open DevOps platform using React, TypeScript, and Next.js, building accessible and scalable UI components.',
+    description: 'Contribute to the open DevOps platform using React, JavaScript, TypeScript, and Next.js, building accessible UI components from Figma.',
     area: 'Web Development',
-    requiredSkills: ['react', 'typescript', 'next.js'],
+    requiredSkills: ['react', 'javascript', 'typescript', 'next.js', 'html & css', 'figma'],
     qualifications: ['Experience contributing to open source or full-stack web applications', 'Proficient in Git workflows'],
     locationType: 'Remote',
     location: 'Global / Singapore (Remote)',
@@ -519,9 +519,9 @@ const ALL_30_INTERNSHIPS = [
   {
     companyName: 'Cloudflare',
     title: 'Security Operations Intern',
-    description: 'Assist in protecting edge infrastructure, investigating DDoS mitigation logs, analyzing network protocols, and developing Go/Linux tools.',
+    description: 'Assist in protecting edge infrastructure, investigating DDoS mitigation logs, analyzing network protocols, and developing Go and C++ tools.',
     area: 'Cyber Security',
-    requiredSkills: ['network security', 'linux', 'go'],
+    requiredSkills: ['cybersecurity', 'network security', 'linux', 'go', 'c++'],
     qualifications: ['Strong grasp of TCP/IP, DNS, and HTTP protocols', 'Familiarity with Go or C systems programming'],
     locationType: 'Remote',
     location: 'United Kingdom (Remote)',
@@ -534,9 +534,9 @@ const ALL_30_INTERNSHIPS = [
   {
     companyName: 'Vercel',
     title: 'Full-Stack Engineering Intern',
-    description: 'Build cutting-edge edge-computing and deployment features using Next.js, TypeScript, and Node.js for global developer tooling.',
+    description: 'Build cutting-edge edge-computing and deployment features using Next.js, TypeScript, JavaScript, Node.js, and Supabase for global developer tooling.',
     area: 'Web Development',
-    requiredSkills: ['next.js', 'typescript', 'node.js'],
+    requiredSkills: ['next.js', 'typescript', 'javascript', 'node.js', 'supabase', 'rest api'],
     qualifications: ['Deep knowledge of Next.js App Router and server components', 'Passion for web performance'],
     locationType: 'Remote',
     location: 'United States (Remote)',
@@ -551,7 +551,7 @@ const ALL_30_INTERNSHIPS = [
     title: 'Penetration Testing Intern',
     description: 'Perform advanced penetration tests, build exploitation proof-of-concepts in Python, and assess enterprise network resilience.',
     area: 'Cyber Security',
-    requiredSkills: ['linux', 'python', 'network security'],
+    requiredSkills: ['cybersecurity', 'linux', 'python', 'network security', 'rest api'],
     qualifications: ['Experience with offensive security tooling and ethical hacking labs', 'Undergraduate in Cybersecurity/CS'],
     locationType: 'Hybrid',
     location: 'Dublin, Ireland',
@@ -564,9 +564,9 @@ const ALL_30_INTERNSHIPS = [
   {
     companyName: 'Automattic',
     title: 'Node.js Backend Intern',
-    description: 'Develop distributed backend microservices and data pipelines with Node.js, MySQL, and Docker for millions of WordPress VIP users.',
+    description: 'Develop distributed backend microservices and data pipelines with Node.js, Express.js, JavaScript, MySQL, and Docker for millions of WordPress VIP users.',
     area: 'Backend Web',
-    requiredSkills: ['node.js', 'mysql', 'docker'],
+    requiredSkills: ['node.js', 'express.js', 'javascript', 'mysql', 'docker', 'rest api'],
     qualifications: ['Self-motivated and effective communicator in distributed, async work environments'],
     locationType: 'Remote',
     location: 'Global (Remote)',
@@ -579,9 +579,9 @@ const ALL_30_INTERNSHIPS = [
   {
     companyName: 'Trend Micro',
     title: 'Threat Intelligence Research Intern',
-    description: 'Analyze malware samples, disassemble binaries, and create automated threat indicators in Python and Linux.',
+    description: 'Analyze malware samples, disassemble binaries with C++ and Linux, and create automated threat indicators in Python.',
     area: 'Threat Research',
-    requiredSkills: ['python', 'linux', 'reverse engineering'],
+    requiredSkills: ['cybersecurity', 'c++', 'python', 'linux', 'reverse engineering'],
     qualifications: ['Basic knowledge of assembly (x86/x64) and disassemblers (Ghidra, IDA Pro)'],
     locationType: 'Hybrid',
     location: 'Tokyo, Japan',
@@ -594,9 +594,9 @@ const ALL_30_INTERNSHIPS = [
   {
     companyName: 'Spotify',
     title: 'Frontend Web Intern',
-    description: 'Build engaging web player features and creator dashboards using React, TypeScript, and Next.js at international scale.',
+    description: 'Build engaging web player features and creator dashboards using React, JavaScript, TypeScript, Next.js, and Figma at international scale.',
     area: 'Frontend Web',
-    requiredSkills: ['react', 'typescript', 'next.js'],
+    requiredSkills: ['react', 'javascript', 'typescript', 'next.js', 'html & css', 'figma'],
     qualifications: ['Passion for music streaming UI and web audio technologies', 'Proficient in modern CSS/Tailwind'],
     locationType: 'Hybrid',
     location: 'Stockholm, Sweden',
@@ -611,7 +611,7 @@ const ALL_30_INTERNSHIPS = [
     title: 'Vulnerability Assessment Intern',
     description: 'Inspect next-generation firewall telemetry, script automated security scanners with Python, and run Dockerized test harnesses.',
     area: 'Cyber Security',
-    requiredSkills: ['python', 'network security', 'docker'],
+    requiredSkills: ['cybersecurity', 'python', 'network security', 'docker', 'rest api'],
     qualifications: ['Undergraduate in Computer Science, Cyber Security, or Information Systems'],
     locationType: 'Remote',
     location: 'Australia (Remote)',
@@ -624,9 +624,9 @@ const ALL_30_INTERNSHIPS = [
   {
     companyName: 'Postman',
     title: 'API & Platform Engineer Intern',
-    description: 'Help build the next generation of API collaboration tooling, client SDKs, and containerized runtime engines.',
+    description: 'Help build the next generation of API collaboration tooling, Express.js middleware, JavaScript SDKs, and containerized runtime engines.',
     area: 'API Infrastructure',
-    requiredSkills: ['node.js', 'typescript', 'docker'],
+    requiredSkills: ['rest api', 'node.js', 'express.js', 'javascript', 'typescript', 'docker'],
     qualifications: ['Knowledge of REST, GraphQL, or gRPC', 'Strong JavaScript / TypeScript fundamentals'],
     locationType: 'Remote',
     location: 'India / Global (Remote)',
@@ -639,9 +639,9 @@ const ALL_30_INTERNSHIPS = [
   {
     companyName: 'Datadog',
     title: 'Site Reliability Engineering Intern',
-    description: 'Develop automated monitoring, observability scripts in Python, and manage scalable Linux and Docker container infrastructure.',
+    description: 'Develop automated monitoring, observability scripts in Python, query MySQL metrics, and manage scalable Linux and Docker container infrastructure.',
     area: 'SRE / DevOps',
-    requiredSkills: ['docker', 'linux', 'python'],
+    requiredSkills: ['docker', 'linux', 'python', 'mysql', 'rest api'],
     qualifications: ['Strong troubleshooting abilities in Linux/Unix', 'Familiarity with cloud metrics'],
     locationType: 'Hybrid',
     location: 'Paris, France',
@@ -654,9 +654,9 @@ const ALL_30_INTERNSHIPS = [
   {
     companyName: 'Synopsys',
     title: 'Software Security Intern',
-    description: 'Evaluate static and dynamic application security testing (SAST/DAST) tools, analyze MySQL databases, and script in Python.',
+    description: 'Evaluate static and dynamic application security testing (SAST/DAST) tools, analyze Java and C++ codebases, MySQL databases, and script in Python.',
     area: 'AppSec',
-    requiredSkills: ['python', 'linux', 'mysql'],
+    requiredSkills: ['cybersecurity', 'c++', 'java', 'python', 'linux', 'mysql'],
     qualifications: ['Interest in secure coding practices and software development life-cycle security'],
     locationType: 'Hybrid',
     location: 'Munich, Germany',
@@ -669,9 +669,9 @@ const ALL_30_INTERNSHIPS = [
   {
     companyName: 'Canva',
     title: 'React & Design Systems Intern',
-    description: 'Contribute to Canva’s core design system, building accessible React components, TypeScript interfaces, and Dockerized build systems.',
+    description: 'Contribute to Canva’s core design system, building accessible React components, JavaScript & TypeScript interfaces, and Figma token integrations.',
     area: 'Frontend Web',
-    requiredSkills: ['react', 'typescript', 'docker'],
+    requiredSkills: ['react', 'javascript', 'typescript', 'html & css', 'figma', 'docker'],
     qualifications: ['Experience with UI component libraries and design tokens', 'Attention to web accessibility'],
     locationType: 'Remote',
     location: 'Sydney, Australia (Remote)',
@@ -684,9 +684,9 @@ const ALL_30_INTERNSHIPS = [
   {
     companyName: 'MongoDB Inc.',
     title: 'Database Infrastructure Intern',
-    description: 'Work with the MongoDB core server and driver teams, building automation tools in Python and testing Docker distributed clusters.',
+    description: 'Work with the MongoDB core server and driver teams, building automation tools in Python, core components in C++, and testing Docker distributed clusters.',
     area: 'Databases',
-    requiredSkills: ['mongodb', 'python', 'docker'],
+    requiredSkills: ['mongodb', 'c++', 'python', 'docker', 'rest api'],
     qualifications: ['Knowledge of distributed systems and database indexing', 'Proficient in Python or C++'],
     locationType: 'Remote',
     location: 'United States (Remote)',
@@ -699,9 +699,9 @@ const ALL_30_INTERNSHIPS = [
   {
     companyName: 'Darktrace',
     title: 'Cyber Defense Operations Intern',
-    description: 'Support cyber threat analysts monitoring enterprise networks with AI-driven cyber defense platforms across Linux and Python.',
+    description: 'Support cyber threat analysts monitoring enterprise networks with AI and Machine Learning cyber defense platforms across Linux and Python.',
     area: 'Cyber Security',
-    requiredSkills: ['network security', 'linux', 'python'],
+    requiredSkills: ['cybersecurity', 'machine learning', 'network security', 'linux', 'python'],
     qualifications: ['Undergraduate in Computer Science, Cyber Security, or Mathematics', 'Strong analytical skills'],
     locationType: 'On-site',
     location: 'Cambridge, UK',
@@ -709,6 +709,68 @@ const ALL_30_INTERNSHIPS = [
     openPositions: 2,
     stipend: { isPaid: true, amount: 2400, currency: '£' },
     deadline: new Date('2027-01-15T23:59:59Z'),
+    status: 'published',
+  },
+
+  // --- PART 3: ADDITIONAL CORE OFFERINGS (31 - 34) ---
+  {
+    companyName: 'Virtusa',
+    title: 'Full Stack Engineering Intern (MERN)',
+    description: 'Join Virtusa to develop scalable web applications using React, Node.js, Express.js, MongoDB, JavaScript, and HTML & CSS with RESTful microservices.',
+    area: 'Software Engineering',
+    requiredSkills: ['react', 'node.js', 'express.js', 'mongodb', 'javascript', 'html & css', 'rest api'],
+    qualifications: ['Undergraduate in ICT/CS', 'Knowledge of RESTful APIs and Git', 'Strong team communication'],
+    locationType: 'Hybrid',
+    location: 'Colombo, Sri Lanka',
+    durationMonths: 6,
+    openPositions: 3,
+    stipend: { isPaid: true, amount: 45000, currency: 'LKR' },
+    deadline: new Date('2026-11-20T23:59:59Z'),
+    status: 'published',
+  },
+  {
+    companyName: 'WSO2',
+    title: 'Frontend React Developer Intern',
+    description: 'Design elegant and performant UI components using React, JavaScript, TypeScript, HTML & CSS, and Figma for Identity Server interfaces.',
+    area: 'Web Development',
+    requiredSkills: ['react', 'javascript', 'typescript', 'html & css', 'figma', 'rest api'],
+    qualifications: ['Hands-on experience with modern React hooks', 'Familiarity with Figma designs'],
+    locationType: 'Remote',
+    location: 'Colombo (Remote)',
+    durationMonths: 6,
+    openPositions: 2,
+    stipend: { isPaid: true, amount: 50000, currency: 'LKR' },
+    deadline: new Date('2026-12-05T23:59:59Z'),
+    status: 'published',
+  },
+  {
+    companyName: 'Sysco LABS Sri Lanka',
+    title: 'Backend Systems Intern (Node.js & Cloud)',
+    description: 'Work with high-throughput backend services powering restaurant tech. Build and optimize microservices with Node.js, Express.js, JavaScript, MySQL, Docker, and REST APIs.',
+    area: 'Software Engineering',
+    requiredSkills: ['node.js', 'express.js', 'javascript', 'mysql', 'docker', 'rest api'],
+    qualifications: ['Undergraduate in Computer Science / Software Engineering', 'Good understanding of relational databases'],
+    locationType: 'On-site',
+    location: 'Sysco LABS HQ, Colombo 03',
+    durationMonths: 6,
+    openPositions: 2,
+    stipend: { isPaid: true, amount: 55000, currency: 'LKR' },
+    deadline: new Date('2026-11-10T23:59:59Z'),
+    status: 'published',
+  },
+  {
+    companyName: 'Virtusa',
+    title: 'Data Science & Machine Learning Intern',
+    description: 'Analyze complex datasets, build machine learning models, and create actionable business intelligence pipelines using Python, Pandas, MySQL, and REST APIs.',
+    area: 'Data Science',
+    requiredSkills: ['machine learning', 'python', 'pandas', 'mysql', 'rest api'],
+    qualifications: ['Sound mathematical & statistics background', 'Experience with scikit-learn / pandas'],
+    locationType: 'Remote',
+    location: 'Remote, Sri Lanka',
+    durationMonths: 3,
+    openPositions: 1,
+    stipend: { isPaid: true, amount: 40000, currency: 'LKR' },
+    deadline: new Date('2026-11-05T23:59:59Z'),
     status: 'published',
   },
 ];
@@ -724,7 +786,6 @@ export const seedSearchData = async () => {
     const companyMap = new Map();
 
     for (const cData of COMPANIES_DATA) {
-      // Find or create user for this company
       let cUser = await User.findOne({ email: cData.email });
       if (!cUser) {
         cUser = await User.create({
@@ -735,7 +796,6 @@ export const seedSearchData = async () => {
         });
       }
 
-      // Find or create Company record by user or name
       let company = await Company.findOne({
         $or: [{ user: cUser._id }, { name: cData.name }],
       });
@@ -791,24 +851,36 @@ export const seedSearchData = async () => {
         fieldOfStudy: 'Software Engineering',
         academicYear: '3rd Year',
         gpa: 3.78,
-        bio: 'Passionate full-stack web developer experienced with modern JavaScript, React, Node.js, and MongoDB.',
-        skills: ['react', 'node.js', 'mongodb', 'javascript', 'tailwind', 'express', 'git', 'python'],
+        bio: 'Passionate full-stack web developer experienced with modern JavaScript, React, Node.js, Express.js, and MongoDB.',
+        skills: [
+          'react',
+          'node.js',
+          'mongodb',
+          'javascript',
+          'express.js',
+          'html & css',
+          'rest api',
+          'mysql',
+          'git',
+          'python',
+          'cybersecurity',
+        ],
         reputationScore: 4.9,
         reviewCount: 4,
         projects: [
           {
             title: 'InternBridge Portal',
             description: 'Full stack recruitment platform with algorithmic matching engine.',
-            technologies: ['React', 'Node.js', 'MongoDB', 'Tailwind CSS'],
+            technologies: ['React', 'Node.js', 'Express.js', 'MongoDB', 'Tailwind CSS'],
           },
         ],
       });
     }
 
-    // 3. Upsert All 30 Internships
-    console.log('[Seed] Seeding 30 internships from PDF catalog...');
+    // 3. Upsert All 34 Internships
+    console.log('[Seed] Seeding all 34 internships with enriched skills...');
     let seededCount = 0;
-    for (const item of ALL_30_INTERNSHIPS) {
+    for (const item of ALL_34_INTERNSHIPS) {
       const company = companyMap.get(item.companyName);
       if (!company) {
         console.warn(`[Seed Warning] Company ${item.companyName} not found!`);

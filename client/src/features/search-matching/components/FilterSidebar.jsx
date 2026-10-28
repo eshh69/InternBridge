@@ -17,14 +17,25 @@ const POPULAR_SKILLS = [
   'React',
   'Node.js',
   'Python',
+  'JavaScript',
+  'Express.js',
+  'MySQL',
+  'Java',
+  'C++',
+  'HTML & CSS',
+  'REST API',
+  'Machine Learning',
+  'Figma',
+  'Cybersecurity',
+  'Firebase',
+  'Supabase',
   'Linux',
   'Docker',
   'TypeScript',
-  'Network Security',
-  'Next.js',
   'MongoDB',
-  'MySQL',
+  'Next.js',
   'Tailwind CSS',
+  'Network Security',
   'Wireshark',
   'Selenium',
   'OWASP',
@@ -65,7 +76,7 @@ export const FilterSidebar = ({
     ? filters.skills.split(',').map((s) => s.trim().toLowerCase()).filter(Boolean)
     : [];
 
-  const visibleSkills = showAllSkills ? POPULAR_SKILLS : POPULAR_SKILLS.slice(0, 9);
+  const visibleSkills = showAllSkills ? POPULAR_SKILLS : POPULAR_SKILLS.slice(0, 15);
 
   const content = (
     <div className="space-y-6">
