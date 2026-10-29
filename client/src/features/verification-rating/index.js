@@ -1,7 +1,14 @@
 export { VerificationRequestForm } from './components/VerificationRequestForm';
 export { AdminVerificationPanel } from './components/AdminVerificationPanel';
+export { AdminVerificationQueue } from './components/AdminVerificationQueue';
 export { GiveReviewForm } from './components/GiveReviewForm';
 export { ReputationAndReviewsCard } from './components/ReputationAndReviewsCard';
+export { ReputationOverviewCard } from './components/ReputationOverviewCard';
 export { StarRating } from './components/StarRating';
 export { VerificationStatusBadge } from './components/VerificationStatusBadge';
+export { VerificationRequestModal } from './components/VerificationRequestModal';
+export { ReviewSubmissionModal } from './components/ReviewSubmissionModal';
+export { ReviewList } from './components/ReviewList';
+export { ReputationMetricsDashboard } from './components/ReputationMetricsDashboard';
 export { VerificationRatingPage } from './VerificationRatingPage';
+export { verificationRatingApi } from './verificationRatingApi';
