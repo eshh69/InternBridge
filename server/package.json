@@ -9,7 +9,8 @@
     "dev": "nodemon src/server.js",
     "seed": "node src/utils/seedDevUsers.js",
     "seed:search": "node src/modules/search-matching/seedSearchData.js",
-    "test": "node src/modules/company-internships/tests/companyInternships.test.js"
+    "test": "node src/modules/company-internships/tests/companyInternships.test.js",
+    "test:verification": "node src/modules/verification-rating/tests/verificationRating.test.js"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.45.0",
