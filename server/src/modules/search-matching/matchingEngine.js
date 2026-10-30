@@ -8,7 +8,7 @@
  */
 
 // Canonical alias dictionary for tech skills
-const SKILL_SYNONYMS = {
+export const SKILL_SYNONYMS = {
   javascript: ['javascript', 'js', 'ecmascript'],
   typescript: ['typescript', 'ts'],
   react: ['react', 'reactjs', 'react.js'],

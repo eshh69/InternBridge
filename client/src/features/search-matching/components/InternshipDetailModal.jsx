@@ -201,16 +201,16 @@ export const InternshipDetailModal = ({
             {/* Matched Skills */}
             {matchedSkills.length > 0 && (
               <div>
-                <span className="text-[11px] font-semibold text-emerald-800 block mb-1">
+                <span className="text-[11px] font-semibold text-gray-700 block mb-1">
                   Skills you possess:
                 </span>
                 <div className="flex flex-wrap gap-1.5">
                   {matchedSkills.map((s, idx) => (
                     <span
                       key={idx}
-                      className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800 border border-emerald-300"
+                      className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-700 border border-gray-200"
                     >
-                      <Check className="w-3 h-3 text-emerald-700" /> {s}
+                      {formatSkillName(s)}
                     </span>
                   ))}
                 </div>

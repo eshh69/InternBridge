@@ -52,11 +52,64 @@ const INITIAL_FILTERS = {
   minGpa: '',
 };
 
+const SKILL_DISPLAY_NAMES = {
+  javascript: 'JavaScript',
+  'express.js': 'Express.js',
+  express: 'Express.js',
+  mysql: 'MySQL',
+  sql: 'SQL',
+  java: 'Java',
+  'c++': 'C++',
+  cpp: 'C++',
+  'html & css': 'HTML & CSS',
+  html: 'HTML',
+  html5: 'HTML5',
+  css: 'CSS',
+  css3: 'CSS3',
+  'rest api': 'REST API',
+  'rest apis': 'REST APIs',
+  'machine learning': 'Machine Learning',
+  ml: 'ML',
+  figma: 'Figma',
+  cybersecurity: 'Cybersecurity',
+  firebase: 'Firebase',
+  supabase: 'Supabase',
+  react: 'React',
+  'node.js': 'Node.js',
+  nodejs: 'Node.js',
+  python: 'Python',
+  linux: 'Linux',
+  docker: 'Docker',
+  typescript: 'TypeScript',
+  'next.js': 'Next.js',
+  nextjs: 'Next.js',
+  mongodb: 'MongoDB',
+  'tailwind css': 'Tailwind CSS',
+  tailwind: 'Tailwind CSS',
+  'network security': 'Network Security',
+  wireshark: 'Wireshark',
+  selenium: 'Selenium',
+  owasp: 'OWASP',
+  siem: 'SIEM',
+  go: 'Go',
+  git: 'Git',
+  aws: 'AWS',
+};
+
+const formatSkillName = (s = '') => {
+  const lower = s.toLowerCase().trim();
+  return SKILL_DISPLAY_NAMES[lower] || s.charAt(0).toUpperCase() + s.slice(1);
+};
+
 export const SearchMatchingPage = () => {
   const navigate = useNavigate();
   const { user, isAuthenticated } = useAuth();
   const isStudent = user?.role === 'student';
   const isCompany = user?.role === 'company' || user?.role === 'admin';
+
+  // Logged-in student profile skills from Member 1 Portfolio
+  const [studentSkills, setStudentSkills] = useState([]);
+  const [studentProfileLoaded, setStudentProfileLoaded] = useState(false);
 
   // Navigation tab state
   const [activeTab, setActiveTab] = useState('all_internships'); // 'all_internships' | 'top_matches' | 'candidates'
@@ -166,6 +219,28 @@ export const SearchMatchingPage = () => {
     fetchResults();
   }, [fetchResults]);
 
+  // Load logged-in student's saved competencies from Member 1 StudentProfile
+  useEffect(() => {
+    if (isStudent && isAuthenticated) {
+      apiClient
+        .get('/students/me')
+        .then((res) => {
+          const profile = res.data?.data || res.data;
+          if (profile && Array.isArray(profile.skills)) {
+            setStudentSkills(profile.skills);
+          }
+          setStudentProfileLoaded(true);
+        })
+        .catch((err) => {
+          console.warn('Could not load student profile skills:', err);
+          setStudentProfileLoaded(true);
+        });
+    } else {
+      setStudentSkills([]);
+      setStudentProfileLoaded(false);
+    }
+  }, [isStudent, isAuthenticated]);
+
   const handleApply = (internship) => {
     if (!isAuthenticated) {
       navigate('/login');
@@ -245,6 +320,90 @@ export const SearchMatchingPage = () => {
         )}
       </div>
 
+      {/* Student Profile Skills Quick-Match Banner */}
+      {isStudent && studentSkills.length > 0 && (
+        <div className="bg-gradient-to-r from-indigo-50/90 via-blue-50/70 to-white rounded-2xl border border-indigo-200/80 p-4 sm:p-5 flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-2xs">
+          <div className="flex items-start gap-3.5">
+            <div className="p-2.5 bg-indigo-600 text-white rounded-xl shadow-xs flex-shrink-0 mt-0.5 md:mt-0">
+              <Sparkles className="w-5 h-5 text-indigo-100" />
+            </div>
+            <div className="space-y-1">
+              <div className="flex flex-wrap items-center gap-2">
+                <h4 className="text-sm font-bold text-gray-900">
+                  Matched with Your Profile Skills
+                </h4>
+                <span className="text-[10px] font-semibold px-2 py-0.5 bg-indigo-100 text-indigo-700 rounded-full">
+                  {studentSkills.length} Skills in Portfolio
+                </span>
+              </div>
+              <div className="flex flex-wrap items-center gap-1.5 pt-0.5">
+                <span className="text-xs text-gray-500 font-medium mr-1">Your competencies:</span>
+                {studentSkills.map((skill) => (
+                  <span
+                    key={skill}
+                    className="inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-semibold bg-white border border-indigo-200 text-indigo-800 shadow-3xs"
+                  >
+                    {formatSkillName(skill)}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2 self-start md:self-center flex-shrink-0">
+            <button
+              type="button"
+              onClick={() => {
+                const currentList = filters.skills
+                  ? filters.skills.split(',').map((s) => s.trim().toLowerCase()).filter(Boolean)
+                  : [];
+                const areAllActive = studentSkills.every((s) =>
+                  currentList.includes(s.toLowerCase().trim())
+                );
+                if (areAllActive) {
+                  handleFilterChange('skills', '');
+                } else {
+                  handleFilterChange('skills', studentSkills.join(','));
+                }
+              }}
+              className={`px-4 py-2 text-xs font-bold rounded-xl shadow-xs transition-all flex items-center gap-1.5 cursor-pointer ${
+                studentSkills.every((s) =>
+                  (filters.skills || '')
+                    .toLowerCase()
+                    .split(',')
+                    .map((sk) => sk.trim())
+                    .includes(s.toLowerCase().trim())
+                )
+                  ? 'bg-emerald-600 hover:bg-emerald-700 text-white'
+                  : 'bg-indigo-600 hover:bg-indigo-700 text-white'
+              }`}
+            >
+              <Sparkles className="w-3.5 h-3.5" />
+              {studentSkills.every((s) =>
+                (filters.skills || '')
+                  .toLowerCase()
+                  .split(',')
+                  .map((sk) => sk.trim())
+                  .includes(s.toLowerCase().trim())
+              )
+                ? '✓ Showing Only Matching Internships'
+                : 'Filter Internships for My Skills'}
+            </button>
+
+            <button
+              type="button"
+              onClick={() => {
+                setActiveTab('top_matches');
+                setPage(1);
+              }}
+              className="px-3.5 py-2 text-xs font-semibold rounded-xl bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 shadow-3xs transition-colors flex items-center gap-1"
+            >
+              Ranked Matches
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Main Two-Column Layout */}
       <div className="flex flex-col md:flex-row gap-6 items-start">
         {/* LEFT COLUMN: FILTER SIDEBAR */}
@@ -254,6 +413,7 @@ export const SearchMatchingPage = () => {
           onChange={handleFilterChange}
           onReset={handleResetFilters}
           isStudent={isStudent}
+          studentSkills={studentSkills}
           isMobileOpen={isMobileFiltersOpen}
           onCloseMobile={() => setIsMobileFiltersOpen(false)}
           totalCounts={{
@@ -465,6 +625,7 @@ export const SearchMatchingPage = () => {
                   key={internship._id || internship.id}
                   internship={internship}
                   isStudent={isStudent}
+                  selectedSkills={filters.skills}
                   onViewDetails={(item) => setSelectedInternship(item)}
                   onApply={handleApply}
                 />

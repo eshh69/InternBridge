@@ -10,7 +10,7 @@ export const SupabaseSignInButton = ({ role = 'student', onError }) => {
 
       if (!isSupabaseConfigured || !supabase) {
         throw new Error(
-          'Supabase is not configured yet! Please add VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY to your client/.env file.'
+          'Supabase credentials are not configured in client/.env yet. Please add your live VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY, or sign in using the email accounts below.'
         );
       }
 

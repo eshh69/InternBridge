@@ -183,6 +183,33 @@ router.post('/supabase-login', async (req, res, next) => {
       token,
     });
   } catch (error) {
+    // Handle race conditions where multiple requests created the user concurrently
+    if (error.code === 11000) {
+      try {
+        const normalizedEmail = req.body.email ? req.body.email.toLowerCase().trim() : '';
+        const user = await User.findOne({
+          $or: [
+            { email: normalizedEmail },
+            ...(req.body.supabaseId ? [{ supabaseId: req.body.supabaseId }] : []),
+          ],
+        });
+        if (user) {
+          const token = generateToken(user._id);
+          return sendSuccess(res, 200, 'Supabase authentication successful', {
+            user: {
+              id: user._id,
+              name: user.name,
+              email: user.email,
+              role: user.role,
+              avatarUrl: user.avatarUrl,
+            },
+            token,
+          });
+        }
+      } catch (innerErr) {
+        return next(innerErr);
+      }
+    }
     next(error);
   }
 });
