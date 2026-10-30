@@ -31,3 +31,7 @@ lerna-debug.log*
 *.sw?
 .DS_Store
 Thumbs.db
+
+# Local environment wrapper
+powershell.cmd
+powershell.bat

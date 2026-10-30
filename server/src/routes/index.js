@@ -2,7 +2,7 @@ import express from 'express';
 import authRoutes from './authRoutes.js';
 import studentPortfolioRoutes from '../modules/student-portfolio/routes.js';
 import chatRoutes from '../modules/student-portfolio/chatRoutes.js';
-import companyInternshipRoutes from '../modules/company-internships/routes.js';
+import companyRoutes, { internshipRoutes } from '../modules/company-internships/routes.js';
 import searchMatchingRoutes, { matchRoutes } from '../modules/search-matching/routes.js';
 import applicationsRoutes from '../modules/applications/routes.js';
 import verificationRatingRoutes from './verificationRoutes.js';
@@ -23,7 +23,8 @@ router.get('/health', (req, res) => {
 router.use('/auth', authRoutes);
 router.use('/students', studentPortfolioRoutes);
 router.use('/conversations', chatRoutes);
-router.use('/companies', companyInternshipRoutes);
+router.use('/companies', companyRoutes);
+router.use('/internships', internshipRoutes);
 router.use('/search', searchMatchingRoutes);
 router.use('/match', matchRoutes);
 router.use('/applications', applicationsRoutes);

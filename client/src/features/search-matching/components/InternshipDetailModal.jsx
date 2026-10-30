@@ -52,6 +52,21 @@ export const InternshipDetailModal = ({
       })
     : 'Open';
 
+  const formatStipend = (stipend) => {
+    if (!stipend?.isPaid) return 'Unpaid';
+    const curr = (stipend.currency || 'LKR').trim();
+    const amt = Number(stipend.amount || 0).toLocaleString();
+    if (curr.includes('/hr')) {
+      const symbol = curr.replace('/hr', '').trim();
+      return `${symbol} ${amt} / hr`;
+    }
+    if (curr.includes('/mo')) {
+      const symbol = curr.replace('/mo', '').trim();
+      return `${symbol} ${amt} / mo`;
+    }
+    return `${curr} ${amt} / mo`;
+  };
+
   const matchedSet = new Set(
     (matchedSkills || []).map((s) => s.toLowerCase().trim())
   );
@@ -146,9 +161,7 @@ export const InternshipDetailModal = ({
             </span>
             <p className="text-xs font-semibold text-gray-800 flex items-center gap-1">
               <Banknote className="w-3.5 h-3.5 text-emerald-500" />
-              {stipend?.isPaid
-                ? `${stipend?.currency || 'LKR'} ${Number(stipend?.amount || 0).toLocaleString()}`
-                : 'Unpaid'}
+              {formatStipend(stipend)}
             </p>
           </div>
 

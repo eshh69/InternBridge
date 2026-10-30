@@ -94,9 +94,43 @@ const handleSearchInternships = async (req, res) => {
         .filter(Boolean);
 
       if (skillsArray.length > 0) {
+        const queryVariants = new Set(skillsArray);
+        for (const s of skillsArray) {
+          if (s === 'cybersecurity' || s === 'cyber security') {
+            queryVariants.add('cybersecurity');
+            queryVariants.add('cyber security');
+            queryVariants.add('network security');
+          }
+          if (s === 'express.js' || s === 'express') {
+            queryVariants.add('express.js');
+            queryVariants.add('express');
+          }
+          if (s === 'html & css' || s === 'html' || s === 'css') {
+            queryVariants.add('html & css');
+            queryVariants.add('html');
+            queryVariants.add('css');
+          }
+          if (s === 'rest api' || s === 'rest') {
+            queryVariants.add('rest api');
+            queryVariants.add('rest');
+          }
+          if (s === 'c++' || s === 'cpp') {
+            queryVariants.add('c++');
+            queryVariants.add('cpp');
+          }
+          if (s === 'mysql' || s === 'sql') {
+            queryVariants.add('mysql');
+            queryVariants.add('sql');
+          }
+          if (s === 'machine learning' || s === 'ml') {
+            queryVariants.add('machine learning');
+            queryVariants.add('ml');
+          }
+        }
+
         // Find internships that require any of the queried skills
         filter.requiredSkills = {
-          $in: skillsArray.map((s) => new RegExp(`^${escapeRegex(s)}$`, 'i')),
+          $in: Array.from(queryVariants).map((s) => new RegExp(`^${escapeRegex(s)}$`, 'i')),
         };
       }
     }
