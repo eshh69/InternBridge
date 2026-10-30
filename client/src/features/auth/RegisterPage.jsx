@@ -244,240 +244,201 @@ export const RegisterPage = () => {
   };
 
   return (
-    <div className="max-w-2xl mx-auto py-8 px-4">
-      {/* Top Header */}
-      <div className="text-center mb-8">
-        <div className="inline-flex p-3 bg-indigo-50 text-indigo-600 rounded-xl mb-3 shadow-2xs">
-          <Briefcase className="w-8 h-8" />
-        </div>
-        <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">
-          Create Your InternBridge Account
-        </h1>
-        <p className="text-sm text-gray-500 mt-2 max-w-md mx-auto">
-          One unified platform bridging students, companies, and academic reviewers.
-        </p>
-      </div>
-
-      {/* Stepper Progress Bar */}
-      <div className="mb-8">
-        <div className="flex items-center justify-between relative">
-          <div className="absolute left-0 top-1/2 -translate-y-1/2 w-full h-1 bg-gray-200 z-0" />
-          <div
-            className="absolute left-0 top-1/2 -translate-y-1/2 h-1 bg-indigo-600 transition-all duration-300 z-0"
-            style={{ width: `${((currentStep - 1) / 3) * 100}%` }}
-          />
-
-          {[
-            { step: 1, label: 'Role' },
-            { step: 2, label: 'Identity' },
-            { step: 3, label: 'Profile' },
-            { step: 4, label: 'Confirm' },
-          ].map((item) => (
-            <div key={item.step} className="relative z-10 flex flex-col items-center">
-              <div
-                className={`w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold transition-all shadow-sm ${
-                  currentStep >= item.step
-                    ? 'bg-indigo-600 text-white ring-4 ring-indigo-50'
-                    : 'bg-white border-2 border-gray-300 text-gray-500'
-                }`}
-              >
-                {currentStep > item.step ? <CheckCircle2 className="w-5 h-5" /> : item.step}
-              </div>
-              <span
-                className={`text-xs mt-1.5 font-medium ${
-                  currentStep >= item.step ? 'text-indigo-600' : 'text-gray-400'
-                }`}
-              >
-                {item.label}
-              </span>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Main Card */}
+    <div className="max-w-md mx-auto py-10 px-4">
       <Card className="shadow-md rounded-[10px] p-6 md:p-8">
+        {/* Top Header - Perfectly matching LoginPage */}
+        <div className="text-center mb-6">
+          <div className="inline-flex p-3 bg-indigo-50 text-indigo-600 rounded-xl mb-3 shadow-2xs">
+            <Briefcase className="w-8 h-8" />
+          </div>
+          <h1 className="text-2xl font-bold text-gray-900 tracking-tight">Create an Account</h1>
+          <p className="text-xs text-gray-500 mt-1">
+            Join InternBridge as a verified student, company, or reviewer
+          </p>
+        </div>
+
+        {/* Compact Stepper Progress Bar */}
+        <div className="mb-6">
+          <div className="flex items-center justify-between relative px-2">
+            <div className="absolute left-6 right-6 top-1/2 -translate-y-1/2 h-0.5 bg-gray-200 z-0" />
+            <div
+              className="absolute left-6 top-1/2 -translate-y-1/2 h-0.5 bg-indigo-600 transition-all duration-300 z-0"
+              style={{ width: `${((currentStep - 1) / 3) * 85}%` }}
+            />
+
+            {[
+              { step: 1, label: 'Role' },
+              { step: 2, label: 'Identity' },
+              { step: 3, label: 'Profile' },
+              { step: 4, label: 'Confirm' },
+            ].map((item) => (
+              <div key={item.step} className="relative z-10 flex flex-col items-center">
+                <div
+                  className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold transition-all shadow-2xs ${
+                    currentStep >= item.step
+                      ? 'bg-indigo-600 text-white ring-4 ring-indigo-50'
+                      : 'bg-white border-2 border-gray-300 text-gray-400'
+                  }`}
+                >
+                  {currentStep > item.step ? <CheckCircle2 className="w-4 h-4" /> : item.step}
+                </div>
+                <span
+                  className={`text-[10px] mt-1 font-semibold ${
+                    currentStep >= item.step ? 'text-indigo-600' : 'text-gray-400'
+                  }`}
+                >
+                  {item.label}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+
         {error && (
-          <Alert type="danger" className="mb-6">
+          <Alert type="danger" className="mb-5">
             {error}
           </Alert>
         )}
 
-        {/* STEP 1: Select Role & Signup Method */}
+        {/* STEP 1: Select Role & Signup Method - Matched to Login Page UI */}
         {currentStep === 1 && (
-          <div className="space-y-6">
+          <div className="space-y-5">
+            {/* Segmented Role Selector matching LoginPage */}
             <div>
-              <h2 className="text-xl font-bold text-gray-900 mb-1">Select Your Account Role</h2>
-              <p className="text-xs text-gray-500">
-                Choose the role that best describes your profile on InternBridge.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5">
-              {[
-                {
-                  id: 'student',
-                  title: 'Student Intern',
-                  desc: 'Build portfolio, explore verified internships, and chat with employers.',
-                  icon: GraduationCap,
-                },
-                {
-                  id: 'company',
-                  title: 'Company / Employer',
-                  desc: 'Publish internship vacancies and recruit matched undergraduate talent.',
-                  icon: Building2,
-                },
-                {
-                  id: 'reviewer',
-                  title: 'Academic Reviewer',
-                  desc: 'Verify university student credentials, endorse projects & ratings.',
-                  icon: ShieldCheck,
-                },
-              ].map((item) => {
-                const Icon = item.icon;
-                const isSelected = role === item.id;
-                return (
-                  <button
-                    key={item.id}
-                    type="button"
-                    onClick={() => setRole(item.id)}
-                    className={`p-4 rounded-[10px] border-2 text-left transition-all ${
-                      isSelected
-                        ? 'border-indigo-600 bg-indigo-50/60 shadow-sm'
-                        : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
-                    }`}
-                  >
-                    <div
-                      className={`w-10 h-10 rounded-lg flex items-center justify-center mb-3 ${
-                        isSelected ? 'bg-indigo-600 text-white' : 'bg-gray-100 text-gray-600'
+              <label className="block text-xs font-semibold uppercase tracking-wider text-gray-500 mb-2">
+                Register As:
+              </label>
+              <div className="grid grid-cols-3 gap-2 p-1 bg-gray-100 rounded-[10px]">
+                {[
+                  { id: 'student', label: 'Student', icon: GraduationCap },
+                  { id: 'company', label: 'Company', icon: Building2 },
+                  { id: 'reviewer', label: 'Reviewer', icon: ShieldCheck },
+                ].map((item) => {
+                  const Icon = item.icon;
+                  const isActive = role === item.id;
+                  return (
+                    <button
+                      key={item.id}
+                      type="button"
+                      onClick={() => setRole(item.id)}
+                      className={`py-2 px-2.5 rounded-[8px] text-xs font-semibold flex items-center justify-center gap-1.5 transition-all ${
+                        isActive
+                          ? 'bg-white text-indigo-600 shadow-2xs'
+                          : 'text-gray-600 hover:text-gray-900'
                       }`}
                     >
-                      <Icon className="w-5 h-5" />
-                    </div>
-                    <div className="font-semibold text-gray-900 text-sm mb-1">{item.title}</div>
-                    <div className="text-xs text-gray-500 leading-relaxed">{item.desc}</div>
-                  </button>
-                );
-              })}
-            </div>
+                      <Icon className="w-3.5 h-3.5" />
+                      {item.label}
+                    </button>
+                  );
+                })}
+              </div>
 
-            <div className="pt-4 border-t border-gray-100">
-              <label className="block text-sm font-semibold text-gray-900 mb-3">
-                Choose How to Create Your Account:
-              </label>
-
-              <div className="space-y-3">
-                {/* Google 1-Click Signup */}
-                <div className="p-3.5 bg-gray-50 rounded-[10px] border border-gray-200">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-xs font-semibold uppercase text-indigo-600 tracking-wider flex items-center gap-1.5">
-                      <Sparkles className="w-3.5 h-3.5" /> Recommended (1-Click)
-                    </span>
-                    <span className="text-xs text-gray-500">Auto-imports Name & Email</span>
-                  </div>
-                  <SupabaseSignInButton
-                    role={role}
-                    intent="register"
-                    buttonText="Sign up with Google"
-                    onError={(msg) => setError(msg)}
-                  />
-                </div>
-
-                <div className="relative my-3">
-                  <div className="absolute inset-0 flex items-center">
-                    <div className="w-full border-t border-gray-200" />
-                  </div>
-                  <div className="relative flex justify-center text-xs uppercase">
-                    <span className="bg-white px-3 text-gray-400 font-medium">Or continue manually</span>
-                  </div>
-                </div>
-
-                {/* Manual Email/Password Option */}
-                <Button
-                  type="button"
-                  variant="outline"
-                  className="w-full justify-center py-2.5 rounded-[10px] font-medium"
-                  onClick={() => {
-                    setAuthMode('manual');
-                    setGoogleProfile(null);
-                    setCurrentStep(2);
-                  }}
-                >
-                  <Mail className="w-4 h-4 mr-2 text-gray-500" />
-                  Sign up with Email & Password
-                </Button>
+              {/* Compact Role Description Pill */}
+              <div className="mt-2.5 p-2.5 bg-gray-50 rounded-[8px] border border-gray-100 text-xs text-gray-500 text-center leading-relaxed">
+                {role === 'student' &&
+                  'Build your verified portfolio, explore internships, and chat with employers.'}
+                {role === 'company' &&
+                  'Publish internship vacancies and recruit matched undergraduate talent.'}
+                {role === 'reviewer' &&
+                  'Verify university student credentials, endorse projects & ratings.'}
               </div>
             </div>
+
+            {/* Supabase Google 1-Click Signup matching LoginPage */}
+            <div className="pt-1">
+              <SupabaseSignInButton
+                role={role}
+                intent="register"
+                buttonText={`Sign up with Google (${role.charAt(0).toUpperCase() + role.slice(1)})`}
+                onError={(msg) => setError(msg)}
+              />
+            </div>
+
+            {/* Divider matching LoginPage */}
+            <div className="relative my-4">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-gray-200" />
+              </div>
+              <div className="relative flex justify-center text-xs uppercase">
+                <span className="bg-white px-2 text-gray-400 font-medium">Or continue manually</span>
+              </div>
+            </div>
+
+            {/* Manual Email/Password Option matching primary button on Login */}
+            <Button
+              type="button"
+              variant="primary"
+              className="w-full justify-center py-2.5 rounded-[10px] font-semibold text-sm"
+              onClick={() => {
+                setAuthMode('manual');
+                setGoogleProfile(null);
+                setCurrentStep(2);
+              }}
+            >
+              Sign up with Email & Password
+            </Button>
           </div>
         )}
 
         {/* STEP 2: Basic Identity & Credentials */}
         {currentStep === 2 && (
-          <div className="space-y-5">
-            <div>
-              <div className="flex items-center gap-2 mb-1">
-                <h2 className="text-xl font-bold text-gray-900">Personal & Account Details</h2>
-                <Badge variant="indigo" className="text-xs uppercase">
-                  {role}
-                </Badge>
-              </div>
-              <p className="text-xs text-gray-500">
-                {authMode === 'google'
-                  ? 'Your profile details were retrieved from Google. Add your age and phone number.'
-                  : 'Enter your basic contact information and create a secure password.'}
-              </p>
+          <div className="space-y-4">
+            <div className="flex items-center justify-between pb-1 border-b border-gray-100">
+              <h2 className="text-sm font-bold text-gray-900">Personal & Contact Info</h2>
+              <Badge variant="indigo" className="text-[10px] uppercase font-bold">
+                {role}
+              </Badge>
             </div>
 
             {/* Google Profile Connected Banner */}
             {authMode === 'google' && googleProfile && (
-              <div className="p-3.5 bg-emerald-50 border border-emerald-200 rounded-[10px] flex items-center gap-3">
+              <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-[10px] flex items-center gap-2.5">
                 {googleProfile.avatarUrl ? (
                   <img
                     src={googleProfile.avatarUrl}
                     alt={googleProfile.name}
-                    className="w-10 h-10 rounded-full border border-emerald-300"
+                    className="w-8 h-8 rounded-full border border-emerald-300"
                   />
                 ) : (
-                  <div className="w-10 h-10 rounded-full bg-emerald-200 text-emerald-800 flex items-center justify-center font-bold">
+                  <div className="w-8 h-8 rounded-full bg-emerald-200 text-emerald-800 flex items-center justify-center font-bold text-xs">
                     {googleProfile.name?.charAt(0) || 'G'}
                   </div>
                 )}
                 <div className="flex-1 min-w-0">
-                  <div className="text-xs font-semibold text-emerald-900 flex items-center gap-1.5">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" /> Connected with Google
+                  <div className="text-[11px] font-semibold text-emerald-900 flex items-center gap-1">
+                    <CheckCircle2 className="w-3 h-3 text-emerald-600" /> Google Connected
                   </div>
-                  <div className="text-sm font-medium text-emerald-950 truncate">
+                  <div className="text-xs font-medium text-emerald-950 truncate">
                     {googleProfile.name} ({googleProfile.email})
                   </div>
                 </div>
               </div>
             )}
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <Input
-                label="Full Name *"
-                type="text"
-                required
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="e.g. Kasun Weerasinghe"
-                disabled={authMode === 'google' && Boolean(googleProfile?.name)}
-              />
+            <Input
+              label="Full Name *"
+              type="text"
+              required
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="e.g. Kasun Weerasinghe"
+              disabled={authMode === 'google' && Boolean(googleProfile?.name)}
+            />
 
-              <Input
-                label="Email Address *"
-                type="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="you@domain.com"
-                disabled={authMode === 'google'}
-              />
-            </div>
+            <Input
+              label="Email Address *"
+              type="email"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="you@domain.com"
+              disabled={authMode === 'google'}
+            />
 
             {/* Password inputs if manual */}
             {authMode === 'manual' && (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <>
                 <div className="relative">
                   <Input
                     label="Password (min 6 chars) *"
@@ -504,11 +465,11 @@ export const RegisterPage = () => {
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   placeholder="••••••••"
                 />
-              </div>
+              </>
             )}
 
             {/* Age & Phone Number */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-3">
               <Input
                 label="Age (Optional)"
                 type="number"
@@ -520,21 +481,31 @@ export const RegisterPage = () => {
               />
 
               <Input
-                label="Phone Number (Optional)"
+                label="Phone (Optional)"
                 type="tel"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
-                placeholder="e.g. +94 77 123 4567"
+                placeholder="+94 77 123 4567"
               />
             </div>
 
             {/* Stepper Navigation */}
-            <div className="flex justify-between pt-4 border-t border-gray-100">
-              <Button type="button" variant="outline" onClick={handleBack} className="rounded-[10px]">
-                <ArrowLeft className="w-4 h-4 mr-1.5" /> Back
+            <div className="flex items-center gap-3 pt-3 border-t border-gray-100">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={handleBack}
+                className="w-1/3 justify-center py-2.5 rounded-[10px] text-xs"
+              >
+                <ArrowLeft className="w-3.5 h-3.5 mr-1" /> Back
               </Button>
-              <Button type="button" variant="primary" onClick={handleNext} className="rounded-[10px]">
-                Continue to Profile <ArrowRight className="w-4 h-4 ml-1.5" />
+              <Button
+                type="button"
+                variant="primary"
+                onClick={handleNext}
+                className="w-2/3 justify-center py-2.5 rounded-[10px] text-xs font-semibold"
+              >
+                Continue to Profile <ArrowRight className="w-3.5 h-3.5 ml-1" />
               </Button>
             </div>
           </div>
@@ -542,23 +513,21 @@ export const RegisterPage = () => {
 
         {/* STEP 3: Role-Specific Details Form */}
         {currentStep === 3 && (
-          <div className="space-y-5">
-            <div>
-              <h2 className="text-xl font-bold text-gray-900 mb-1">
-                {role === 'student' && 'Academic & Education Details'}
-                {role === 'company' && 'Company Organization Details'}
-                {role === 'reviewer' && 'Academic Reviewer Profile'}
+          <div className="space-y-4">
+            <div className="flex items-center justify-between pb-1 border-b border-gray-100">
+              <h2 className="text-sm font-bold text-gray-900">
+                {role === 'student' && 'Academic Details'}
+                {role === 'company' && 'Company Details'}
+                {role === 'reviewer' && 'Reviewer Credentials'}
               </h2>
-              <p className="text-xs text-gray-500">
-                {role === 'student' && 'Tell recruiters about your university program and technical competencies.'}
-                {role === 'company' && 'Provide company background to attract top student applicants.'}
-                {role === 'reviewer' && 'Provide verification details to issue academic endorsements.'}
-              </p>
+              <Badge variant="indigo" className="text-[10px] uppercase font-bold">
+                {role}
+              </Badge>
             </div>
 
             {/* Student Specific Fields */}
             {role === 'student' && (
-              <div className="space-y-4">
+              <div className="space-y-3.5">
                 <Input
                   label="University / Higher Education Institute *"
                   type="text"
@@ -568,35 +537,33 @@ export const RegisterPage = () => {
                   placeholder="e.g. South Eastern University of Sri Lanka"
                 />
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <Input
-                    label="Degree Program *"
-                    type="text"
-                    required
-                    value={degree}
-                    onChange={(e) => setDegree(e.target.value)}
-                    placeholder="e.g. BSc in Information and Communication Technology"
-                  />
+                <Input
+                  label="Degree Program *"
+                  type="text"
+                  required
+                  value={degree}
+                  onChange={(e) => setDegree(e.target.value)}
+                  placeholder="e.g. BSc in ICT"
+                />
 
-                  <Input
-                    label="Field of Study *"
-                    type="text"
-                    required
-                    value={fieldOfStudy}
-                    onChange={(e) => setFieldOfStudy(e.target.value)}
-                    placeholder="e.g. Software Engineering"
-                  />
-                </div>
+                <Input
+                  label="Field of Study *"
+                  type="text"
+                  required
+                  value={fieldOfStudy}
+                  onChange={(e) => setFieldOfStudy(e.target.value)}
+                  placeholder="e.g. Software Engineering"
+                />
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label className="block text-xs font-medium text-gray-700 mb-1">
                       Academic Year *
                     </label>
                     <select
                       value={academicYear}
                       onChange={(e) => setAcademicYear(e.target.value)}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-[10px] text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-[10px] text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white"
                     >
                       <option value="1st Year">1st Year</option>
                       <option value="2nd Year">2nd Year</option>
@@ -607,11 +574,11 @@ export const RegisterPage = () => {
                   </div>
 
                   <Input
-                    label="Key Skills (comma separated)"
+                    label="Key Skills"
                     type="text"
                     value={skills}
                     onChange={(e) => setSkills(e.target.value)}
-                    placeholder="e.g. React, Node.js, Python, Figma"
+                    placeholder="React, Node.js, Python"
                   />
                 </div>
               </div>
@@ -619,7 +586,7 @@ export const RegisterPage = () => {
 
             {/* Company Specific Fields */}
             {role === 'company' && (
-              <div className="space-y-4">
+              <div className="space-y-3.5">
                 <Input
                   label="Company / Enterprise Name *"
                   type="text"
@@ -629,54 +596,52 @@ export const RegisterPage = () => {
                   placeholder="e.g. Virtusa, WSO2, or Sysco LABS"
                 />
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-2 gap-3">
                   <Input
                     label="Industry Sector *"
                     type="text"
                     required
                     value={industry}
                     onChange={(e) => setIndustry(e.target.value)}
-                    placeholder="e.g. Software Engineering / FinTech"
+                    placeholder="Software Engineering"
                   />
 
                   <Input
-                    label="Headquarters City *"
+                    label="City *"
                     type="text"
                     required
                     value={city}
                     onChange={(e) => setCity(e.target.value)}
-                    placeholder="e.g. Colombo"
+                    placeholder="Colombo"
                   />
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <Input
-                    label="Physical Address"
-                    type="text"
-                    value={address}
-                    onChange={(e) => setAddress(e.target.value)}
-                    placeholder="e.g. 752 Dr Danister De Silva Mawatha, Colombo"
-                  />
+                <Input
+                  label="Physical Address"
+                  type="text"
+                  value={address}
+                  onChange={(e) => setAddress(e.target.value)}
+                  placeholder="752 Dr Danister De Silva Mawatha"
+                />
 
-                  <Input
-                    label="Website URL"
-                    type="url"
-                    value={website}
-                    onChange={(e) => setWebsite(e.target.value)}
-                    placeholder="https://company.lk"
-                  />
-                </div>
+                <Input
+                  label="Website URL"
+                  type="url"
+                  value={website}
+                  onChange={(e) => setWebsite(e.target.value)}
+                  placeholder="https://company.lk"
+                />
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Company Bio / Overview
+                  <label className="block text-xs font-medium text-gray-700 mb-1">
+                    Company Overview
                   </label>
                   <textarea
-                    rows={3}
+                    rows={2}
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
-                    placeholder="Briefly describe your company culture, technology stack, and internship programs..."
-                    className="w-full px-3 py-2 border border-gray-300 rounded-[10px] text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    placeholder="Briefly describe company culture and internship vacancies..."
+                    className="w-full px-3 py-2 border border-gray-300 rounded-[10px] text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   />
                 </div>
               </div>
@@ -684,7 +649,7 @@ export const RegisterPage = () => {
 
             {/* Reviewer Specific Fields */}
             {role === 'reviewer' && (
-              <div className="space-y-4">
+              <div className="space-y-3.5">
                 <Input
                   label="Academic Institution / University *"
                   type="text"
@@ -694,35 +659,43 @@ export const RegisterPage = () => {
                   placeholder="e.g. South Eastern University of Sri Lanka"
                 />
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <Input
-                    label="Faculty / Department *"
-                    type="text"
-                    required
-                    value={department}
-                    onChange={(e) => setDepartment(e.target.value)}
-                    placeholder="e.g. Department of ICT, Faculty of Technology"
-                  />
+                <Input
+                  label="Faculty / Department *"
+                  type="text"
+                  required
+                  value={department}
+                  onChange={(e) => setDepartment(e.target.value)}
+                  placeholder="e.g. Department of ICT, Faculty of Technology"
+                />
 
-                  <Input
-                    label="Academic Designation *"
-                    type="text"
-                    required
-                    value={designation}
-                    onChange={(e) => setDesignation(e.target.value)}
-                    placeholder="e.g. Senior Lecturer / Head of Dept"
-                  />
-                </div>
+                <Input
+                  label="Academic Designation *"
+                  type="text"
+                  required
+                  value={designation}
+                  onChange={(e) => setDesignation(e.target.value)}
+                  placeholder="e.g. Senior Lecturer"
+                />
               </div>
             )}
 
             {/* Stepper Navigation */}
-            <div className="flex justify-between pt-4 border-t border-gray-100">
-              <Button type="button" variant="outline" onClick={handleBack} className="rounded-[10px]">
-                <ArrowLeft className="w-4 h-4 mr-1.5" /> Back
+            <div className="flex items-center gap-3 pt-3 border-t border-gray-100">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={handleBack}
+                className="w-1/3 justify-center py-2.5 rounded-[10px] text-xs"
+              >
+                <ArrowLeft className="w-3.5 h-3.5 mr-1" /> Back
               </Button>
-              <Button type="button" variant="primary" onClick={handleNext} className="rounded-[10px]">
-                Review & Confirm <ArrowRight className="w-4 h-4 ml-1.5" />
+              <Button
+                type="button"
+                variant="primary"
+                onClick={handleNext}
+                className="w-2/3 justify-center py-2.5 rounded-[10px] text-xs font-semibold"
+              >
+                Review Details <ArrowRight className="w-3.5 h-3.5 ml-1" />
               </Button>
             </div>
           </div>
@@ -730,53 +703,49 @@ export const RegisterPage = () => {
 
         {/* STEP 4: Review Summary & Create Account */}
         {currentStep === 4 && (
-          <div className="space-y-6">
-            <div>
-              <h2 className="text-xl font-bold text-gray-900 mb-1">Review Your Information</h2>
-              <p className="text-xs text-gray-500">
-                Please verify your registration details before creating your account.
-              </p>
+          <div className="space-y-4">
+            <div className="flex items-center justify-between pb-1 border-b border-gray-100">
+              <h2 className="text-sm font-bold text-gray-900">Review Your Information</h2>
+              <Badge variant="indigo" className="text-[10px] uppercase font-bold">
+                {role}
+              </Badge>
             </div>
 
-            <div className="bg-gray-50 rounded-[10px] p-5 border border-gray-200 space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-gray-200">
+            <div className="bg-gray-50 rounded-[10px] p-4 border border-gray-200 space-y-3">
+              <div className="flex items-center justify-between pb-2 border-b border-gray-200">
                 <div>
-                  <div className="text-base font-bold text-gray-900">{name}</div>
-                  <div className="text-xs text-gray-500">{email}</div>
+                  <div className="text-sm font-bold text-gray-900">{name}</div>
+                  <div className="text-[11px] text-gray-500">{email}</div>
                 </div>
-                <Badge variant="indigo" className="uppercase font-bold tracking-wide">
-                  {role}
+                <Badge variant="neutral" className="uppercase text-[10px]">
+                  {authMode === 'google' ? 'Google Auth' : 'Email/Pass'}
                 </Badge>
               </div>
 
-              <div className="grid grid-cols-2 gap-4 text-xs">
+              <div className="grid grid-cols-2 gap-2.5 text-xs">
                 <div>
-                  <span className="text-gray-400 block mb-0.5">Authentication Mode:</span>
-                  <span className="font-semibold text-gray-800">
-                    {authMode === 'google' ? 'Google OAuth (Verified)' : 'Email & Password'}
-                  </span>
-                </div>
-                <div>
-                  <span className="text-gray-400 block mb-0.5">Contact Phone:</span>
+                  <span className="text-gray-400 block text-[10px]">Contact Phone:</span>
                   <span className="font-semibold text-gray-800">{phone || 'Not provided'}</span>
                 </div>
                 <div>
-                  <span className="text-gray-400 block mb-0.5">Age:</span>
-                  <span className="font-semibold text-gray-800">{age ? `${age} years` : 'Not provided'}</span>
+                  <span className="text-gray-400 block text-[10px]">Age:</span>
+                  <span className="font-semibold text-gray-800">
+                    {age ? `${age} yrs` : 'Not provided'}
+                  </span>
                 </div>
 
                 {role === 'student' && (
                   <>
-                    <div>
-                      <span className="text-gray-400 block mb-0.5">University:</span>
+                    <div className="col-span-2">
+                      <span className="text-gray-400 block text-[10px]">University:</span>
                       <span className="font-semibold text-gray-800">{university}</span>
                     </div>
                     <div>
-                      <span className="text-gray-400 block mb-0.5">Degree:</span>
+                      <span className="text-gray-400 block text-[10px]">Degree:</span>
                       <span className="font-semibold text-gray-800">{degree}</span>
                     </div>
                     <div>
-                      <span className="text-gray-400 block mb-0.5">Academic Year:</span>
+                      <span className="text-gray-400 block text-[10px]">Year:</span>
                       <span className="font-semibold text-gray-800">{academicYear}</span>
                     </div>
                   </>
@@ -784,30 +753,34 @@ export const RegisterPage = () => {
 
                 {role === 'company' && (
                   <>
-                    <div>
-                      <span className="text-gray-400 block mb-0.5">Company:</span>
+                    <div className="col-span-2">
+                      <span className="text-gray-400 block text-[10px]">Company:</span>
                       <span className="font-semibold text-gray-800">{companyName || name}</span>
                     </div>
                     <div>
-                      <span className="text-gray-400 block mb-0.5">Industry:</span>
+                      <span className="text-gray-400 block text-[10px]">Industry:</span>
                       <span className="font-semibold text-gray-800">{industry}</span>
                     </div>
                     <div>
-                      <span className="text-gray-400 block mb-0.5">Location:</span>
-                      <span className="font-semibold text-gray-800">{city}, Sri Lanka</span>
+                      <span className="text-gray-400 block text-[10px]">City:</span>
+                      <span className="font-semibold text-gray-800">{city}</span>
                     </div>
                   </>
                 )}
 
                 {role === 'reviewer' && (
                   <>
-                    <div>
-                      <span className="text-gray-400 block mb-0.5">Institution:</span>
+                    <div className="col-span-2">
+                      <span className="text-gray-400 block text-[10px]">Institution:</span>
                       <span className="font-semibold text-gray-800">{institution}</span>
                     </div>
                     <div>
-                      <span className="text-gray-400 block mb-0.5">Department:</span>
+                      <span className="text-gray-400 block text-[10px]">Department:</span>
                       <span className="font-semibold text-gray-800">{department}</span>
+                    </div>
+                    <div>
+                      <span className="text-gray-400 block text-[10px]">Designation:</span>
+                      <span className="font-semibold text-gray-800">{designation}</span>
                     </div>
                   </>
                 )}
@@ -815,28 +788,33 @@ export const RegisterPage = () => {
             </div>
 
             {/* Stepper Navigation */}
-            <div className="flex justify-between pt-4 border-t border-gray-100">
-              <Button type="button" variant="outline" onClick={handleBack} className="rounded-[10px]">
-                <ArrowLeft className="w-4 h-4 mr-1.5" /> Back
+            <div className="flex items-center gap-3 pt-3 border-t border-gray-100">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={handleBack}
+                className="w-1/3 justify-center py-2.5 rounded-[10px] text-xs"
+              >
+                <ArrowLeft className="w-3.5 h-3.5 mr-1" /> Back
               </Button>
               <Button
                 type="button"
                 variant="primary"
                 onClick={handleFinalSubmit}
                 isLoading={isLoading}
-                className="rounded-[10px] px-6"
+                className="w-2/3 justify-center py-2.5 rounded-[10px] text-xs font-semibold"
               >
-                Create Account <CheckCircle2 className="w-4 h-4 ml-2" />
+                Create Account <CheckCircle2 className="w-3.5 h-3.5 ml-1.5" />
               </Button>
             </div>
           </div>
         )}
 
-        {/* Bottom Login Link */}
-        <div className="mt-6 pt-4 border-t border-gray-100 text-center text-xs text-gray-600">
+        {/* Bottom Login Link - Identical to LoginPage */}
+        <div className="mt-6 text-center text-xs text-gray-600">
           Already have an account?{' '}
           <Link to="/login" className="font-semibold text-indigo-600 hover:text-indigo-500">
-            Sign In to InternBridge
+            Sign In
           </Link>
         </div>
       </Card>
