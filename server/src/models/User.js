@@ -41,6 +41,17 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: null,
     },
+    age: {
+      type: Number,
+      min: [15, 'Age must be at least 15'],
+      max: [100, 'Age must be under 100'],
+      default: null,
+    },
+    phone: {
+      type: String,
+      trim: true,
+      default: '',
+    },
     authProvider: {
       type: String,
       enum: ['local', 'google', 'supabase'],
