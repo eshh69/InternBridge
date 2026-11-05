@@ -12,7 +12,8 @@ import { AdminVerificationQueue } from './components/AdminVerificationQueue';
 import { ReviewSubmissionModal } from './components/ReviewSubmissionModal';
 import { ReputationOverviewCard } from './components/ReputationOverviewCard';
 import { ReviewList } from './components/ReviewList';
-import { apiClient } from '../../services/apiClient';
+import { ReputationMetricsDashboard } from './components/ReputationMetricsDashboard';
+import { verificationRatingApi } from './verificationRatingApi';
 import {
   ShieldCheck,
   ShieldAlert,
@@ -20,46 +21,48 @@ import {
   Award,
   CheckCircle2,
   Clock,
-  Plus,
+  PlusCircle,
   Search,
   ExternalLink,
   Building2,
   User,
   Sparkles,
   FileCheck2,
+  RotateCcw,
+  Info,
+  Filter,
+  BarChart3,
 } from 'lucide-react';
 
 export const VerificationRatingPage = () => {
   const { user } = useAuth();
+
+  // Active Portal: 'admin' | 'reviewer' (defaults to user role or admin for preview)
+  const [activePortal, setActivePortal] = useState(
+    user?.role === 'admin' ? 'admin' : user?.role === 'reviewer' ? 'reviewer' : 'admin'
+  );
+
+  // Sub-tab within active portal
+  const [adminSubTab, setAdminSubTab] = useState('queue'); // 'queue' | 'directory'
+  const [reviewerSubTab, setReviewerSubTab] = useState('workspace'); // 'workspace' | 'directory'
+
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
 
   // Verification status for the logged-in user
   const [myVerification, setMyVerification] = useState(null);
   const [myStatus, setMyStatus] = useState('unverified');
   const [loadingStatus, setLoadingStatus] = useState(true);
 
-  // Reviews & Reputation for the logged-in user or active target
-  const [myReviews, setMyReviews] = useState([]);
-  const [myReputation, setMyReputation] = useState({
-    reputationScore: 0,
-    reviewCount: 0,
-    breakdown: {},
-    distribution: { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 },
-  });
-  const [loadingReviews, setLoadingReviews] = useState(false);
-
-  // Reviewer specific: Reviews submitted by this reviewer
+  // Submitted Reviews by reviewer
   const [submittedReviews, setSubmittedReviews] = useState([]);
+  const [loadingReviews, setLoadingReviews] = useState(false);
 
   // Modals state
   const [isRequestModalOpen, setIsRequestModalOpen] = useState(false);
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
+  const [successBanner, setSuccessBanner] = useState('');
 
-  // Active view tab
-  const [activeTab, setActiveTab] = useState(
-    user?.role === 'admin' ? 'admin-queue' : 'overview'
-  );
-
-  // Public Search Target state
+  // Reputation Directory Lookup State
   const [searchTargetType, setSearchTargetType] = useState('student');
   const [searchQuery, setSearchQuery] = useState('');
   const [targetSearchResults, setTargetSearchResults] = useState([]);
@@ -72,9 +75,9 @@ export const VerificationRatingPage = () => {
   const fetchMyVerificationStatus = async () => {
     setLoadingStatus(true);
     try {
-      const res = await apiClient.get('/verifications/my-status');
-      setMyVerification(res.data?.verification || null);
-      setMyStatus(res.data?.status || 'unverified');
+      const data = await verificationRatingApi.getMyVerificationStatus(user);
+      setMyVerification(data.verification);
+      setMyStatus(data.status || 'unverified');
     } catch (err) {
       console.error('Failed to fetch verification status', err);
     } finally {
@@ -82,73 +85,48 @@ export const VerificationRatingPage = () => {
     }
   };
 
-  // 2. Fetch reviews and reputation score for current user (if student or company)
-  const fetchMyReviewsAndReputation = async () => {
-    if (!user?._id) return;
+  // 2. Fetch submitted reviews by reviewer
+  const fetchSubmittedReviews = async () => {
     setLoadingReviews(true);
     try {
-      const res = await apiClient.get(`/reviews/target/${user._id}`);
-      setMyReviews(res.data?.reviews || []);
-      if (res.data?.summary) {
-        setMyReputation(res.data.summary);
-      }
+      const reviews = await verificationRatingApi.getMySubmittedReviews(user?.email);
+      setSubmittedReviews(reviews || []);
     } catch (err) {
-      console.error('Failed to load entity reviews', err);
+      console.error('Failed to load submitted reviews', err);
     } finally {
       setLoadingReviews(false);
     }
   };
 
-  // 3. Fetch reviews submitted by this reviewer
-  const fetchSubmittedReviews = async () => {
-    if (user?.role !== 'reviewer') return;
+  // 3. Search Review Targets for Directory
+  const fetchDirectoryTargets = async () => {
     try {
-      const res = await apiClient.get('/reviews/my-reviews');
-      setSubmittedReviews(res.data?.reviews || []);
+      const targets = await verificationRatingApi.getTargets(searchTargetType, searchQuery);
+      setTargetSearchResults(targets || []);
     } catch (err) {
-      console.error('Failed to load submitted reviews', err);
+      console.error('Failed to search targets', err);
     }
   };
 
   useEffect(() => {
     fetchMyVerificationStatus();
-    if (user?.role === 'student' || user?.role === 'company') {
-      fetchMyReviewsAndReputation();
-    }
-    if (user?.role === 'reviewer') {
-      fetchSubmittedReviews();
-    }
-  }, [user]);
+    fetchSubmittedReviews();
+    fetchDirectoryTargets();
+  }, [user, refreshTrigger]);
 
-  // Handle Target Search for Lookup Tab
   useEffect(() => {
-    if (activeTab !== 'lookup' || !searchQuery.trim()) {
-      setTargetSearchResults([]);
-      return;
-    }
-
-    const timer = setTimeout(async () => {
-      try {
-        const res = await apiClient.get(
-          `/reviews/targets?type=${searchTargetType}&q=${encodeURIComponent(searchQuery)}`
-        );
-        setTargetSearchResults(res.data?.targets || []);
-      } catch (err) {
-        console.error('Failed to search targets', err);
-      }
-    }, 300);
-
+    const timer = setTimeout(fetchDirectoryTargets, 200);
     return () => clearTimeout(timer);
-  }, [activeTab, searchQuery, searchTargetType]);
+  }, [searchQuery, searchTargetType]);
 
   // Inspect Target Reviews
   const handleInspectTarget = async (target) => {
     setSelectedInspectTarget(target);
     setLoadingInspect(true);
     try {
-      const res = await apiClient.get(`/reviews/target/${target._id}`);
-      setInspectReviews(res.data?.reviews || []);
-      setInspectReputation(res.data?.summary || null);
+      const data = await verificationRatingApi.getTargetReviews(target._id, searchTargetType);
+      setInspectReviews(data.reviews || []);
+      setInspectReputation(data.summary || null);
     } catch (err) {
       console.error('Failed to inspect reviews', err);
     } finally {
@@ -156,457 +134,598 @@ export const VerificationRatingPage = () => {
     }
   };
 
+  const handleVerificationSuccess = (newVer) => {
+    setRefreshTrigger((prev) => prev + 1);
+    setSuccessBanner('Verification request submitted successfully and queued in real-time!');
+    setTimeout(() => setSuccessBanner(''), 4500);
+  };
+
+  const handleReviewSuccess = (newRev, summary) => {
+    setRefreshTrigger((prev) => prev + 1);
+    setSuccessBanner('Multi-criteria evaluation published! Reputation metrics updated in real-time.');
+    setTimeout(() => setSuccessBanner(''), 4500);
+
+    // If currently inspecting the target that was reviewed, update inspect state immediately
+    if (selectedInspectTarget && (selectedInspectTarget._id === newRev?.targetStudentId || selectedInspectTarget._id === newRev?.targetCompanyId)) {
+      handleInspectTarget(selectedInspectTarget);
+    }
+  };
+
+  const handleResetDemoData = () => {
+    if (window.confirm('Reset all local verification & rating demo data to initial defaults?')) {
+      verificationRatingApi.resetLocalStore();
+      setRefreshTrigger((prev) => prev + 1);
+      setSuccessBanner('Local store reset to default demonstration data.');
+      setTimeout(() => setSuccessBanner(''), 3000);
+    }
+  };
+
+  // Calculate Average Reviewer Endorsement Score
+  const avgReviewerScore =
+    submittedReviews.length > 0
+      ? (
+          submittedReviews.reduce((acc, r) => acc + (r.overallRating || 0), 0) /
+          submittedReviews.length
+        ).toFixed(1)
+      : '5.0';
+
   return (
-    <div className="space-y-6">
-      {/* Top Banner Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div className="space-y-6 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      {/* 1. Header & Registration Number Badge */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-2 border-b border-gray-200">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
-            Verification & Ratings System
-            <Badge variant="purple" size="sm">
-              Module 5
-            </Badge>
-          </h1>
-          <p className="text-sm text-gray-500">
-            Official academic evaluations, institutional verifications, and multi-criteria reputation metrics
+          <div className="flex items-center gap-2 flex-wrap">
+            <h1 className="text-2xl font-extrabold text-gray-900 tracking-tight">
+              Verification & Ratings System
+            </h1>
+            <span className="text-xs font-bold px-2.5 py-0.5 !rounded-none bg-blue-50 text-blue-700 border border-blue-200 uppercase tracking-wider">
+              MODULE 5 (SEU/IS/22/ICT/057)
+            </span>
+          </div>
+          <p className="text-xs sm:text-sm text-gray-500 mt-1">
+            Decentralized credibility verification, academic endorsements, and multi-criteria performance ratings
           </p>
         </div>
 
-        {/* Action Buttons based on Role */}
-        <div className="flex items-center gap-3">
-          {user?.role === 'reviewer' && (
+        {/* 2. Portal Switcher & Quick Action Buttons (Top Right of Header) */}
+        <div className="flex flex-wrap items-center gap-2.5">
+          {/* Sharp Role Switcher (Admin Portal / Reviewer Portal) */}
+          <div className="inline-flex p-1 bg-slate-100 !rounded-none border border-slate-300 text-xs font-semibold">
+            <button
+              type="button"
+              onClick={() => setActivePortal('admin')}
+              className={`flex items-center gap-1.5 px-3.5 py-1.5 !rounded-none transition-all ${
+                activePortal === 'admin'
+                  ? 'bg-blue-600 text-white shadow-xs font-bold'
+                  : 'text-slate-700 hover:text-slate-900 hover:bg-slate-200/70'
+              }`}
+            >
+              <ShieldAlert className="w-3.5 h-3.5" />
+              <span>Admin Portal</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setActivePortal('reviewer')}
+              className={`flex items-center gap-1.5 px-3.5 py-1.5 !rounded-none transition-all ${
+                activePortal === 'reviewer'
+                  ? 'bg-blue-600 text-white shadow-xs font-bold'
+                  : 'text-slate-700 hover:text-slate-900 hover:bg-slate-200/70'
+              }`}
+            >
+              <Award className="w-3.5 h-3.5" />
+              <span>Reviewer Portal</span>
+            </button>
+          </div>
+
+          {/* Interactive Action Buttons */}
+          <div className="flex items-center gap-2">
+            <Button
+              variant="primary"
+              size="sm"
+              onClick={() => setIsRequestModalOpen(true)}
+              className="gap-1.5 text-xs !rounded-none !bg-blue-600 hover:!bg-blue-700 !border-blue-600 text-white shadow-xs font-semibold"
+            >
+              <PlusCircle className="w-3.5 h-3.5" /> Submit Verification
+            </Button>
+
             <Button
               variant="primary"
               size="sm"
               onClick={() => setIsReviewModalOpen(true)}
-              className="flex items-center gap-1.5"
+              className="gap-1.5 text-xs !rounded-none !bg-indigo-600 hover:!bg-indigo-700 !border-indigo-600 text-white shadow-xs font-semibold"
             >
-              <Plus className="w-4 h-4" />
-              Write Evaluation
+              <Sparkles className="w-3.5 h-3.5" /> Write Review
             </Button>
-          )}
 
-          {(user?.role === 'reviewer' || user?.role === 'company') && (
-            <Button
-              variant="secondary"
-              size="sm"
-              onClick={() => setIsRequestModalOpen(true)}
-              className="flex items-center gap-1.5"
+            <button
+              type="button"
+              onClick={handleResetDemoData}
+              title="Reset local demo data"
+              className="p-1.5 text-slate-500 hover:text-slate-800 hover:bg-slate-100 !rounded-none border border-slate-300 transition-colors"
             >
-              <ShieldCheck className="w-4 h-4" />
-              {myStatus === 'approved' ? 'Update Credentials' : 'Request Verification'}
-            </Button>
-          )}
+              <RotateCcw className="w-4 h-4" />
+            </button>
+          </div>
         </div>
       </div>
 
-      {/* Verification Status Banner for Reviewer / Company */}
-      {(user?.role === 'reviewer' || user?.role === 'company') && !loadingStatus && (
-        <Card className="bg-gradient-to-r from-indigo-50/60 via-purple-50/40 to-blue-50/60 border-indigo-100 p-5">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div className="flex items-start gap-3">
-              <div
-                className={`p-3 rounded-xl flex-shrink-0 ${
-                  myStatus === 'approved'
-                    ? 'bg-emerald-100 text-emerald-700'
-                    : myStatus === 'pending'
-                    ? 'bg-amber-100 text-amber-700'
-                    : myStatus === 'rejected'
-                    ? 'bg-red-100 text-red-700'
-                    : 'bg-indigo-100 text-indigo-700'
-                }`}
-              >
-                {myStatus === 'approved' ? (
-                  <ShieldCheck className="w-6 h-6" />
-                ) : myStatus === 'pending' ? (
-                  <Clock className="w-6 h-6" />
-                ) : myStatus === 'rejected' ? (
-                  <ShieldAlert className="w-6 h-6" />
-                ) : (
-                  <FileCheck2 className="w-6 h-6" />
-                )}
-              </div>
-
-              <div className="space-y-1">
-                <div className="flex items-center gap-2">
-                  <h3 className="font-bold text-gray-900 text-base">
-                    {user?.role === 'company' ? 'Company Accreditation Status' : 'Academic Reviewer Credentials'}
-                  </h3>
-                  <VerificationStatusBadge status={myStatus} />
-                </div>
-
-                <p className="text-xs text-gray-600 max-w-2xl leading-relaxed">
-                  {myStatus === 'approved'
-                    ? `Your credentials (${myVerification?.institutionOrOrg || 'Registered'}) are formally verified by the InternBridge academic moderation committee.`
-                    : myStatus === 'pending'
-                    ? `Your credentials proof for ${myVerification?.institutionOrOrg || 'your entity'} has been received and is currently under review.`
-                    : myStatus === 'rejected'
-                    ? `Your verification submission was rejected: "${myVerification?.adminNotes || 'Credentials could not be verified.'}". Please re-submit valid documentation.`
-                    : `Please submit your ${
-                        user?.role === 'company'
-                          ? 'business registration certificate (BRN)'
-                          : 'university appointment letter / staff ID'
-                      } to gain official verified status.`}
-                </p>
-
-                {myVerification?.proofDocumentUrl && (
-                  <div className="pt-1">
-                    <a
-                      href={myVerification.proofDocumentUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 text-xs text-indigo-600 hover:underline"
-                    >
-                      <ExternalLink className="w-3 h-3" />
-                      View Uploaded Document ({myVerification.designationOrRegNo})
-                    </a>
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {myStatus !== 'approved' && (
-              <Button
-                variant={myStatus === 'pending' ? 'secondary' : 'primary'}
-                size="sm"
-                onClick={() => setIsRequestModalOpen(true)}
-                className="self-start md:self-auto flex-shrink-0"
-              >
-                {myStatus === 'pending' ? 'Re-upload Proof' : 'Verify Now'}
-              </Button>
-            )}
-          </div>
-        </Card>
-      )}
-
-      {/* Navigation Tabs */}
-      <div className="flex items-center gap-2 border-b border-gray-200 pb-2 overflow-x-auto">
-        {user?.role === 'admin' && (
-          <button
-            onClick={() => setActiveTab('admin-queue')}
-            className={`px-4 py-2 text-sm font-semibold rounded-lg transition-colors flex items-center gap-2 whitespace-nowrap ${
-              activeTab === 'admin-queue'
-                ? 'bg-indigo-600 text-white shadow-sm'
-                : 'text-gray-600 hover:bg-gray-100'
-            }`}
-          >
-            <ShieldAlert className="w-4 h-4" />
-            Verification Queue
-          </button>
-        )}
-
-        <button
-          onClick={() => setActiveTab('overview')}
-          className={`px-4 py-2 text-sm font-semibold rounded-lg transition-colors flex items-center gap-2 whitespace-nowrap ${
-            activeTab === 'overview'
-              ? 'bg-indigo-600 text-white shadow-sm'
-              : 'text-gray-600 hover:bg-gray-100'
-          }`}
-        >
-          <Award className="w-4 h-4" />
-          {user?.role === 'admin'
-            ? 'Reputation Metrics'
-            : user?.role === 'reviewer'
-            ? 'Evaluations Workspace'
-            : 'My Ratings & Reviews'}
-        </button>
-
-        <button
-          onClick={() => setActiveTab('lookup')}
-          className={`px-4 py-2 text-sm font-semibold rounded-lg transition-colors flex items-center gap-2 whitespace-nowrap ${
-            activeTab === 'lookup'
-              ? 'bg-indigo-600 text-white shadow-sm'
-              : 'text-gray-600 hover:bg-gray-100'
-          }`}
-        >
-          <Search className="w-4 h-4" />
-          Reputation Directory
-        </button>
+      {/* 3. Dual-Engine Architecture / System Status Banner (Sharp Blue Theme) */}
+      <div className="bg-blue-50/90 border border-blue-200 border-l-4 border-l-blue-600 !rounded-none p-3.5 flex items-center justify-between text-xs text-blue-950 shadow-2xs">
+        <div className="flex items-center gap-2">
+          <Info className="w-4 h-4 text-blue-600 flex-shrink-0" />
+          <span>
+            <strong>Dual-Engine Architecture:</strong> Currently running in resilient instant-preview mode. Any verification requests or multi-criteria reputation evaluations persist in real-time. When the backend server is booted, it automatically connects to MongoDB endpoints.
+          </span>
+        </div>
+        <span className="hidden sm:inline-flex text-[11px] font-bold uppercase tracking-wider text-white bg-blue-600 px-2.5 py-0.5 !rounded-none border border-blue-700">
+          Ready to Run
+        </span>
       </div>
 
-      {/* Tab 1: Admin Verification Queue */}
-      {activeTab === 'admin-queue' && user?.role === 'admin' && <AdminVerificationQueue />}
+      {/* Instant Notification Banner */}
+      {successBanner && (
+        <Alert type="success" title="Real-Time Synchronization" onClose={() => setSuccessBanner('')}>
+          {successBanner}
+        </Alert>
+      )}
 
-      {/* Tab 2: Overview / Workspace */}
-      {activeTab === 'overview' && (
+      {/* ======================================================== */}
+      {/* 4. Portal Views: Admin Portal vs Reviewer Portal */}
+      {/* ======================================================== */}
+
+      {activePortal === 'admin' ? (
+        /* ======================== ADMIN PORTAL ======================== */
         <div className="space-y-6">
-          {/* Reviewer Workspace View */}
-          {user?.role === 'reviewer' ? (
+          {/* Sub Navigation */}
+          <div className="flex items-center gap-2 border-b border-gray-200 pb-2 overflow-x-auto">
+            <button
+              type="button"
+              onClick={() => setAdminSubTab('queue')}
+              className={`px-4 py-2 text-xs font-bold !rounded-none transition-all flex items-center gap-2 whitespace-nowrap ${
+                adminSubTab === 'queue'
+                  ? 'bg-blue-600 text-white shadow-xs'
+                  : 'text-slate-600 hover:bg-slate-100'
+              }`}
+            >
+              <ShieldAlert className="w-3.5 h-3.5" />
+              Verification Moderation Queue
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setAdminSubTab('metrics')}
+              className={`px-4 py-2 text-xs font-bold !rounded-none transition-all flex items-center gap-2 whitespace-nowrap ${
+                adminSubTab === 'metrics'
+                  ? 'bg-blue-600 text-white shadow-xs'
+                  : 'text-slate-600 hover:bg-slate-100'
+              }`}
+            >
+              <BarChart3 className="w-3.5 h-3.5" />
+              Reputation Metrics & Analytics
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setAdminSubTab('directory')}
+              className={`px-4 py-2 text-xs font-bold !rounded-none transition-all flex items-center gap-2 whitespace-nowrap ${
+                adminSubTab === 'directory'
+                  ? 'bg-blue-600 text-white shadow-xs'
+                  : 'text-slate-600 hover:bg-slate-100'
+              }`}
+            >
+              <Search className="w-3.5 h-3.5" />
+              Reputation Directory & Audit
+            </button>
+          </div>
+
+          {adminSubTab === 'queue' ? (
+            /* Admin Verification Queue */
+            <AdminVerificationQueue refreshTrigger={refreshTrigger} />
+          ) : adminSubTab === 'metrics' ? (
+            /* Interactive Reputation Analytics & Multi-Criteria Dashboard */
+            <ReputationMetricsDashboard
+              onOpenReviewModal={() => setIsReviewModalOpen(true)}
+              refreshTrigger={refreshTrigger}
+            />
+          ) : (
+            /* Directory Audit within Admin */
+            renderReputationDirectory()
+          )}
+        </div>
+      ) : (
+        /* ======================== REVIEWER PORTAL ======================== */
+        <div className="space-y-6">
+          {/* Sub Navigation */}
+          <div className="flex items-center gap-2 border-b border-gray-200 pb-2 overflow-x-auto">
+            <button
+              type="button"
+              onClick={() => setReviewerSubTab('workspace')}
+              className={`px-4 py-2 text-xs font-bold !rounded-none transition-all flex items-center gap-2 whitespace-nowrap ${
+                reviewerSubTab === 'workspace'
+                  ? 'bg-blue-600 text-white shadow-xs'
+                  : 'text-slate-600 hover:bg-slate-100'
+              }`}
+            >
+              <Award className="w-3.5 h-3.5" />
+              Evaluations Workspace
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setReviewerSubTab('metrics')}
+              className={`px-4 py-2 text-xs font-bold !rounded-none transition-all flex items-center gap-2 whitespace-nowrap ${
+                reviewerSubTab === 'metrics'
+                  ? 'bg-blue-600 text-white shadow-xs'
+                  : 'text-slate-600 hover:bg-slate-100'
+              }`}
+            >
+              <BarChart3 className="w-3.5 h-3.5" />
+              Reputation Metrics & Leaderboard
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setReviewerSubTab('directory')}
+              className={`px-4 py-2 text-xs font-bold !rounded-none transition-all flex items-center gap-2 whitespace-nowrap ${
+                reviewerSubTab === 'directory'
+                  ? 'bg-blue-600 text-white shadow-xs'
+                  : 'text-slate-600 hover:bg-slate-100'
+              }`}
+            >
+              <Search className="w-3.5 h-3.5" />
+              Candidate & Company Directory
+            </button>
+          </div>
+
+          {reviewerSubTab === 'workspace' ? (
+            /* Reviewer Workspace View */
             <div className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <Card className="flex items-center gap-4">
-                  <div className="p-3 bg-indigo-50 text-indigo-600 rounded-xl">
-                    <Award className="w-6 h-6" />
+              {/* 4 Reviewer Stats Cards */}
+              <div className="grid grid-cols-1 sm:grid-cols-4 gap-3 sm:gap-4">
+                <div className="p-4 bg-white !rounded-none border border-slate-200 shadow-2xs">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2.5 bg-blue-50 text-blue-700 !rounded-none border border-blue-200">
+                      <Award className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+                        Evaluations Submitted
+                      </p>
+                      <p className="text-2xl font-black text-slate-900 mt-0.5">
+                        {submittedReviews.length}
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <p className="text-xs font-medium text-gray-500 uppercase">Evaluations Submitted</p>
-                    <p className="text-2xl font-bold text-gray-900">{submittedReviews.length}</p>
-                  </div>
-                </Card>
+                </div>
 
-                <Card className="flex items-center gap-4">
-                  <div className="p-3 bg-emerald-50 text-emerald-600 rounded-xl">
-                    <ShieldCheck className="w-6 h-6" />
+                <div className="p-4 bg-white !rounded-none border border-slate-200 shadow-2xs">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2.5 bg-emerald-50 text-emerald-700 !rounded-none border border-emerald-200">
+                      <ShieldCheck className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+                        Credentials Status
+                      </p>
+                      <p className="text-sm font-black text-emerald-700 uppercase mt-1">
+                        {myStatus === 'approved' ? 'Verified Faculty' : myStatus}
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <p className="text-xs font-medium text-gray-500 uppercase">Reviewer Credentials</p>
-                    <p className="text-sm font-bold text-gray-900 capitalize">{myStatus}</p>
-                  </div>
-                </Card>
+                </div>
 
-                <Card className="flex items-center gap-4">
-                  <div className="p-3 bg-amber-50 text-amber-600 rounded-xl">
-                    <Sparkles className="w-6 h-6" />
+                <div className="p-4 bg-white !rounded-none border border-slate-200 shadow-2xs">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2.5 bg-amber-50 text-amber-700 !rounded-none border border-amber-200">
+                      <Star className="w-5 h-5 fill-amber-400 text-amber-500" />
+                    </div>
+                    <div>
+                      <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+                        Average Endorsement
+                      </p>
+                      <p className="text-2xl font-black text-slate-900 mt-0.5">
+                        {avgReviewerScore} <span className="text-xs text-slate-400 font-normal">/ 5.0</span>
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <p className="text-xs font-medium text-gray-500 uppercase">Reputation Impact</p>
-                    <p className="text-sm font-bold text-gray-900">Direct Academic Endorsement</p>
+                </div>
+
+                <div className="p-4 bg-white !rounded-none border border-slate-200 shadow-2xs">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2.5 bg-purple-50 text-purple-700 !rounded-none border border-purple-200">
+                      <Sparkles className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+                        Evaluation Authority
+                      </p>
+                      <p className="text-xs font-bold text-slate-900 mt-1">
+                        Direct Academic Endorsement
+                      </p>
+                    </div>
                   </div>
-                </Card>
+                </div>
               </div>
 
-              <div>
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="font-bold text-gray-900 text-lg">Your Submitted Academic Evaluations</h3>
+              {/* Reviewer Credentials Card */}
+              <div className="bg-slate-50 border border-slate-200 !rounded-none p-4 shadow-2xs">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                  <div className="flex items-start gap-3">
+                    <div className="p-3 !rounded-none bg-blue-100 text-blue-700 flex-shrink-0">
+                      <ShieldCheck className="w-6 h-6" />
+                    </div>
+                    <div className="space-y-1">
+                      <div className="flex items-center gap-2">
+                        <h3 className="font-extrabold text-slate-900 text-sm">
+                          Academic Reviewer Accreditation
+                        </h3>
+                        <VerificationStatusBadge status={myStatus} />
+                      </div>
+                      <p className="text-xs text-slate-600 max-w-2xl leading-relaxed">
+                        Credentials accredited for <strong>{myVerification?.institutionOrOrg || 'South Eastern University of Sri Lanka'}</strong> under ID <code>{myVerification?.designationOrRegNo || 'Senior Lecturer (Staff ID: ICT-L-042)'}</code>. Your academic evaluations carry formal recommendation weight in student rankings.
+                      </p>
+                      {myVerification?.proofDocumentUrl && (
+                        <a
+                          href={myVerification.proofDocumentUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1 text-xs text-blue-600 hover:underline pt-1 font-semibold"
+                        >
+                          <ExternalLink className="w-3 h-3" />
+                          View Uploaded Faculty Proof Document
+                        </a>
+                      )}
+                    </div>
+                  </div>
+
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    onClick={() => setIsRequestModalOpen(true)}
+                    className="text-xs !rounded-none"
+                  >
+                    Update Credentials
+                  </Button>
+                </div>
+              </div>
+
+              {/* Submitted Evaluations List */}
+              <div className="space-y-3">
+                <div className="flex items-center justify-between border-b border-gray-200 pb-2">
+                  <h3 className="font-extrabold text-slate-900 text-base">
+                    Submitted Academic Evaluations ({submittedReviews.length})
+                  </h3>
                   <Button
                     variant="primary"
                     size="sm"
                     onClick={() => setIsReviewModalOpen(true)}
-                    className="flex items-center gap-1"
+                    className="gap-1.5 text-xs !rounded-none !bg-blue-600 hover:!bg-blue-700 !border-blue-600 text-white font-semibold shadow-xs"
                   >
-                    <Plus className="w-4 h-4" />
-                    New Evaluation
+                    <PlusCircle className="w-3.5 h-3.5" /> Write New Review
                   </Button>
                 </div>
-                <ReviewList
-                  reviews={submittedReviews}
-                  emptyMessage="You have not submitted any student or company evaluations yet. Click 'Write Evaluation' to get started."
-                />
-              </div>
-            </div>
-          ) : user?.role === 'student' || user?.role === 'company' ? (
-            /* Student or Company View: Aggregate Reputation Card + Verified Reviews */
-            <div className="space-y-6">
-              <ReputationOverviewCard
-                score={myReputation.reputationScore}
-                reviewCount={myReputation.reviewCount}
-                breakdown={myReputation.breakdown}
-                distribution={myReputation.distribution}
-                targetType={user.role}
-                title={
-                  user.role === 'student'
-                    ? 'Student Academic Endorsement & Reputation'
-                    : 'Company Reputation & Intern Feedback'
-                }
-              />
 
-              <div className="space-y-4">
-                <h3 className="text-lg font-bold text-gray-900">
-                  Verified Academic Reviews ({myReviews.length})
-                </h3>
                 {loadingReviews ? (
-                  <div className="py-8 flex justify-center">
+                  <div className="py-12 flex justify-center">
                     <Spinner size="lg" />
                   </div>
                 ) : (
                   <ReviewList
-                    reviews={myReviews}
-                    emptyMessage={
-                      user.role === 'student'
-                        ? 'No academic supervisor evaluations posted for your profile yet.'
-                        : 'No reviewer feedback has been submitted for this company yet.'
-                    }
+                    reviews={submittedReviews}
+                    emptyMessage="You have not submitted any student candidate or company partner evaluations yet. Click 'Write Review' to publish your first academic evaluation."
                   />
                 )}
               </div>
             </div>
+          ) : reviewerSubTab === 'metrics' ? (
+            /* Interactive Reputation Analytics & Multi-Criteria Dashboard */
+            <ReputationMetricsDashboard
+              onOpenReviewModal={() => setIsReviewModalOpen(true)}
+              refreshTrigger={refreshTrigger}
+            />
           ) : (
-            /* Admin view of general reputation directory */
-            <div className="space-y-4">
-              <p className="text-sm text-gray-600">
-                Browse student and company reputation scores and multi-criteria evaluations across the platform.
-              </p>
-              <Button onClick={() => setActiveTab('lookup')} variant="primary" size="sm">
-                Explore Reputation Directory
-              </Button>
-            </div>
+            /* Directory Search within Reviewer */
+            renderReputationDirectory()
           )}
         </div>
       )}
 
-      {/* Tab 3: Public Reputation Directory / Lookup */}
-      {activeTab === 'lookup' && (
-        <div className="space-y-6">
-          <Card className="space-y-4">
-            <div>
-              <h3 className="text-lg font-bold text-gray-900">Verified Reputation Directory</h3>
-              <p className="text-xs text-gray-500">
-                Inspect academic ratings, endorsement breakdowns, and reviews for any student or partner company
-              </p>
+      {/* ======================================================== */}
+      {/* 5. Verification Request Modal */}
+      {/* ======================================================== */}
+      <VerificationRequestModal
+        isOpen={isRequestModalOpen}
+        onClose={() => setIsRequestModalOpen(false)}
+        defaultType={activePortal === 'admin' ? 'company' : 'reviewer'}
+        onSuccess={handleVerificationSuccess}
+      />
+
+      {/* ======================================================== */}
+      {/* 6. Review Submission Modal */}
+      {/* ======================================================== */}
+      <ReviewSubmissionModal
+        isOpen={isReviewModalOpen}
+        onClose={() => setIsReviewModalOpen(false)}
+        onSuccess={handleReviewSuccess}
+      />
+    </div>
+  );
+
+  // Helper render function for Reputation Directory
+  function renderReputationDirectory() {
+    return (
+      <div className="space-y-6">
+        <div className="bg-white border border-slate-200 !rounded-none p-4 space-y-4 shadow-2xs">
+          <div>
+            <h3 className="text-base font-extrabold text-slate-900">
+              Verified Reputation Directory
+            </h3>
+            <p className="text-xs text-slate-500">
+              Inspect multi-criteria ratings, star score distribution, and qualitative evaluations for university candidates and corporate partners
+            </p>
+          </div>
+
+          {/* Filter & Search Bar */}
+          <div className="flex flex-col sm:flex-row gap-3">
+            <div className="inline-flex p-1 bg-slate-100 !rounded-none border border-slate-300 text-xs font-semibold">
+              <button
+                type="button"
+                onClick={() => {
+                  setSearchTargetType('student');
+                  setSelectedInspectTarget(null);
+                }}
+                className={`flex items-center gap-1.5 px-3 py-1.5 !rounded-none transition-all ${
+                  searchTargetType === 'student'
+                    ? 'bg-blue-600 text-white shadow-xs font-bold'
+                    : 'text-slate-700 hover:text-slate-900 hover:bg-slate-200/70'
+                }`}
+              >
+                <User className="w-3.5 h-3.5" />
+                Student Candidates
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setSearchTargetType('company');
+                  setSelectedInspectTarget(null);
+                }}
+                className={`flex items-center gap-1.5 px-3 py-1.5 !rounded-none transition-all ${
+                  searchTargetType === 'company'
+                    ? 'bg-blue-600 text-white shadow-xs font-bold'
+                    : 'text-slate-700 hover:text-slate-900 hover:bg-slate-200/70'
+                }`}
+              >
+                <Building2 className="w-3.5 h-3.5" />
+                Corporate Companies
+              </button>
             </div>
 
-            {/* Target Type Filter & Search Bar */}
-            <div className="flex flex-col sm:flex-row gap-3">
-              <div className="inline-flex rounded-lg border border-gray-200 p-1 bg-gray-50">
-                <button
-                  onClick={() => {
-                    setSearchTargetType('student');
-                    setSelectedInspectTarget(null);
-                  }}
-                  className={`px-3 py-1.5 text-xs font-semibold rounded-md transition-colors flex items-center gap-1.5 ${
-                    searchTargetType === 'student'
-                      ? 'bg-white text-indigo-700 shadow-sm'
-                      : 'text-gray-600 hover:text-gray-900'
-                  }`}
-                >
-                  <User className="w-3.5 h-3.5" />
-                  Students
-                </button>
-                <button
-                  onClick={() => {
-                    setSearchTargetType('company');
-                    setSelectedInspectTarget(null);
-                  }}
-                  className={`px-3 py-1.5 text-xs font-semibold rounded-md transition-colors flex items-center gap-1.5 ${
-                    searchTargetType === 'company'
-                      ? 'bg-white text-indigo-700 shadow-sm'
-                      : 'text-gray-600 hover:text-gray-900'
-                  }`}
-                >
-                  <Building2 className="w-3.5 h-3.5" />
-                  Companies
-                </button>
-              </div>
-
-              <div className="relative flex-1">
-                <Search className="w-4 h-4 absolute left-3 top-3 text-gray-400" />
-                <input
-                  type="text"
-                  placeholder={`Search ${searchTargetType === 'student' ? 'students by name or email...' : 'companies by name or industry...'}`}
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-9 pr-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                />
-              </div>
+            <div className="relative flex-1">
+              <Search className="w-4 h-4 absolute left-3 top-2.5 text-gray-400" />
+              <input
+                type="text"
+                placeholder={`Search ${searchTargetType === 'student' ? 'students by name or email...' : 'companies by name or industry...'}`}
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-9 pr-3 py-1.5 text-xs border border-gray-300 !rounded-none focus:outline-none focus:ring-1 focus:ring-blue-500 font-medium"
+              />
             </div>
+          </div>
 
-            {/* Target Search Results */}
-            {targetSearchResults.length > 0 && !selectedInspectTarget && (
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 pt-2">
-                {targetSearchResults.map((target) => (
-                  <div
-                    key={target._id}
-                    onClick={() => handleInspectTarget(target)}
-                    className="p-3 border border-gray-200 hover:border-indigo-500 rounded-xl cursor-pointer hover:shadow-sm transition-all bg-white flex items-center justify-between"
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className="w-9 h-9 rounded-full bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold text-sm">
-                        {target.name?.charAt(0)}
-                      </div>
-                      <div>
-                        <p className="text-sm font-semibold text-gray-900 leading-tight">{target.name}</p>
-                        <p className="text-xs text-gray-400">
-                          {searchTargetType === 'student'
-                            ? target.profile?.degree || target.email
-                            : target.industry || 'Company'}
-                        </p>
-                      </div>
+          {/* Target Search Results Grid */}
+          {targetSearchResults.length > 0 && !selectedInspectTarget && (
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 pt-2">
+              {targetSearchResults.map((target) => (
+                <div
+                  key={target._id}
+                  onClick={() => handleInspectTarget(target)}
+                  className="p-3 border border-slate-200 hover:border-blue-500 !rounded-none cursor-pointer hover:shadow-xs transition-all bg-white flex items-center justify-between"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="w-9 h-9 !rounded-none bg-blue-50 text-blue-700 border border-blue-200 flex items-center justify-center font-bold text-xs">
+                      {target.name?.charAt(0)}
                     </div>
-
-                    <div className="text-right">
-                      <span className="text-xs font-bold text-amber-500 flex items-center justify-end gap-0.5">
-                        <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
-                        {Number(target.reputationScore || target.profile?.reputationScore || 0).toFixed(1)}
-                      </span>
-                      <span className="text-[10px] text-gray-400">
-                        {target.reviewCount || target.profile?.reviewCount || 0} reviews
-                      </span>
+                    <div>
+                      <p className="text-xs font-bold text-slate-900 leading-tight">{target.name}</p>
+                      <p className="text-[11px] text-slate-400">
+                        {searchTargetType === 'student'
+                          ? target.profile?.fieldOfStudy || target.email
+                          : target.industry || 'Company'}
+                      </p>
                     </div>
                   </div>
-                ))}
-              </div>
-            )}
-          </Card>
 
-          {/* Inspected Target Details */}
-          {selectedInspectTarget && (
-            <div className="space-y-6">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-xl bg-indigo-600 text-white flex items-center justify-center font-bold text-lg">
-                    {selectedInspectTarget.name?.charAt(0)}
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-bold text-gray-900">{selectedInspectTarget.name}</h3>
-                    <p className="text-xs text-gray-500">
-                      {searchTargetType === 'student'
-                        ? selectedInspectTarget.profile?.degree || selectedInspectTarget.email
-                        : selectedInspectTarget.industry}
-                    </p>
+                  <div className="text-right">
+                    <span className="text-xs font-bold text-amber-500 flex items-center justify-end gap-0.5">
+                      <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
+                      {Number(target.reputationScore || target.profile?.reputationScore || 5.0).toFixed(1)}
+                    </span>
+                    <span className="text-[10px] text-slate-400">
+                      {target.reviewCount || target.profile?.reviewCount || 1} evaluation
+                      {(target.reviewCount || target.profile?.reviewCount) === 1 ? '' : 's'}
+                    </span>
                   </div>
                 </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Inspected Target Multi-Criteria Details */}
+        {selectedInspectTarget && (
+          <div className="space-y-6">
+            <div className="flex items-center justify-between bg-blue-50/60 p-4 border border-blue-200 !rounded-none">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 !rounded-none bg-blue-600 text-white flex items-center justify-center font-bold text-sm">
+                  {selectedInspectTarget.name?.charAt(0)}
+                </div>
+                <div>
+                  <h3 className="text-base font-extrabold text-slate-900 leading-none">
+                    {selectedInspectTarget.name}
+                  </h3>
+                  <p className="text-xs text-slate-500 mt-1">
+                    {searchTargetType === 'student'
+                      ? selectedInspectTarget.profile?.degree || selectedInspectTarget.email
+                      : selectedInspectTarget.industry}
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="primary"
+                  size="sm"
+                  onClick={() => setIsReviewModalOpen(true)}
+                  className="text-xs !rounded-none !bg-blue-600 hover:!bg-blue-700 !border-blue-600 text-white font-semibold shadow-xs"
+                >
+                  <Sparkles className="w-3.5 h-3.5 mr-1" />
+                  Evaluate {selectedInspectTarget.name.split(' ')[0]}
+                </Button>
 
                 <Button
                   variant="secondary"
                   size="sm"
                   onClick={() => setSelectedInspectTarget(null)}
+                  className="text-xs !rounded-none"
                 >
                   Clear Selection
                 </Button>
               </div>
-
-              {loadingInspect ? (
-                <div className="py-12 flex justify-center">
-                  <Spinner size="lg" />
-                </div>
-              ) : inspectReputation ? (
-                <>
-                  <ReputationOverviewCard
-                    score={inspectReputation.reputationScore}
-                    reviewCount={inspectReputation.reviewCount}
-                    breakdown={inspectReputation.breakdown}
-                    distribution={inspectReputation.distribution}
-                    targetType={searchTargetType}
-                    title={`${selectedInspectTarget.name}'s Verified Score`}
-                  />
-
-                  <div className="space-y-4">
-                    <h4 className="text-base font-bold text-gray-900">
-                      Evaluations List ({inspectReviews.length})
-                    </h4>
-                    <ReviewList
-                      reviews={inspectReviews}
-                      emptyMessage={`No verified evaluations recorded for ${selectedInspectTarget.name}.`}
-                    />
-                  </div>
-                </>
-              ) : null}
             </div>
-          )}
-        </div>
-      )}
 
-      {/* Verification Request Modal */}
-      <VerificationRequestModal
-        isOpen={isRequestModalOpen}
-        onClose={() => setIsRequestModalOpen(false)}
-        userRole={user?.role}
-        onSuccess={() => {
-          fetchMyVerificationStatus();
-        }}
-      />
+            {loadingInspect ? (
+              <div className="py-12 flex justify-center">
+                <Spinner size="lg" />
+              </div>
+            ) : inspectReputation ? (
+              <>
+                <ReputationOverviewCard
+                  reviews={inspectReviews}
+                  score={inspectReputation.reputationScore}
+                  reviewCount={inspectReputation.reviewCount}
+                  breakdown={inspectReputation.breakdown}
+                  distribution={inspectReputation.distribution}
+                  targetType={searchTargetType}
+                  title={`${selectedInspectTarget.name}'s Academic Endorsement Profile`}
+                />
 
-      {/* Review Submission Modal */}
-      <ReviewSubmissionModal
-        isOpen={isReviewModalOpen}
-        onClose={() => setIsReviewModalOpen(false)}
-        onSuccess={() => {
-          fetchSubmittedReviews();
-          if (user?.role === 'student' || user?.role === 'company') {
-            fetchMyReviewsAndReputation();
-          }
-        }}
-      />
-    </div>
-  );
+                <div className="space-y-3">
+                  <h4 className="text-sm font-extrabold text-slate-900 uppercase tracking-wider">
+                    Verified Evaluation Records ({inspectReviews.length})
+                  </h4>
+                  <ReviewList
+                    reviews={inspectReviews}
+                    emptyMessage={`No verified academic evaluations recorded for ${selectedInspectTarget.name} yet.`}
+                  />
+                </div>
+              </>
+            ) : null}
+          </div>
+        )}
+      </div>
+    );
+  }
 };
+
+export default VerificationRatingPage;

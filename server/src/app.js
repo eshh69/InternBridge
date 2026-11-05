@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import apiRoutes from './routes/index.js';
 import verificationRoutes from './routes/verificationRoutes.js';
 import reviewRoutes from './routes/reviewRoutes.js';
+import applicationsRoutes from './modules/applications/routes.js';
 import { errorHandler } from './middleware/errorHandler.js';
 
 dotenv.config();
@@ -33,11 +34,12 @@ app.get('/', (req, res) => {
   });
 });
 
-// Module 5: Verification & Rating System Routes
+// Module-level direct aliases
 app.use('/api/verifications', verificationRoutes);
 app.use('/api/reviews', reviewRoutes);
+app.use('/api/applications', applicationsRoutes);
 
-// API Routes
+// Versioned API Routes (/api/v1)
 app.use('/api/v1', apiRoutes);
 
 // Global Error Handler
