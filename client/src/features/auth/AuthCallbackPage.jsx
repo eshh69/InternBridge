@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { supabase } from '../../services/supabaseClient';
 import { useAuth } from '../../hooks/useAuth';
@@ -10,9 +10,13 @@ export const AuthCallbackPage = () => {
   const [searchParams] = useSearchParams();
   const { loginWithSupabase } = useAuth();
   const [error, setError] = useState('');
+  const hasHandled = useRef(false);
 
   useEffect(() => {
     const handleAuthCallback = async () => {
+      if (hasHandled.current) return;
+      hasHandled.current = true;
+
       try {
         if (!supabase) {
           throw new Error('Supabase client is not configured.');

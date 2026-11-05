@@ -9,6 +9,8 @@ import { sendSuccess, sendError } from '../../utils/apiResponse.js';
 import {
   calculateInternshipMatch,
   calculateCandidateMatch,
+  normalizeSkill,
+  SKILL_SYNONYMS,
 } from './matchingEngine.js';
 
 const router = express.Router();
@@ -96,35 +98,17 @@ const handleSearchInternships = async (req, res) => {
       if (skillsArray.length > 0) {
         const queryVariants = new Set(skillsArray);
         for (const s of skillsArray) {
-          if (s === 'cybersecurity' || s === 'cyber security') {
-            queryVariants.add('cybersecurity');
-            queryVariants.add('cyber security');
-            queryVariants.add('network security');
+          const canonical = normalizeSkill(s);
+          if (canonical && SKILL_SYNONYMS[canonical]) {
+            for (const alias of SKILL_SYNONYMS[canonical]) {
+              queryVariants.add(alias);
+            }
           }
-          if (s === 'express.js' || s === 'express') {
-            queryVariants.add('express.js');
-            queryVariants.add('express');
-          }
-          if (s === 'html & css' || s === 'html' || s === 'css') {
+          // Handle HTML/CSS joint skill variants
+          if (['html', 'css', 'html5', 'css3', 'html & css'].includes(s)) {
             queryVariants.add('html & css');
             queryVariants.add('html');
             queryVariants.add('css');
-          }
-          if (s === 'rest api' || s === 'rest') {
-            queryVariants.add('rest api');
-            queryVariants.add('rest');
-          }
-          if (s === 'c++' || s === 'cpp') {
-            queryVariants.add('c++');
-            queryVariants.add('cpp');
-          }
-          if (s === 'mysql' || s === 'sql') {
-            queryVariants.add('mysql');
-            queryVariants.add('sql');
-          }
-          if (s === 'machine learning' || s === 'ml') {
-            queryVariants.add('machine learning');
-            queryVariants.add('ml');
           }
         }
 

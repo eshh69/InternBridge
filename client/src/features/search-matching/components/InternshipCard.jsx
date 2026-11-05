@@ -9,7 +9,6 @@ import {
   Building2,
   CheckCircle2,
   Users,
-  Check,
   ArrowRight,
   Bookmark,
   Briefcase,
@@ -66,6 +65,7 @@ export const InternshipCard = ({
   onViewDetails,
   onApply,
   isStudent = false,
+  selectedSkills = '',
 }) => {
   const {
     title,
@@ -160,9 +160,43 @@ export const InternshipCard = ({
     }
   };
 
-  const matchedSet = new Set(
-    (matchedSkills || []).map((s) => s.toLowerCase().trim())
-  );
+  const filterSkillsList = selectedSkills
+    ? selectedSkills.split(',').map((s) => s.trim().toLowerCase()).filter(Boolean)
+    : [];
+
+  const matchedSet = new Set([
+    ...(matchedSkills || []).map((s) => s.toLowerCase().trim()),
+    ...filterSkillsList,
+  ]);
+
+  const isSkillSelectedOrMatched = (skill) => {
+    const s = skill.toLowerCase().trim();
+    if (matchedSet.has(s)) return true;
+    for (const item of matchedSet) {
+      if (
+        (item === 'express' && s === 'express.js') ||
+        (item === 'express.js' && s === 'express') ||
+        (item === 'html5' && (s === 'html & css' || s === 'html')) ||
+        (item === 'html & css' && (s === 'html5' || s === 'html' || s === 'css')) ||
+        (item === 'rest apis' && s === 'rest api') ||
+        (item === 'rest api' && s === 'rest apis') ||
+        (item === 'sql' && s === 'mysql') ||
+        (item === 'mysql' && s === 'sql') ||
+        (item === 'c++' && s === 'cpp') ||
+        (item === 'cpp' && s === 'c++')
+      ) {
+        return true;
+      }
+    }
+    return false;
+  };
+
+  const hasSelectionOrMatch = matchedSet.size > 0;
+
+  // Only show the skills that the student selected/matched; hide all others!
+  const displaySkills = hasSelectionOrMatch
+    ? requiredSkills.filter((skill) => isSkillSelectedOrMatched(skill))
+    : requiredSkills.slice(0, 6);
 
   return (
     <div className="bg-white rounded-2xl border border-gray-200/90 shadow-xs hover:border-blue-400 hover:shadow-md transition-all duration-200 p-5">
@@ -237,31 +271,19 @@ export const InternshipCard = ({
             </p>
           )}
 
-          {/* Row 4: Skill Pills */}
-          <div className="flex flex-wrap items-center gap-1.5 pt-0.5">
-            {requiredSkills.slice(0, 6).map((skill, idx) => {
-              const isMatched = matchedSet.has(skill.toLowerCase().trim());
-              return (
+          {/* Row 4: Skill Pills (Only show student selected/matched skills, hide all others, no green color, no checkmark) */}
+          {displaySkills.length > 0 && (
+            <div className="flex flex-wrap items-center gap-1.5 pt-0.5">
+              {displaySkills.map((skill, idx) => (
                 <span
                   key={idx}
-                  className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium border transition-colors ${
-                    isMatched
-                      ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
-                      : 'bg-gray-100/90 text-gray-700 border-gray-200/80 hover:bg-gray-200/70'
-                  }`}
-                  title={isMatched ? 'Matches your portfolio skill' : 'Required skill'}
+                  className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-700 border border-gray-200/80 hover:bg-gray-200/70 transition-colors"
                 >
-                  {isMatched && <Check className="w-3 h-3 text-emerald-600" />}
                   {formatSkillName(skill)}
                 </span>
-              );
-            })}
-            {requiredSkills.length > 6 && (
-              <span className="text-xs text-gray-400 font-medium px-2 py-0.5">
-                +{requiredSkills.length - 6}
-              </span>
-            )}
-          </div>
+              ))}
+            </div>
+          )}
 
           {/* Row 5: Bottom Footer Bar */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-3 border-t border-gray-100">
