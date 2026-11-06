@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Modal } from '../../../components/ui/Modal';
 import { Input } from '../../../components/ui/Input';
 import { Button } from '../../../components/ui/Button';
 import { Badge } from '../../../components/ui/Badge';
 import { Alert } from '../../../components/ui/Alert';
 import { Plus, X, Sparkles, Calendar, DollarSign, MapPin, Briefcase } from 'lucide-react';
+
+import { prepareInternship } from '../internshipForm.mjs';
 
 const COMMON_SKILLS = [
   'React',
@@ -68,10 +70,20 @@ export const InternshipFormModal = ({
   const [skillInput, setSkillInput] = useState('');
   const [error, setError] = useState('');
 
+  const [fieldErrors, setFieldErrors] = useState({});
+  const submitting = useRef(false);
+  const errorRef = useRef(null);
+  const [pending, setPending] = useState(false);
+  const busy = isLoading || pending;
+  useEffect(() => {
+    if (error) errorRef.current?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+  }, [error]);
+
   // Reset or initialize form data when modal opens
   useEffect(() => {
     if (isOpen) {
       setError('');
+      setFieldErrors({});
       if (initialData) {
         // Formatting deadline for date input (YYYY-MM-DD)
         let deadlineString = '';
@@ -154,117 +166,72 @@ export const InternshipFormModal = ({
     }
   };
 
-  const handleSubmit = (statusToSave) => {
-    if (isLoading) return;
+  const handleSubmit = async (statusToSave) => {
+    if (busy || submitting.current) return;
     setError('');
-
-    if (!formData.title.trim()) {
-      setError('Please provide an internship title.');
+    const { errors, payload } = prepareInternship(formData, skills, skillInput, statusToSave);
+    setFieldErrors(errors);
+    if (!payload) {
+      setError(Object.values(errors).join(' '));
       return;
     }
-    if (!formData.area.trim()) {
-      setError('Please provide an area or discipline.');
-      return;
+    submitting.current = true;
+    setPending(true);
+    try {
+      await onSubmit(payload);
+    } catch (err) {
+      setError(err.message === 'Network Error'
+        ? 'Cannot reach the API server. Check that the backend is running on port 5000, then try again.'
+        : err.message || 'Unable to save internship. Please try again.');
+    } finally {
+      submitting.current = false;
+      setPending(false);
     }
-    if (!formData.location.trim()) {
-      setError('Please provide a job location.');
-      return;
-    }
-    if (skills.length === 0) {
-      setError('Please specify at least one required skill for matching candidates.');
-      return;
-    }
-    if (!formData.deadline) {
-      setError('Please set an application deadline.');
-      return;
-    }
-
-    const deadlineDate = new Date(formData.deadline);
-    if (isNaN(deadlineDate.getTime())) {
-      setError('Invalid deadline date format.');
-      return;
-    }
-
-    // When creating or updating to a new deadline, verify future date
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    if (deadlineDate < today) {
-      setError('Application deadline must be a future date.');
-      return;
-    }
-
-    if (!formData.description.trim()) {
-      setError('Please provide a job description.');
-      return;
-    }
-
-    const payload = {
-      title: formData.title.trim(),
-      area: formData.area.trim(),
-      locationType: formData.locationType,
-      location: formData.location.trim(),
-      durationMonths: Math.max(1, Number(formData.durationMonths) || 6),
-      openPositions: Math.max(1, Number(formData.openPositions) || 1),
-      stipend: {
-        isPaid: formData.stipendPaid,
-        amount: formData.stipendPaid ? Math.max(0, Number(formData.stipendAmount) || 0) : 0,
-        currency: formData.stipendCurrency || 'LKR',
-      },
-      deadline: deadlineDate.toISOString(),
-      requiredSkills: skills,
-      qualifications: formData.qualificationsText
-        .split('\n')
-        .map((q) => q.trim())
-        .filter(Boolean),
-      description: formData.description.trim(),
-      status: statusToSave || formData.status,
-    };
-
-    onSubmit(payload);
   };
 
   return (
     <Modal
       isOpen={isOpen}
-      onClose={onClose}
+      onClose={() => { if (!busy) onClose(); }}
       title={isEditing ? 'Edit Internship Listing' : 'Post New Internship Opportunity'}
       maxWidth="max-w-2xl"
       footer={
         <div className="flex items-center justify-between w-full">
-          <Button type="button" variant="ghost" onClick={onClose} disabled={isLoading}>
+          <Button type="button" variant="ghost" onClick={onClose} disabled={busy}>
             Cancel
           </Button>
 
           <div className="flex gap-2">
-            {!isEditing && (
+            {(!isEditing || formData.status === 'draft') && (
               <Button
                 type="button"
                 variant="secondary"
-                disabled={isLoading}
+                disabled={busy}
                 onClick={() => handleSubmit('draft')}
               >
                 Save as Draft
               </Button>
             )}
             <Button
-              type="button"
+              type="submit"
+              form="internship-form"
               variant="primary"
-              isLoading={isLoading}
-              onClick={() => handleSubmit(isEditing ? formData.status : 'published')}
+              isLoading={busy}
             >
-              {isEditing ? 'Save Changes' : 'Publish Internship'}
+              {isEditing && formData.status !== 'draft' ? 'Save Changes' : 'Publish Internship'}
             </Button>
           </div>
         </div>
       }
     >
-      <form onSubmit={(e) => e.preventDefault()} className="space-y-5">
-        {error && <Alert type="danger">{error}</Alert>}
+      <form id="internship-form" noValidate onSubmit={(e) => { e.preventDefault(); handleSubmit(isEditing && formData.status !== 'draft' ? formData.status : 'published'); }} className="space-y-5">
+        {error && <div ref={errorRef} role="alert"><Alert type="danger">{error}</Alert></div>}
 
         {/* Basic Info */}
         <div className="space-y-4">
           <Input
             label="Internship Title"
+            error={fieldErrors.title}
             required
             placeholder="e.g. Full-Stack Web Development Intern"
             value={formData.title}
@@ -316,6 +283,7 @@ export const InternshipFormModal = ({
             <div className="sm:col-span-2">
               <Input
                 label="City / Office Location"
+                error={fieldErrors.location}
                 required
                 placeholder="e.g. Colombo 03, Sri Lanka"
                 value={formData.location}
@@ -325,6 +293,7 @@ export const InternshipFormModal = ({
             <div>
               <Input
                 label="Open Positions"
+                error={fieldErrors.openPositions}
                 type="number"
                 min="1"
                 required
@@ -411,6 +380,7 @@ export const InternshipFormModal = ({
           <div>
             <Input
               label="Duration (Months)"
+              error={fieldErrors.durationMonths}
               type="number"
               min="1"
               required
@@ -422,6 +392,7 @@ export const InternshipFormModal = ({
           <div>
             <Input
               label="Application Deadline"
+              error={fieldErrors.deadline}
               type="date"
               required
               value={formData.deadline}
@@ -455,6 +426,7 @@ export const InternshipFormModal = ({
             <div className="grid grid-cols-2 gap-3 pt-1">
               <Input
                 label="Monthly Amount"
+                error={fieldErrors.stipendAmount}
                 type="number"
                 min="0"
                 step="500"

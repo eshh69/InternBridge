@@ -17,6 +17,7 @@ import {
   X,
   ShieldCheck,
 } from 'lucide-react';
+import internbridgeLogo from '../../assets/internbridge-logo.png';
 
 export const Navbar = () => {
   const { user, isAuthenticated, logout } = useAuth();
@@ -67,9 +68,11 @@ export const Navbar = () => {
               to="/"
               className="flex items-center gap-2.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 rounded-lg p-1"
             >
-              <div className="bg-gradient-to-tr from-indigo-700 to-indigo-600 text-white p-2 rounded-xl shadow-xs">
-                <Briefcase className="w-5 h-5" />
-              </div>
+              <img
+                src={internbridgeLogo}
+                alt="InternBridge logo"
+                className="w-9 h-9 object-contain rounded-xl flex-shrink-0"
+              />
               <span className="text-xl font-extrabold tracking-tight bg-gradient-to-r from-indigo-700 via-indigo-800 to-purple-800 bg-clip-text text-transparent">
                 InternBridge
               </span>
@@ -205,6 +208,18 @@ export const Navbar = () => {
         {/* Mobile Dropdown Panel */}
         {isMobileMenuOpen && (
           <div className="md:hidden py-3 border-t border-slate-200 space-y-1 animate-slide-up">
+            {/* Mobile brand logo row */}
+            <div className="flex items-center gap-2.5 px-3.5 py-2 mb-1">
+              <img
+                src={internbridgeLogo}
+                alt="InternBridge logo"
+                className="w-7 h-7 object-contain rounded-lg flex-shrink-0"
+              />
+              <span className="text-base font-extrabold tracking-tight bg-gradient-to-r from-indigo-700 to-purple-800 bg-clip-text text-transparent">
+                InternBridge
+              </span>
+            </div>
+
             <Link
               to="/search"
               onClick={closeMobileMenu}
