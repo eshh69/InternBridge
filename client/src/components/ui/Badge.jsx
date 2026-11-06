@@ -7,13 +7,17 @@ export const Badge = ({
   className = '',
 }) => {
   const variants = {
-    info: 'bg-blue-50 text-blue-800 border-blue-200/90',
-    indigo: 'bg-indigo-50 text-indigo-800 border-indigo-200/90',
-    success: 'bg-emerald-50 text-emerald-800 border-emerald-200/90',
-    warning: 'bg-amber-50 text-amber-900 border-amber-300/80',
+    forest: 'bg-[#1E3B2F]/10 text-[#1E3B2F] border-[#1E3B2F]/20',
+    sage: 'bg-[#7F8C6A]/15 text-[#1E3B2F] border-[#7F8C6A]/35',
+    sand: 'bg-[#C8B48A]/25 text-[#1E3B2F] border-[#C8B48A]/50',
+    cream: 'bg-[#F5F0E6] text-[#1E3B2F] border-[#C8B48A]/40',
+    info: 'bg-[#7F8C6A]/15 text-[#1E3B2F] border-[#7F8C6A]/30',
+    indigo: 'bg-[#1E3B2F]/10 text-[#1E3B2F] border-[#1E3B2F]/20',
+    success: 'bg-[#7F8C6A]/20 text-[#1E3B2F] border-[#7F8C6A]/40',
+    warning: 'bg-[#C8B48A]/30 text-[#1E3B2F] border-[#C8B48A]/60',
     danger: 'bg-rose-50 text-rose-800 border-rose-200/90',
-    neutral: 'bg-slate-100 text-slate-700 border-slate-200/80',
-    purple: 'bg-purple-50 text-purple-800 border-purple-200/90',
+    neutral: 'bg-[#F5F0E6] text-[#1E3B2F] border-[#C8B48A]/40',
+    purple: 'bg-[#1E3B2F]/15 text-[#1E3B2F] border-[#1E3B2F]/30',
   };
 
   const sizes = {
