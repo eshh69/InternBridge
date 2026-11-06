@@ -7,6 +7,16 @@ import { protect } from '../middleware/auth.js';
 import { sendSuccess, sendError } from '../utils/apiResponse.js';
 
 const router = express.Router();
+const attachCompanyProfile = async (userDoc) => {
+  if (!userDoc || userDoc.role !== 'company') return null;
+  try {
+    const comp = await Company.findOne({ user: userDoc._id || userDoc.id }).select('name logoUrl industry verificationStatus');
+    return comp ? { name: comp.name, logoUrl: comp.logoUrl, industry: comp.industry, verificationStatus: comp.verificationStatus } : null;
+  } catch {
+    return null;
+  }
+};
+
 
 const generateToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET || 'internbridge_secret_fallback', {
@@ -47,9 +57,16 @@ router.post('/register', async (req, res, next) => {
       age,
       phone,
       studentDetails,
+      studentData,
       companyDetails,
+      companyData,
       reviewerDetails,
+      reviewerData,
     } = req.body;
+
+    const effectiveStudentDetails = studentDetails || studentData || {};
+    const effectiveCompanyDetails = companyDetails || companyData || {};
+    const effectiveReviewerDetails = reviewerDetails || reviewerData || {};
 
     if (!name || !email || !password) {
       return sendError(res, 400, 'Please provide name, email, and password');
@@ -79,21 +96,21 @@ router.post('/register', async (req, res, next) => {
 
     // Auto-create role-specific profile document
     if (userRole === 'student') {
-      const skillsArray = Array.isArray(studentDetails?.skills)
-        ? studentDetails.skills.map((s) => s.trim().toLowerCase()).filter(Boolean)
-        : typeof studentDetails?.skills === 'string'
-        ? studentDetails.skills.split(',').map((s) => s.trim().toLowerCase()).filter(Boolean)
+      const skillsArray = Array.isArray(effectiveStudentDetails?.skills)
+        ? effectiveStudentDetails.skills.map((s) => s.trim().toLowerCase()).filter(Boolean)
+        : typeof effectiveStudentDetails?.skills === 'string'
+        ? effectiveStudentDetails.skills.split(',').map((s) => s.trim().toLowerCase()).filter(Boolean)
         : [];
 
       await StudentProfile.create({
         user: user._id,
-        university: studentDetails?.university?.trim() || 'South Eastern University of Sri Lanka',
-        degree: studentDetails?.degree?.trim() || 'BSc in Information and Communication Technology',
-        fieldOfStudy: studentDetails?.fieldOfStudy?.trim() || 'Information and Communication Technology',
-        academicYear: studentDetails?.academicYear || '3rd Year',
-        phone: phone?.trim() || studentDetails?.phone?.trim() || '',
-        whatsapp: studentDetails?.whatsapp?.trim() || '',
-        bio: studentDetails?.bio?.trim() || '',
+        university: effectiveStudentDetails?.university?.trim() || 'South Eastern University of Sri Lanka',
+        degree: effectiveStudentDetails?.degree?.trim() || 'BSc in Information and Communication Technology',
+        fieldOfStudy: effectiveStudentDetails?.fieldOfStudy?.trim() || 'Information and Communication Technology',
+        academicYear: effectiveStudentDetails?.academicYear || '3rd Year',
+        phone: phone?.trim() || effectiveStudentDetails?.phone?.trim() || '',
+        whatsapp: effectiveStudentDetails?.whatsapp?.trim() || '',
+        bio: effectiveStudentDetails?.bio?.trim() || '',
         skills: skillsArray,
         education: [],
         projects: [],
@@ -103,21 +120,28 @@ router.post('/register', async (req, res, next) => {
         links: { github: '', linkedin: '', portfolio: '' },
       });
     } else if (userRole === 'company') {
+      const compAddress =
+        effectiveCompanyDetails?.location?.address || effectiveCompanyDetails?.address || 'Colombo, Sri Lanka';
+      const compCity =
+        effectiveCompanyDetails?.location?.city || effectiveCompanyDetails?.city || 'Colombo';
+      const compCountry =
+        effectiveCompanyDetails?.location?.country || effectiveCompanyDetails?.country || 'Sri Lanka';
+
       await Company.create({
         user: user._id,
-        name: companyDetails?.name?.trim() || name.trim(),
+        name: effectiveCompanyDetails?.name?.trim() || name.trim(),
         description:
-          companyDetails?.description?.trim() ||
+          effectiveCompanyDetails?.description?.trim() ||
           'Innovative technology and business organization offering professional internships.',
-        industry: companyDetails?.industry?.trim() || 'Software Engineering',
+        industry: effectiveCompanyDetails?.industry?.trim() || 'Software Engineering',
         location: {
-          address: companyDetails?.location?.address || 'Colombo, Sri Lanka',
-          city: companyDetails?.location?.city || 'Colombo',
-          country: companyDetails?.location?.country || 'Sri Lanka',
+          address: compAddress,
+          city: compCity,
+          country: compCountry,
         },
-        website: companyDetails?.website?.trim() || '',
-        contactEmail: companyDetails?.contactEmail?.trim() || normalizedEmail,
-        contactPhone: phone?.trim() || companyDetails?.contactPhone?.trim() || '',
+        website: effectiveCompanyDetails?.website?.trim() || '',
+        contactEmail: effectiveCompanyDetails?.contactEmail?.trim() || normalizedEmail,
+        contactPhone: phone?.trim() || effectiveCompanyDetails?.contactPhone?.trim() || '',
         verificationStatus: 'unverified',
       });
     }
@@ -200,8 +224,11 @@ router.post('/supabase-login', async (req, res, next) => {
       age,
       phone,
       studentDetails,
+      studentData,
       companyDetails,
+      companyData,
       reviewerDetails,
+      reviewerData,
     } = req.body;
 
     if (!email) {
@@ -288,21 +315,26 @@ router.post('/supabase-login', async (req, res, next) => {
           links: { github: '', linkedin: '', portfolio: '' },
         });
       } else if (assignedRole === 'company') {
+        const effComp = companyDetails || companyData || {};
+        const compAddress = effComp?.location?.address || effComp?.address || 'Colombo, Sri Lanka';
+        const compCity = effComp?.location?.city || effComp?.city || 'Colombo';
+        const compCountry = effComp?.location?.country || effComp?.country || 'Sri Lanka';
+
         await Company.create({
           user: user._id,
-          name: companyDetails?.name?.trim() || name || normalizedEmail.split('@')[0],
+          name: effComp?.name?.trim() || name || normalizedEmail.split('@')[0],
           description:
-            companyDetails?.description?.trim() ||
+            effComp?.description?.trim() ||
             'Leading business organization offering impactful internship and recruitment opportunities.',
-          industry: companyDetails?.industry?.trim() || 'Technology & Innovation',
+          industry: effComp?.industry?.trim() || 'Technology & Innovation',
           location: {
-            address: companyDetails?.location?.address || 'Colombo, Sri Lanka',
-            city: companyDetails?.location?.city || 'Colombo',
-            country: companyDetails?.location?.country || 'Sri Lanka',
+            address: compAddress,
+            city: compCity,
+            country: compCountry,
           },
-          website: companyDetails?.website?.trim() || '',
-          contactEmail: companyDetails?.contactEmail?.trim() || normalizedEmail,
-          contactPhone: phone?.trim() || companyDetails?.contactPhone?.trim() || '',
+          website: effComp?.website?.trim() || '',
+          contactEmail: effComp?.contactEmail?.trim() || normalizedEmail,
+          contactPhone: phone?.trim() || effComp?.contactPhone?.trim() || '',
           verificationStatus: 'unverified',
         });
       }
@@ -358,6 +390,7 @@ router.post('/supabase-login', async (req, res, next) => {
 // @route   GET /api/v1/auth/me
 // @access  Private
 router.get('/me', protect, async (req, res) => {
+  const companyInfo = await attachCompanyProfile(req.user);
   return sendSuccess(res, 200, 'Current session retrieved', {
     user: {
       id: req.user._id,
@@ -368,6 +401,7 @@ router.get('/me', protect, async (req, res) => {
       phone: req.user.phone,
       avatarUrl: req.user.avatarUrl,
       createdAt: req.user.createdAt,
+      company: companyInfo,
     },
   });
 });

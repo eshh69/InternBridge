@@ -157,7 +157,7 @@ export const Navbar = () => {
 
                 <div className="flex items-center gap-2.5 pl-2 sm:pl-3 border-l border-[#C8B48A]/40">
                   <div className="text-right hidden sm:block">
-                    <p className="text-xs font-bold uppercase tracking-wider text-[#1E3B2F] leading-none">{user.name}</p>
+                    <p className="text-xs font-bold uppercase tracking-wider text-[#1E3B2F] leading-none" title={user.name}>{user.company?.name || user.name}</p>
                     <span className="inline-block mt-1 text-[10px] uppercase tracking-widest font-bold px-1.5 py-0.5 rounded bg-[#7F8C6A]/20 text-[#1E3B2F] border border-[#7F8C6A]/35">
                       {user.role}
                     </span>
@@ -291,7 +291,7 @@ export const Navbar = () => {
             {isAuthenticated && (
               <div className="pt-2 pb-1 px-3.5 border-t border-[#C8B48A]/40 mt-2 sm:hidden flex items-center justify-between">
                 <div>
-                  <p className="text-xs font-bold uppercase tracking-wider text-[#1E3B2F]">{user.name}</p>
+                  <p className="text-xs font-bold uppercase tracking-wider text-[#1E3B2F]">{user.company?.name || user.name}</p>
                   <p className="text-[10px] text-[#7F8C6A] uppercase tracking-widest">{user.role}</p>
                 </div>
                 <button
