@@ -10,9 +10,10 @@ import {
   RefreshCw,
   AlertCircle,
   FileCheck,
+  Trash2,
 } from 'lucide-react';
 
-export const CvUploader = ({ cvUrl, onUploadCv, isLoading }) => {
+export const CvUploader = ({ cvUrl, onUploadCv, onDeleteCv, isLoading, isDeletingCv }) => {
   const [dragOver, setDragOver] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
   const [errorMsg, setErrorMsg] = useState('');
@@ -82,6 +83,20 @@ export const CvUploader = ({ cvUrl, onUploadCv, isLoading }) => {
     }
   };
 
+  const handleDelete = async () => {
+    if (!onDeleteCv) return;
+    if (window.confirm('Are you sure you want to remove your uploaded CV? This action cannot be undone.')) {
+      try {
+        setErrorMsg('');
+        setSuccessMsg('');
+        await onDeleteCv();
+        setSuccessMsg('Your CV was successfully removed.');
+      } catch (err) {
+        setErrorMsg(err.message || 'Failed to remove CV.');
+      }
+    }
+  };
+
   return (
     <Card className="space-y-4 !rounded-[10px]">
       <div className="flex items-center justify-between">
@@ -115,7 +130,7 @@ export const CvUploader = ({ cvUrl, onUploadCv, isLoading }) => {
         </Alert>
       )}
 
-      {/* Existing CV Banner */}
+      {/* Existing CV Banner with Actions: Preview, Replace, and Delete */}
       {cvUrl && !selectedFile && (
         <div className="p-4 rounded-[10px] border border-indigo-100 bg-indigo-50/40 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div className="flex items-center gap-3">
@@ -128,7 +143,7 @@ export const CvUploader = ({ cvUrl, onUploadCv, isLoading }) => {
             </div>
           </div>
 
-          <div className="flex items-center gap-2 self-end sm:self-auto">
+          <div className="flex flex-wrap items-center gap-2 self-end sm:self-auto">
             <a
               href={cvUrl}
               target="_blank"
@@ -145,7 +160,18 @@ export const CvUploader = ({ cvUrl, onUploadCv, isLoading }) => {
               className="gap-1.5 text-xs !rounded-none"
             >
               <RefreshCw className="w-3.5 h-3.5" />
-              Replace CV
+              Replace
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleDelete}
+              disabled={isLoading || isDeletingCv}
+              className="gap-1.5 text-xs text-red-600 hover:text-red-700 hover:bg-red-50 !rounded-none"
+              title="Delete uploaded CV"
+            >
+              <Trash2 className="w-3.5 h-3.5" />
+              {isDeletingCv ? 'Deleting...' : 'Delete'}
             </Button>
           </div>
         </div>

@@ -62,8 +62,10 @@ export const EducationExperienceSection = ({
   };
 
   const handleDeleteEducation = (index) => {
-    const updated = education.filter((_, i) => i !== index);
-    onSaveEducation(updated);
+    if (window.confirm('Are you sure you want to remove this education record?')) {
+      const updated = education.filter((_, i) => i !== index);
+      onSaveEducation(updated);
+    }
   };
 
   // Experience Handlers
@@ -95,8 +97,10 @@ export const EducationExperienceSection = ({
   };
 
   const handleDeleteExperience = (index) => {
-    const updated = experience.filter((_, i) => i !== index);
-    onSaveExperience(updated);
+    if (window.confirm('Are you sure you want to remove this work experience?')) {
+      const updated = experience.filter((_, i) => i !== index);
+      onSaveExperience(updated);
+    }
   };
 
   const formatDate = (dateStr) => {

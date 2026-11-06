@@ -38,6 +38,37 @@ export const studentPortfolioService = {
   },
 
   /**
+   * Delete student CV file from storage and clear URL
+   */
+  deleteCv: async () => {
+    const response = await apiClient.delete('/students/cv');
+    return response.data;
+  },
+
+  /**
+   * Upload and update student profile photo (avatar)
+   */
+  uploadAvatar: async (file) => {
+    const formData = new FormData();
+    formData.append('avatar', file);
+
+    const response = await apiClient.post('/students/upload-avatar', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return response.data;
+  },
+
+  /**
+   * Remove student profile photo
+   */
+  deleteAvatar: async () => {
+    const response = await apiClient.delete('/students/avatar');
+    return response.data;
+  },
+
+  /**
    * Fetch a student's public portfolio by ID
    */
   getPublicProfile: async (id) => {
