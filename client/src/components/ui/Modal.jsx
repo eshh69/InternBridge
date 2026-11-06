@@ -31,6 +31,7 @@ export const Modal = ({
       role="dialog"
       aria-modal="true"
       aria-labelledby="modal-title"
+      onClick={onClose}
     >
       <div
         className={`bg-white rounded-2xl shadow-2xl w-full ${maxWidth} overflow-hidden transform transition-all animate-scale-in border border-slate-200/80`}

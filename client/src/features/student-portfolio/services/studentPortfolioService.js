@@ -69,6 +69,36 @@ export const studentPortfolioService = {
   },
 
   /**
+   * Upload project cover image/screenshot to Supabase storage
+   */
+  uploadProjectImage: async (file) => {
+    const formData = new FormData();
+    formData.append('image', file);
+
+    const response = await apiClient.post('/students/upload-project-image', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return response.data?.data?.imageUrl;
+  },
+
+  /**
+   * Upload certificate or badge file (PDF or image) to Supabase storage
+   */
+  uploadCertificateFile: async (file) => {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    const response = await apiClient.post('/students/upload-certificate-file', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return response.data?.data?.fileUrl;
+  },
+
+  /**
    * Fetch a student's public portfolio by ID
    */
   getPublicProfile: async (id) => {

@@ -1,5 +1,7 @@
 import express from 'express';
 import cors from 'cors';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
 import apiRoutes from './routes/index.js';
 import verificationRoutes from './routes/verificationRoutes.js';
@@ -7,6 +9,9 @@ import reviewRoutes from './routes/reviewRoutes.js';
 import applicationsRoutes from './modules/applications/routes.js';
 import { errorHandler } from './middleware/errorHandler.js';
 
+// Load Root Master .env first, fallback to local
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+dotenv.config({ path: path.resolve(__dirname, '../../.env') });
 dotenv.config();
 
 const app = express();
