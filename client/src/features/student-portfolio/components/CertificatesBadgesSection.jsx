@@ -221,10 +221,10 @@ export const CertificatesBadgesSection = ({
       {/* Header with Title, Tabs, and Minimal '+' Button */}
       <div className="flex flex-wrap items-center justify-between gap-2 border-b border-gray-100 pb-2.5">
         <div className="flex items-center gap-2">
-          <Award className="w-4 h-4 text-blue-600" />
+          <Award className="w-4 h-4 text-[#1E3B2F]" />
           <h3 className="text-base font-bold text-gray-900">Certificates & Badges</h3>
           {allItems.length > 0 && (
-            <span className="text-xs px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-700 font-semibold border border-blue-200/80">
+            <span className="text-xs px-2.5 py-0.5 rounded-full bg-[#7F8C6A]/15 text-[#1E3B2F] font-semibold border border-[#C8B48A]/40">
               {allItems.length}
             </span>
           )}
@@ -238,7 +238,7 @@ export const CertificatesBadgesSection = ({
               onClick={() => setActiveTab('all')}
               className={`px-3 py-1 font-medium transition-colors rounded-full ${
                 activeTab === 'all'
-                  ? 'bg-blue-600 text-white font-semibold shadow-xs'
+                  ? 'bg-[#1E3B2F] text-white font-semibold shadow-xs'
                   : 'text-gray-600 hover:text-gray-900'
               }`}
             >
@@ -249,7 +249,7 @@ export const CertificatesBadgesSection = ({
               onClick={() => setActiveTab('certificates')}
               className={`px-3 py-1 font-medium transition-colors rounded-full ${
                 activeTab === 'certificates'
-                  ? 'bg-blue-600 text-white font-semibold shadow-xs'
+                  ? 'bg-[#1E3B2F] text-white font-semibold shadow-xs'
                   : 'text-gray-600 hover:text-gray-900'
               }`}
             >
@@ -260,7 +260,7 @@ export const CertificatesBadgesSection = ({
               onClick={() => setActiveTab('badges')}
               className={`px-3 py-1 font-medium transition-colors rounded-full ${
                 activeTab === 'badges'
-                  ? 'bg-blue-600 text-white font-semibold shadow-xs'
+                  ? 'bg-[#1E3B2F] text-white font-semibold shadow-xs'
                   : 'text-gray-600 hover:text-gray-900'
               }`}
             >
@@ -272,7 +272,7 @@ export const CertificatesBadgesSection = ({
           <button
             type="button"
             onClick={handleOpenAddModal}
-            className="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-colors focus:outline-none"
+            className="p-1.5 text-gray-400 hover:text-[#1E3B2F] hover:bg-[#7F8C6A]/15 rounded-xl transition-colors focus:outline-none"
             title="Add Certificate or Badge"
             aria-label="Add Certificate or Badge"
           >
@@ -295,7 +295,7 @@ export const CertificatesBadgesSection = ({
           <button
             type="button"
             onClick={handleOpenAddModal}
-            className="mt-2 text-xs font-semibold text-blue-600 hover:text-blue-700 underline focus:outline-none"
+            className="mt-2 text-xs font-semibold text-[#1E3B2F] hover:text-[#1E3B2F] underline focus:outline-none"
           >
             + Add your first {activeTab === 'badges' ? 'badge' : 'certificate'}
           </button>
@@ -310,7 +310,7 @@ export const CertificatesBadgesSection = ({
               <div
                 key={idx}
                 onClick={() => setSelectedItem(item)}
-                className="group relative p-3.5 rounded-xl border border-gray-200/80 bg-white hover:border-blue-400 hover:shadow-md transition-all cursor-pointer flex items-start gap-3 select-none"
+                className="group relative p-3.5 rounded-xl border border-gray-200/80 bg-white hover:border-[#7F8C6A] hover:shadow-md transition-all cursor-pointer flex items-start gap-3 select-none"
                 title="Click to view details and preview"
               >
                 {/* Visual Thumbnail */}
@@ -334,7 +334,7 @@ export const CertificatesBadgesSection = ({
                       <ShieldCheck className="w-6 h-6" />
                     </div>
                   ) : (
-                    <div className="w-full h-full bg-blue-50 text-blue-600 flex items-center justify-center">
+                    <div className="w-full h-full bg-[#7F8C6A]/15 text-[#1E3B2F] flex items-center justify-center">
                       <Award className="w-6 h-6" />
                     </div>
                   )}
@@ -352,7 +352,7 @@ export const CertificatesBadgesSection = ({
                       className={`text-[9px] font-extrabold uppercase px-2 py-0.5 tracking-wider rounded-full ${
                         isBadge
                           ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                          : 'bg-blue-50 text-blue-700 border border-blue-200'
+                          : 'bg-[#7F8C6A]/15 text-[#1E3B2F] border border-[#C8B48A]/40'
                       }`}
                     >
                       {isBadge ? 'Badge' : 'Certificate'}
@@ -364,7 +364,7 @@ export const CertificatesBadgesSection = ({
                     )}
                   </div>
 
-                  <h4 className="text-xs font-bold text-gray-900 group-hover:text-blue-600 transition-colors truncate">
+                  <h4 className="text-xs font-bold text-gray-900 group-hover:text-[#1E3B2F] transition-colors truncate">
                     {item.title}
                   </h4>
 
@@ -419,7 +419,7 @@ export const CertificatesBadgesSection = ({
                     }
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold bg-blue-600 hover:bg-blue-700 text-white rounded-xl shadow-xs transition-colors"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold bg-[#1E3B2F] hover:bg-[#152A22] text-white rounded-xl shadow-xs transition-colors"
                   >
                     <span>Verify on Official Site</span>
                     <ExternalLink className="w-3.5 h-3.5" />
@@ -471,9 +471,9 @@ export const CertificatesBadgesSection = ({
               ) : (
                 /* Elegant Plaque Mockup when no custom image was uploaded */
                 <div className="p-8 bg-gradient-to-br from-gray-50 via-white to-blue-50/30 border border-gray-200 text-center relative overflow-hidden rounded-xl">
-                  <div className="absolute top-0 right-0 w-24 h-24 bg-blue-100/50 rounded-full blur-2xl pointer-events-none" />
+                  <div className="absolute top-0 right-0 w-24 h-24 bg-[#C8B48A]/20 rounded-full blur-2xl pointer-events-none" />
                   <div className="flex flex-col items-center space-y-3">
-                    <div className="w-14 h-14 bg-blue-50 border border-blue-200 text-blue-600 flex items-center justify-center rounded-xl shadow-xs">
+                    <div className="w-14 h-14 bg-[#7F8C6A]/15 border border-[#C8B48A]/40 text-[#1E3B2F] flex items-center justify-center rounded-xl shadow-xs">
                       {selectedItem.type === 'badge' ? (
                         <ShieldCheck className="w-8 h-8" />
                       ) : (
@@ -481,7 +481,7 @@ export const CertificatesBadgesSection = ({
                       )}
                     </div>
                     <div>
-                      <p className="text-[11px] font-bold text-blue-600 uppercase tracking-widest">
+                      <p className="text-[11px] font-bold text-[#1E3B2F] uppercase tracking-widest">
                         {selectedItem.type === 'badge' ? 'Official Badge Award' : 'Certificate of Achievement'}
                       </p>
                       <h3 className="text-lg font-black text-gray-900 tracking-tight mt-1">
@@ -508,9 +508,9 @@ export const CertificatesBadgesSection = ({
                 <span className="text-gray-400 font-medium block">Credential Type</span>
                 <span className="font-semibold text-gray-800 capitalize flex items-center gap-1 mt-0.5">
                   {selectedItem.type === 'badge' ? (
-                    <ShieldCheck className="w-3.5 h-3.5 text-blue-600" />
+                    <ShieldCheck className="w-3.5 h-3.5 text-[#1E3B2F]" />
                   ) : (
-                    <Award className="w-3.5 h-3.5 text-blue-600" />
+                    <Award className="w-3.5 h-3.5 text-[#1E3B2F]" />
                   )}
                   {selectedItem.type === 'badge' ? 'Digital Badge' : 'Official Certificate'}
                 </span>
@@ -544,7 +544,7 @@ export const CertificatesBadgesSection = ({
                     <button
                       type="button"
                       onClick={() => handleCopyId(selectedItem.credentialId)}
-                      className="p-1 text-gray-400 hover:text-blue-600 transition-colors focus:outline-none"
+                      className="p-1 text-gray-400 hover:text-[#1E3B2F] transition-colors focus:outline-none"
                       title="Copy Credential ID"
                     >
                       {copiedId ? (
@@ -595,7 +595,7 @@ export const CertificatesBadgesSection = ({
                 onClick={() => setItemType('certificate')}
                 className={`py-2 px-3 text-xs font-bold flex items-center justify-center gap-2 border rounded-xl transition-all ${
                   itemType === 'certificate'
-                    ? 'border-blue-600 bg-blue-50 text-blue-700 font-semibold'
+                    ? 'border-[#1E3B2F] bg-[#7F8C6A]/15 text-[#1E3B2F] font-semibold'
                     : 'border-gray-200 bg-white text-gray-600 hover:bg-gray-50'
                 }`}
               >
@@ -607,7 +607,7 @@ export const CertificatesBadgesSection = ({
                 onClick={() => setItemType('badge')}
                 className={`py-2 px-3 text-xs font-bold flex items-center justify-center gap-2 border rounded-xl transition-all ${
                   itemType === 'badge'
-                    ? 'border-blue-600 bg-blue-50 text-blue-700 font-semibold'
+                    ? 'border-[#1E3B2F] bg-[#7F8C6A]/15 text-[#1E3B2F] font-semibold'
                     : 'border-gray-200 bg-white text-gray-600 hover:bg-gray-50'
                 }`}
               >
@@ -683,16 +683,16 @@ export const CertificatesBadgesSection = ({
               {!selectedUploadFile ? (
                 <div
                   onClick={() => fileInputRef.current?.click()}
-                  className="border border-dashed border-gray-300 hover:border-blue-400 rounded-xl p-3.5 text-center cursor-pointer bg-gray-50/50 hover:bg-blue-50/20 transition-all"
+                  className="border border-dashed border-gray-300 hover:border-[#7F8C6A] rounded-xl p-3.5 text-center cursor-pointer bg-gray-50/50 hover:bg-[#7F8C6A]/15/20 transition-all"
                 >
                   <UploadCloud className="w-5 h-5 text-gray-400 mx-auto mb-1" />
                   <p className="text-xs font-medium text-gray-700">
-                    <span className="font-semibold text-blue-600">Click to upload</span> certificate image or PDF
+                    <span className="font-semibold text-[#1E3B2F]">Click to upload</span> certificate image or PDF
                   </p>
                   <p className="text-[10px] text-gray-400 mt-0.5">PNG, JPG, WEBP, or PDF (Max 10MB)</p>
                 </div>
               ) : (
-                <div className="p-2.5 border border-blue-200 bg-blue-50/40 rounded-xl flex items-center justify-between gap-3">
+                <div className="p-2.5 border border-[#C8B48A]/40 bg-[#7F8C6A]/10 rounded-xl flex items-center justify-between gap-3">
                   <div className="flex items-center gap-2 min-w-0">
                     {uploadFilePreview ? (
                       <img
@@ -701,7 +701,7 @@ export const CertificatesBadgesSection = ({
                         className="w-9 h-9 object-cover border border-gray-300 rounded-lg shrink-0"
                       />
                     ) : (
-                      <FileCheck2 className="w-5 h-5 text-blue-600 shrink-0" />
+                      <FileCheck2 className="w-5 h-5 text-[#1E3B2F] shrink-0" />
                     )}
                     <span className="text-xs font-semibold text-gray-800 truncate">
                       {selectedUploadFile.name}
@@ -746,7 +746,7 @@ export const CertificatesBadgesSection = ({
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
               placeholder="Key skills demonstrated, exam topics, or honors..."
-              className="w-full text-xs p-2.5 border border-gray-200 focus:border-blue-500 focus:outline-none rounded-xl bg-white transition-all"
+              className="w-full text-xs p-2.5 border border-gray-200 focus:border-[#1E3B2F] focus:outline-none rounded-xl bg-white transition-all"
             />
           </div>
 
@@ -765,7 +765,7 @@ export const CertificatesBadgesSection = ({
               variant="primary"
               size="sm"
               disabled={isLoading || isUploadingFile}
-              className="rounded-xl text-xs font-semibold px-4 bg-blue-600 hover:bg-blue-700 text-white shadow-xs"
+              className="rounded-xl text-xs font-semibold px-4 bg-[#1E3B2F] hover:bg-[#152A22] text-white shadow-xs"
             >
               {isUploadingFile ? 'Uploading File...' : isLoading ? 'Saving...' : `Save ${itemType === 'badge' ? 'Badge' : 'Certificate'}`}
             </Button>

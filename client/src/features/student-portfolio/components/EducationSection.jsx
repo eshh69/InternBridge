@@ -57,10 +57,10 @@ export const EducationSection = ({
     <Card className="space-y-4 rounded-2xl shadow-xs border border-gray-200/90 p-5 bg-white">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <GraduationCap className="w-4 h-4 text-blue-600" />
+          <GraduationCap className="w-4 h-4 text-[#1E3B2F]" />
           <h3 className="text-base font-bold text-gray-900">Education Background</h3>
           {education.length > 0 && (
-            <span className="text-xs px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-700 font-semibold border border-blue-200/80">
+            <span className="text-xs px-2.5 py-0.5 rounded-full bg-[#7F8C6A]/15 text-[#1E3B2F] font-semibold border border-[#C8B48A]/40">
               {education.length}
             </span>
           )}
@@ -69,7 +69,7 @@ export const EducationSection = ({
         <button
           type="button"
           onClick={() => setIsModalOpen(true)}
-          className="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-colors focus:outline-none"
+          className="p-1.5 text-gray-400 hover:text-[#1E3B2F] hover:bg-[#7F8C6A]/15 rounded-xl transition-colors focus:outline-none"
           title="Add Education"
           aria-label="Add Education"
         >
@@ -87,11 +87,11 @@ export const EducationSection = ({
             {education.map((edu, idx) => (
               <div
                 key={idx}
-                className="p-4 rounded-xl border border-gray-200/80 bg-gray-50/60 flex items-start justify-between gap-3 hover:border-blue-400 hover:shadow-xs transition-all"
+                className="p-4 rounded-xl border border-gray-200/80 bg-gray-50/60 flex items-start justify-between gap-3 hover:border-[#7F8C6A] hover:shadow-xs transition-all"
               >
                 <div className="space-y-1 min-w-0">
                   <h4 className="text-xs font-bold text-gray-900 truncate">{edu.degree}</h4>
-                  <p className="text-xs text-blue-600 font-medium truncate">{edu.institution}</p>
+                  <p className="text-xs text-[#1E3B2F] font-medium truncate">{edu.institution}</p>
                   {(edu.startDate || edu.endDate) && (
                     <div className="flex items-center gap-1 text-[11px] text-gray-400">
                       <Calendar className="w-3 h-3" />
@@ -163,7 +163,7 @@ export const EducationSection = ({
               rows={2}
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-              className="w-full text-xs p-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-1 focus:ring-blue-500 bg-white"
+              className="w-full text-xs p-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-1 focus:ring-[#1E3B2F]/20 bg-white"
               placeholder="e.g. Relevant coursework, GPA achievements, Dean's list"
             />
           </div>
@@ -182,7 +182,7 @@ export const EducationSection = ({
               variant="primary"
               size="sm"
               isLoading={isLoading}
-              className="rounded-xl text-xs bg-blue-600 hover:bg-blue-700 text-white font-semibold shadow-xs"
+              className="rounded-xl text-xs bg-[#1E3B2F] hover:bg-[#152A22] text-white font-semibold shadow-xs"
             >
               Save Education
             </Button>

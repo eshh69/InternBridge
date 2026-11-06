@@ -21,13 +21,11 @@ import {
 } from 'lucide-react';
 
 const SKILL_COLOR_PALETTES = [
-  'bg-indigo-50 text-indigo-700',
-  'bg-purple-50 text-purple-700',
-  'bg-blue-50 text-blue-700',
-  'bg-emerald-50 text-emerald-700',
-  'bg-amber-50 text-amber-800',
-  'bg-rose-50 text-rose-700',
-  'bg-cyan-50 text-cyan-700',
+  'bg-[#7F8C6A]/15 text-[#1E3B2F] border border-[#7F8C6A]/30',
+  'bg-[#C8B48A]/20 text-[#1E3B2F] border border-[#C8B48A]/40',
+  'bg-[#1E3B2F]/10 text-[#1E3B2F] border border-[#1E3B2F]/20',
+  'bg-[#7F8C6A]/20 text-[#152A22] border border-[#7F8C6A]/35',
+  'bg-[#F5F0E6] text-[#1E3B2F] border border-[#C8B48A]/40',
 ];
 
 export const ProfileHeader = ({
@@ -130,7 +128,7 @@ export const ProfileHeader = ({
                 onClick={() => avatarInputRef.current?.click()}
                 className="px-3.5 py-1.5 bg-white text-slate-900 text-xs font-semibold rounded-xl shadow-xs hover:bg-slate-100 flex items-center gap-1.5 transition-transform hover:scale-105"
               >
-                <Camera className="w-3.5 h-3.5 text-blue-600" />
+                <Camera className="w-3.5 h-3.5 text-[#1E3B2F]" />
                 {isUploadingAvatar ? 'Saving...' : 'Change Photo'}
               </button>
 
@@ -154,7 +152,7 @@ export const ProfileHeader = ({
 
             {/* Uploading Loader */}
             {isUploadingAvatar && (
-              <div className="absolute inset-0 bg-white/90 flex flex-col items-center justify-center gap-1.5 text-xs font-semibold text-blue-600">
+              <div className="absolute inset-0 bg-white/90 flex flex-col items-center justify-center gap-1.5 text-xs font-semibold text-[#1E3B2F]">
                 <Spinner size="md" />
                 <span>Uploading...</span>
               </div>
@@ -190,7 +188,7 @@ export const ProfileHeader = ({
               <button
                 type="button"
                 onClick={onEditClick}
-                className="p-2 rounded-xl text-gray-400 hover:text-blue-600 hover:bg-blue-50 transition-colors focus:outline-none shrink-0"
+                className="p-2 rounded-xl text-gray-400 hover:text-[#1E3B2F] hover:bg-[#7F8C6A]/15 transition-colors focus:outline-none shrink-0"
                 title="Edit Profile"
                 aria-label="Edit Profile"
               >
@@ -199,7 +197,7 @@ export const ProfileHeader = ({
             </div>
 
             {fieldOfStudy && (
-              <p className="text-xs sm:text-sm font-semibold text-blue-600">
+              <p className="text-xs sm:text-sm font-semibold text-[#1E3B2F]">
                 {fieldOfStudy}
               </p>
             )}
@@ -218,12 +216,12 @@ export const ProfileHeader = ({
               <div className="min-w-0 space-y-0.5">
                 {degree && <p className="text-sm font-bold text-gray-900 truncate">{degree}</p>}
                 <div className="flex items-center gap-1.5 text-xs text-gray-500 truncate">
-                  <GraduationCap className="w-3.5 h-3.5 text-blue-600 shrink-0" />
+                  <GraduationCap className="w-3.5 h-3.5 text-[#1E3B2F] shrink-0" />
                   {university && <span className="truncate">{university}</span>}
                   {academicYear && (
                     <>
                       <span className="text-gray-300">•</span>
-                      <span className="text-blue-600 font-medium">{academicYear}</span>
+                      <span className="text-[#1E3B2F] font-medium">{academicYear}</span>
                     </>
                   )}
                   {gpa !== null && gpa !== undefined && (
@@ -251,7 +249,7 @@ export const ProfileHeader = ({
                       href={cvUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs shadow-xs transition-all hover:scale-102"
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#1E3B2F] hover:bg-[#152A22] text-white font-semibold text-xs shadow-xs transition-all hover:scale-102"
                       title="View Resume in new tab"
                     >
                       <FileText className="w-3.5 h-3.5" />
@@ -263,11 +261,11 @@ export const ProfileHeader = ({
                       type="button"
                       onClick={() => cvInputRef.current?.click()}
                       disabled={isUploadingCv}
-                      className="p-1.5 rounded-lg text-gray-400 hover:text-blue-600 hover:bg-blue-50 transition-colors"
+                      className="p-1.5 rounded-lg text-gray-400 hover:text-[#1E3B2F] hover:bg-[#7F8C6A]/15 transition-colors"
                       title="Replace Resume document"
                     >
                       <RefreshCw
-                        className={`w-3.5 h-3.5 ${isUploadingCv ? 'animate-spin text-blue-600' : ''}`}
+                        className={`w-3.5 h-3.5 ${isUploadingCv ? 'animate-spin text-[#1E3B2F]' : ''}`}
                       />
                     </button>
 
@@ -292,10 +290,10 @@ export const ProfileHeader = ({
                     type="button"
                     onClick={() => cvInputRef.current?.click()}
                     disabled={isUploadingCv}
-                    className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl border border-dashed border-blue-300 hover:border-blue-500 bg-blue-50/70 hover:bg-blue-100/70 text-blue-700 font-semibold text-xs transition-all shadow-2xs"
+                    className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl border border-dashed border-[#C8B48A]/40 hover:border-[#1E3B2F] bg-[#7F8C6A]/15 hover:bg-[#C8B48A]/30 text-[#1E3B2F] font-semibold text-xs transition-all shadow-2xs"
                     title="Upload Resume (PDF, DOCX)"
                   >
-                    <UploadCloud className="w-3.5 h-3.5 text-blue-600" />
+                    <UploadCloud className="w-3.5 h-3.5 text-[#1E3B2F]" />
                     <span>{isUploadingCv ? 'Uploading...' : 'Upload Resume'}</span>
                   </button>
                 )}
@@ -311,7 +309,7 @@ export const ProfileHeader = ({
               {email && (
                 <div className="flex items-center gap-1.5 text-gray-600">
                   <Mail className="w-3.5 h-3.5 text-gray-400 shrink-0" />
-                  <a href={`mailto:${email}`} className="truncate hover:text-blue-600 font-medium">
+                  <a href={`mailto:${email}`} className="truncate hover:text-[#1E3B2F] font-medium">
                     {email}
                   </a>
                 </div>
@@ -320,7 +318,7 @@ export const ProfileHeader = ({
               {phone && (
                 <div className="flex items-center gap-1.5 text-gray-600">
                   <Phone className="w-3.5 h-3.5 text-gray-400 shrink-0" />
-                  <a href={`tel:${phone}`} className="hover:text-blue-600 font-medium">
+                  <a href={`tel:${phone}`} className="hover:text-[#1E3B2F] font-medium">
                     {phone}
                   </a>
                 </div>
@@ -357,7 +355,7 @@ export const ProfileHeader = ({
                   href={links.linkedin.startsWith('http') ? links.linkedin : `https://${links.linkedin}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1 text-xs font-semibold text-[#0A66C2] bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded-full border border-blue-200/80 transition-colors"
+                  className="inline-flex items-center gap-1 text-xs font-semibold text-[#0A66C2] bg-[#7F8C6A]/15 hover:bg-[#7F8C6A]/20 px-3 py-1 rounded-full border border-[#C8B48A]/40 transition-colors"
                 >
                   <Linkedin className="w-3.5 h-3.5" />
                   LinkedIn
@@ -368,7 +366,7 @@ export const ProfileHeader = ({
                   href={links.portfolio.startsWith('http') ? links.portfolio : `https://${links.portfolio}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1 text-xs font-semibold text-blue-700 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded-full border border-blue-200/80 transition-colors"
+                  className="inline-flex items-center gap-1 text-xs font-semibold text-[#1E3B2F] bg-[#7F8C6A]/15 hover:bg-[#7F8C6A]/20 px-3 py-1 rounded-full border border-[#C8B48A]/40 transition-colors"
                 >
                   <Globe className="w-3.5 h-3.5" />
                   Portfolio
@@ -379,7 +377,7 @@ export const ProfileHeader = ({
                   href={links.behance.startsWith('http') ? links.behance : `https://${links.behance}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1 text-xs font-semibold text-blue-700 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded-full border border-blue-200/80 transition-colors"
+                  className="inline-flex items-center gap-1 text-xs font-semibold text-[#1E3B2F] bg-[#7F8C6A]/15 hover:bg-[#7F8C6A]/20 px-3 py-1 rounded-full border border-[#C8B48A]/40 transition-colors"
                 >
                   <Palette className="w-3.5 h-3.5" />
                   Behance
@@ -407,7 +405,7 @@ export const ProfileHeader = ({
                       href={href}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 text-xs font-semibold text-blue-700 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded-full border border-blue-200/80 transition-colors"
+                      className="inline-flex items-center gap-1 text-xs font-semibold text-[#1E3B2F] bg-[#7F8C6A]/15 hover:bg-[#7F8C6A]/20 px-3 py-1 rounded-full border border-[#C8B48A]/40 transition-colors"
                     >
                       <ExternalLink className="w-3.5 h-3.5" />
                       {label}

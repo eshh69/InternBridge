@@ -122,7 +122,7 @@ const ProjectPreview = ({ projectUrl, title }) => {
 
       {/* Interactive Hover Overlay with Launch Button */}
       <div className="absolute inset-0 top-6 z-30 bg-slate-900/60 backdrop-blur-[2px] opacity-0 group-hover/preview:opacity-100 transition-opacity flex items-center justify-center gap-1.5 text-white">
-        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-xl shadow-lg transition-transform transform group-hover/preview:scale-105">
+        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#1E3B2F] hover:bg-[#152A22] text-white text-xs font-semibold rounded-xl shadow-lg transition-transform transform group-hover/preview:scale-105">
           <span>Launch Demo</span>
           <ExternalLink className="w-3.5 h-3.5" />
         </span>
@@ -349,10 +349,10 @@ export const ProjectsSection = ({
     <Card className="space-y-4 rounded-2xl shadow-xs border border-gray-200/90 p-5 bg-white">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <FolderGit2 className="w-4 h-4 text-blue-600" />
+          <FolderGit2 className="w-4 h-4 text-[#1E3B2F]" />
           <h3 className="text-sm font-bold text-gray-900">Featured Projects</h3>
           {projects.length > 0 && (
-            <span className="text-xs px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-700 font-semibold border border-blue-200">
+            <span className="text-xs px-2.5 py-0.5 rounded-full bg-[#7F8C6A]/15 text-[#1E3B2F] font-semibold border border-[#C8B48A]/40">
               {projects.length}
             </span>
           )}
@@ -360,7 +360,7 @@ export const ProjectsSection = ({
         <button
           type="button"
           onClick={handleOpenAdd}
-          className="p-1.5 rounded-xl text-gray-400 hover:text-blue-600 hover:bg-blue-50 transition-colors focus:outline-none"
+          className="p-1.5 rounded-xl text-gray-400 hover:text-[#1E3B2F] hover:bg-[#7F8C6A]/15 transition-colors focus:outline-none"
           title="Add Project"
           aria-label="Add Project"
         >
@@ -377,7 +377,7 @@ export const ProjectsSection = ({
           {projects.map((proj, idx) => (
             <div
               key={idx}
-              className="rounded-2xl border border-gray-200/90 bg-white hover:border-blue-400 transition-all overflow-hidden flex flex-col justify-between shadow-xs hover:shadow-md group/card"
+              className="rounded-2xl border border-gray-200/90 bg-white hover:border-[#7F8C6A] transition-all overflow-hidden flex flex-col justify-between shadow-xs hover:shadow-md group/card"
             >
               {/* Cover Banner: Custom Image OR Live Preview */}
               {proj.imageUrl ? (
@@ -395,7 +395,7 @@ export const ProjectsSection = ({
                   />
                   {proj.projectUrl && (
                     <div className="absolute inset-0 bg-slate-900/40 opacity-0 group-hover/preview:opacity-100 transition-opacity flex items-center justify-center gap-1.5 text-white">
-                      <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-xl shadow-lg">
+                      <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#1E3B2F] hover:bg-[#152A22] text-white text-xs font-semibold rounded-xl shadow-lg">
                         <span>Launch Demo</span>
                         <ExternalLink className="w-3.5 h-3.5" />
                       </span>
@@ -414,7 +414,7 @@ export const ProjectsSection = ({
                       <button
                         type="button"
                         onClick={() => handleOpenEdit(idx)}
-                        className="p-1 text-gray-400 hover:text-blue-600 transition-colors rounded-lg"
+                        className="p-1 text-gray-400 hover:text-[#1E3B2F] transition-colors rounded-lg"
                         title="Edit"
                       >
                         <Edit2 className="w-3 h-3" />
@@ -466,7 +466,7 @@ export const ProjectsSection = ({
                         href={proj.projectUrl.startsWith('http') ? proj.projectUrl : `https://${proj.projectUrl}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1.5 text-blue-600 hover:text-blue-700 font-semibold"
+                        className="inline-flex items-center gap-1.5 text-[#1E3B2F] hover:text-[#1E3B2F] font-semibold"
                       >
                         <ExternalLink className="w-3.5 h-3.5" />
                         Live Demo
@@ -514,7 +514,7 @@ export const ProjectsSection = ({
                       handleFetchGithubRepos();
                     }
                   }}
-                  className="flex-1 text-xs px-3 py-1.5 bg-white border border-gray-200 rounded-xl focus:outline-none focus:border-blue-500 transition-colors"
+                  className="flex-1 text-xs px-3 py-1.5 bg-white border border-gray-200 rounded-xl focus:outline-none focus:border-[#1E3B2F] transition-colors"
                 />
                 <button
                   type="button"
@@ -542,7 +542,7 @@ export const ProjectsSection = ({
                   <select
                     value={selectedRepoId}
                     onChange={(e) => handleSelectRepo(e.target.value)}
-                    className="w-full text-xs px-3 py-2 bg-white border border-blue-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800 font-medium cursor-pointer"
+                    className="w-full text-xs px-3 py-2 bg-white border border-[#C8B48A]/40 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#1E3B2F]/20 text-gray-800 font-medium cursor-pointer"
                   >
                     <option value="">-- Choose a repository ({githubRepos.length} found) --</option>
                     {githubRepos.map((r) => (
@@ -571,7 +571,7 @@ export const ProjectsSection = ({
               rows={3}
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-              className={`w-full text-xs p-2.5 rounded-xl border focus:border-blue-500 focus:outline-none transition-colors ${
+              className={`w-full text-xs p-2.5 rounded-xl border focus:border-[#1E3B2F] focus:outline-none transition-colors ${
                 errors.description ? 'border-rose-400' : 'border-gray-200'
               }`}
               placeholder="What does this project do and what problem did it solve?"
@@ -644,7 +644,7 @@ export const ProjectsSection = ({
                     disabled={isUploadingImage}
                     className="px-2.5 py-1 bg-white hover:bg-gray-100 text-gray-900 text-xs font-semibold rounded-lg shadow-xs flex items-center gap-1"
                   >
-                    <Camera className="w-3 h-3 text-blue-600" />
+                    <Camera className="w-3 h-3 text-[#1E3B2F]" />
                     Replace
                   </button>
                   <button
@@ -663,16 +663,16 @@ export const ProjectsSection = ({
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
                   disabled={isUploadingImage}
-                  className="px-3.5 py-2 border border-gray-300 hover:border-blue-400 bg-gray-50 hover:bg-blue-50/40 text-gray-700 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors"
+                  className="px-3.5 py-2 border border-gray-300 hover:border-[#7F8C6A] bg-gray-50 hover:bg-[#7F8C6A]/10 text-gray-700 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors"
                 >
                   {isUploadingImage ? (
                     <>
-                      <RefreshCw className="w-3.5 h-3.5 animate-spin text-blue-600" />
+                      <RefreshCw className="w-3.5 h-3.5 animate-spin text-[#1E3B2F]" />
                       <span>Uploading...</span>
                     </>
                   ) : (
                     <>
-                      <Camera className="w-3.5 h-3.5 text-blue-600" />
+                      <Camera className="w-3.5 h-3.5 text-[#1E3B2F]" />
                       <span>Upload Screenshot</span>
                     </>
                   )}
@@ -685,7 +685,7 @@ export const ProjectsSection = ({
                   placeholder="Paste image URL (https://...)"
                   value={formData.imageUrl}
                   onChange={(e) => setFormData((prev) => ({ ...prev, imageUrl: e.target.value }))}
-                  className="flex-1 text-xs px-3 py-2 border border-gray-200 rounded-xl focus:outline-none focus:border-blue-500 transition-colors"
+                  className="flex-1 text-xs px-3 py-2 border border-gray-200 rounded-xl focus:outline-none focus:border-[#1E3B2F] transition-colors"
                 />
               </div>
             )}
@@ -704,7 +704,7 @@ export const ProjectsSection = ({
               size="sm"
               type="submit"
               disabled={isLoading || isUploadingImage}
-              className="rounded-xl text-xs font-semibold px-4 bg-blue-600 hover:bg-blue-700 text-white shadow-xs"
+              className="rounded-xl text-xs font-semibold px-4 bg-[#1E3B2F] hover:bg-[#152A22] text-white shadow-xs"
             >
               {editingIndex !== null ? 'Save Changes' : 'Add Project'}
             </Button>

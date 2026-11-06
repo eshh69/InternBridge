@@ -169,10 +169,10 @@ export const SkillTagsSection = ({ skills = [], onSaveSkills, isLoading }) => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Code2 className="w-4 h-4 text-blue-600" />
+          <Code2 className="w-4 h-4 text-[#1E3B2F]" />
           <h3 className="text-sm font-bold text-gray-900">Skills & Expertise</h3>
           {currentSkills.length > 0 && (
-            <span className="text-xs px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-700 font-semibold border border-blue-200">
+            <span className="text-xs px-2.5 py-0.5 rounded-full bg-[#7F8C6A]/15 text-[#1E3B2F] font-semibold border border-[#C8B48A]/40">
               {currentSkills.length}
             </span>
           )}
@@ -194,7 +194,7 @@ export const SkillTagsSection = ({ skills = [], onSaveSkills, isLoading }) => {
           <button
             type="button"
             onClick={handleOpenAddModal}
-            className="p-1.5 rounded-xl text-gray-400 hover:text-blue-600 hover:bg-blue-50 transition-colors focus:outline-none"
+            className="p-1.5 rounded-xl text-gray-400 hover:text-[#1E3B2F] hover:bg-[#7F8C6A]/15 transition-colors focus:outline-none"
             title="Add Skill with Points / Experience"
             aria-label="Add Skill with Points"
           >
@@ -218,7 +218,7 @@ export const SkillTagsSection = ({ skills = [], onSaveSkills, isLoading }) => {
           type="button"
           onClick={() => handleQuickAddSkill()}
           disabled={!inputValue.trim() || isLoading}
-          className="p-2 rounded-xl text-gray-400 hover:text-blue-600 hover:bg-blue-50 disabled:opacity-30 disabled:hover:text-gray-400 transition-colors focus:outline-none shrink-0"
+          className="p-2 rounded-xl text-gray-400 hover:text-[#1E3B2F] hover:bg-[#7F8C6A]/15 disabled:opacity-30 disabled:hover:text-gray-400 transition-colors focus:outline-none shrink-0"
           title="Add Skill"
           aria-label="Add Skill"
         >
@@ -237,7 +237,7 @@ export const SkillTagsSection = ({ skills = [], onSaveSkills, isLoading }) => {
             return (
               <div
                 key={originalIndex}
-                className="p-4 bg-gray-50/60 border border-gray-200/80 rounded-xl space-y-2 transition-all hover:border-blue-400 hover:shadow-xs"
+                className="p-4 bg-gray-50/60 border border-gray-200/80 rounded-xl space-y-2 transition-all hover:border-[#7F8C6A] hover:shadow-xs"
               >
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-bold text-gray-900 capitalize tracking-tight">
@@ -247,7 +247,7 @@ export const SkillTagsSection = ({ skills = [], onSaveSkills, isLoading }) => {
                     <button
                       type="button"
                       onClick={() => handleOpenEditModal(skill, originalIndex)}
-                      className="p-1 text-gray-400 hover:text-blue-600 transition-colors focus:outline-none rounded-lg"
+                      className="p-1 text-gray-400 hover:text-[#1E3B2F] transition-colors focus:outline-none rounded-lg"
                       title="Edit points"
                     >
                       <Edit2 className="w-3 h-3" />
@@ -274,7 +274,7 @@ export const SkillTagsSection = ({ skills = [], onSaveSkills, isLoading }) => {
                         key={i}
                         className="text-xs text-gray-700 flex items-start gap-1.5 leading-snug"
                       >
-                        <span className="text-blue-600 font-bold select-none">•</span>
+                        <span className="text-[#1E3B2F] font-bold select-none">•</span>
                         <span>{pt}</span>
                       </li>
                     ))}
@@ -294,13 +294,13 @@ export const SkillTagsSection = ({ skills = [], onSaveSkills, isLoading }) => {
             return (
               <span
                 key={originalIndex}
-                className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium bg-white text-gray-700 border border-gray-200/90 shadow-2xs group hover:border-blue-400 transition-colors"
+                className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium bg-white text-gray-700 border border-gray-200/90 shadow-2xs group hover:border-[#7F8C6A] transition-colors"
               >
                 <span className="capitalize">{name}</span>
                 <button
                   type="button"
                   onClick={() => handleOpenEditModal(skill, originalIndex)}
-                  className="text-gray-300 group-hover:text-gray-500 hover:!text-blue-600 transition-colors"
+                  className="text-gray-300 group-hover:text-gray-500 hover:!text-[#1E3B2F] transition-colors"
                   title="Add details or points to this skill"
                 >
                   <Edit2 className="w-2.5 h-2.5" />
@@ -338,7 +338,7 @@ export const SkillTagsSection = ({ skills = [], onSaveSkills, isLoading }) => {
                 type="button"
                 onClick={() => handleQuickAddSkill(skill)}
                 disabled={isLoading}
-                className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs bg-gray-100 hover:bg-blue-50 text-gray-600 hover:text-blue-700 border border-gray-200/60 hover:border-blue-200 transition-colors"
+                className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs bg-gray-100 hover:bg-[#7F8C6A]/15 text-gray-600 hover:text-[#1E3B2F] border border-gray-200/60 hover:border-[#C8B48A]/40 transition-colors"
               >
                 <Plus className="w-3 h-3 text-gray-400" />
                 <span className="capitalize">{skill}</span>
@@ -366,7 +366,7 @@ export const SkillTagsSection = ({ skills = [], onSaveSkills, isLoading }) => {
               variant="primary"
               onClick={handleSaveModal}
               isLoading={isLoading}
-              className="rounded-xl text-xs font-semibold px-4 bg-blue-600 hover:bg-blue-700 text-white shadow-xs"
+              className="rounded-xl text-xs font-semibold px-4 bg-[#1E3B2F] hover:bg-[#152A22] text-white shadow-xs"
             >
               Save Skill
             </Button>
@@ -402,7 +402,7 @@ export const SkillTagsSection = ({ skills = [], onSaveSkills, isLoading }) => {
               placeholder="e.g. Frontend UI architecture & state management"
               value={modalSkillDetails}
               onChange={(e) => setModalSkillDetails(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-200 rounded-xl text-xs focus:outline-none focus:border-blue-500 transition-colors"
+              className="w-full px-3 py-2 border border-gray-200 rounded-xl text-xs focus:outline-none focus:border-[#1E3B2F] transition-colors"
             />
           </div>
 
@@ -415,7 +415,7 @@ export const SkillTagsSection = ({ skills = [], onSaveSkills, isLoading }) => {
               <button
                 type="button"
                 onClick={handleAddModalPoint}
-                className="p-1 text-blue-600 hover:text-blue-800 transition-colors focus:outline-none flex items-center gap-1 text-xs font-semibold"
+                className="p-1 text-[#1E3B2F] hover:text-[#152A22] transition-colors focus:outline-none flex items-center gap-1 text-xs font-semibold"
               >
                 <Plus className="w-3 h-3" />
                 Add Point
@@ -435,7 +435,7 @@ export const SkillTagsSection = ({ skills = [], onSaveSkills, isLoading }) => {
                     }`}
                     value={point}
                     onChange={(e) => handlePointChange(pIdx, e.target.value)}
-                    className="flex-1 px-3 py-1.5 border border-gray-200 rounded-xl text-xs focus:outline-none focus:border-blue-500 transition-colors"
+                    className="flex-1 px-3 py-1.5 border border-gray-200 rounded-xl text-xs focus:outline-none focus:border-[#1E3B2F] transition-colors"
                   />
                   {modalSkillPoints.length > 1 && (
                     <button
