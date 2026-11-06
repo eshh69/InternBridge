@@ -201,15 +201,17 @@ export const RegisterPage = () => {
       }
 
       if (role === 'student') {
-        payload.studentData = {
+        const studentInfo = {
           university: university.trim(),
           degree: degree.trim(),
           fieldOfStudy: fieldOfStudy.trim(),
           academicYear,
           skills: skillsArray,
         };
+        payload.studentData = studentInfo;
+        payload.studentDetails = studentInfo;
       } else if (role === 'company') {
-        payload.companyData = {
+        const companyInfo = {
           name: companyName.trim(),
           industry: industry.trim(),
           city: city.trim(),
@@ -217,12 +219,16 @@ export const RegisterPage = () => {
           website: website.trim(),
           description: description.trim(),
         };
+        payload.companyData = companyInfo;
+        payload.companyDetails = companyInfo;
       } else if (role === 'reviewer') {
-        payload.reviewerData = {
+        const reviewerInfo = {
           institution: institution.trim(),
           department: department.trim(),
           designation: designation.trim(),
         };
+        payload.reviewerData = reviewerInfo;
+        payload.reviewerDetails = reviewerInfo;
       }
 
       const registeredUser = await register(payload);
