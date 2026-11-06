@@ -26,13 +26,13 @@ export const HomePage = () => {
       <section className="relative w-full min-h-[calc(100vh-4rem)] h-[calc(100vh-4rem)] bg-[#1E3B2F] text-[#F5F0E6] flex items-center overflow-hidden border-b border-[#7F8C6A]/30">
         {/* Full-width Cityscape Background with Forest Amber Grading */}
         <div
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-35 sm:opacity-45 transform scale-105 transition-transform duration-1000 contrast-125"
+          className="absolute inset-0 bg-cover bg-right md:bg-center bg-no-repeat opacity-55 sm:opacity-75 transform scale-105 transition-transform duration-1000 contrast-110"
           style={{ backgroundImage: `url(${heroCityscape})` }}
         />
 
-        {/* Ambient Overlays in Rich Forest & Emerald Shades */}
-        <div className="absolute inset-0 bg-gradient-to-r from-[#1E3B2F]/95 via-[#1E3B2F]/80 to-[#1E3B2F]/45" />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#1E3B2F] via-transparent to-[#1E3B2F]/60" />
+        {/* Ambient Overlays: Deep opaque forest on left for crisp readability, highly transparent on right for vivid Lotus Tower view */}
+        <div className="absolute inset-0 bg-gradient-to-r from-[#1E3B2F] via-[#1E3B2F]/75 md:via-[#1E3B2F]/60 to-[#1E3B2F]/10" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#1E3B2F]/80 via-transparent to-[#1E3B2F]/20" />
 
         {/* Hero Content Aligned with Container */}
         <div className="w-full lg:w-[80%] mx-auto px-4 sm:px-6 lg:px-8 relative z-10 py-12 flex flex-col justify-center">
