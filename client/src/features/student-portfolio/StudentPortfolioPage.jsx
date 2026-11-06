@@ -5,8 +5,8 @@ import { ProfileHeader } from './components/ProfileHeader';
 import { ProfileEditModal } from './components/ProfileEditModal';
 import { SkillTagsSection } from './components/SkillTagsSection';
 import { ProjectsSection } from './components/ProjectsSection';
-import { CvUploader } from './components/CvUploader';
-import { EducationExperienceSection } from './components/EducationExperienceSection';
+import { EducationSection } from './components/EducationSection';
+import { ExperienceSection } from './components/ExperienceSection';
 import { CertificatesBadgesSection } from './components/CertificatesBadgesSection';
 import { Spinner } from '../../components/ui/Spinner';
 import { Alert } from '../../components/ui/Alert';
@@ -185,7 +185,7 @@ export const StudentPortfolioPage = () => {
   }
 
   return (
-    <div className="space-y-6 w-full pb-12">
+    <div className="portfolio-scope space-y-8 w-full mx-auto pb-16">
       {/* Top Notification Feedback */}
       {feedback.message && (
         <Alert type={feedback.type}>
@@ -200,7 +200,7 @@ export const StudentPortfolioPage = () => {
         </Alert>
       )}
 
-      {/* Main Profile Header Card with Avatar Upload / Delete */}
+      {/* Main Profile Header Showcase */}
       <ProfileHeader
         profile={profile}
         user={user}
@@ -208,61 +208,130 @@ export const StudentPortfolioPage = () => {
         onUploadAvatar={handleUploadAvatar}
         onDeleteAvatar={handleDeleteAvatar}
         isUploadingAvatar={isUploadingAvatar}
+        cvUrl={profile?.cvUrl}
+        onUploadCv={handleUploadCv}
+        onDeleteCv={handleDeleteCv}
+        isUploadingCv={isUploadingCv}
+        isDeletingCv={isDeletingCv}
       />
 
-      {/* Grid Layout: Left / Right Columns */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Left Column (Skills & CV Uploader with Delete) */}
-        <div className="space-y-6">
-          <CvUploader
-            cvUrl={profile?.cvUrl}
-            onUploadCv={handleUploadCv}
-            onDeleteCv={handleDeleteCv}
-            isLoading={isUploadingCv}
-            isDeletingCv={isDeletingCv}
-          />
+      {/* SECTION 01: EDUCATION & CERTIFICATIONS */}
+      <section className="space-y-3">
+        <div className="flex items-center justify-between border-b border-gray-200 pb-2.5">
+          <div className="flex items-center gap-2.5">
+            <span className="text-xs font-mono font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded-lg border border-blue-100">
+              01
+            </span>
+            <h2 className="text-sm font-black text-gray-900 tracking-tight">
+              Education & Certifications
+            </h2>
+          </div>
+          <span className="text-xs text-gray-400 font-medium">Academic Qualifications & Professional Credentials</span>
+        </div>
 
-          <SkillTagsSection
-            skills={profile?.skills || []}
-            onSaveSkills={(skills) => handleUpdateProfile({ skills })}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+          <EducationSection
+            education={profile?.education || []}
+            onSaveEducation={(education) => handleUpdateProfile({ education })}
             isLoading={isSaving}
           />
 
           <CertificatesBadgesSection
             certificates={profile?.certificates || []}
             badges={profile?.badges || []}
+            studentName={user?.name || profile?.user?.name}
             onSaveCertificates={(certificates) => handleUpdateProfile({ certificates })}
+            onSaveBadges={(badges) => handleUpdateProfile({ badges })}
             isLoading={isSaving}
           />
         </div>
+      </section>
 
-        {/* Right Column (Featured Projects & Education / Experience with Delete) */}
-        <div className="lg:col-span-2 space-y-6">
-          <ProjectsSection
-            projects={profile?.projects || []}
-            onSaveProjects={(projects) => handleUpdateProfile({ projects })}
-            isLoading={isSaving}
-          />
-
-          <EducationExperienceSection
-            education={profile?.education || []}
-            experience={profile?.experience || []}
-            onSaveEducation={(education) => handleUpdateProfile({ education })}
-            onSaveExperience={(experience) => handleUpdateProfile({ experience })}
-            isLoading={isSaving}
-          />
+      {/* SECTION 02: TECHNICAL SKILLS & STACK */}
+      <section className="space-y-3">
+        <div className="flex items-center justify-between border-b border-gray-200 pb-2.5">
+          <div className="flex items-center gap-2.5">
+            <span className="text-xs font-mono font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded-lg border border-blue-100">
+              02
+            </span>
+            <h2 className="text-sm font-black text-gray-900 tracking-tight">
+              Technical Skills & Stack
+            </h2>
+          </div>
+          <span className="text-xs text-gray-400 font-medium">Core Capabilities & Expertise</span>
         </div>
-      </div>
 
-      {/* Verified Academic Reputation & Reviews Card */}
+        <SkillTagsSection
+          skills={profile?.skills || []}
+          onSaveSkills={(skills) => handleUpdateProfile({ skills })}
+          isLoading={isSaving}
+        />
+      </section>
+
+      {/* SECTION 03: WORK & INTERNSHIP EXPERIENCE */}
+      <section className="space-y-3">
+        <div className="flex items-center justify-between border-b border-gray-200 pb-2.5">
+          <div className="flex items-center gap-2.5">
+            <span className="text-xs font-mono font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded-lg border border-blue-100">
+              03
+            </span>
+            <h2 className="text-sm font-black text-gray-900 tracking-tight">
+              Work & Internship Experience
+            </h2>
+          </div>
+          <span className="text-xs text-gray-400 font-medium">Industry Roles & Engagements</span>
+        </div>
+
+        <ExperienceSection
+          experience={profile?.experience || []}
+          onSaveExperience={(experience) => handleUpdateProfile({ experience })}
+          isLoading={isSaving}
+        />
+      </section>
+
+      {/* SECTION 04: FEATURED PROJECTS */}
+      <section className="space-y-3">
+        <div className="flex items-center justify-between border-b border-gray-200 pb-2.5">
+          <div className="flex items-center gap-2.5">
+            <span className="text-xs font-mono font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded-lg border border-blue-100">
+              04
+            </span>
+            <h2 className="text-sm font-black text-gray-900 tracking-tight">
+              Featured Work & Projects
+            </h2>
+          </div>
+          <span className="text-xs text-gray-400 font-medium">Selected Works & Live Demos</span>
+        </div>
+
+        <ProjectsSection
+          projects={profile?.projects || []}
+          githubProfileUrl={profile?.links?.github}
+          onSaveProjects={(projects) => handleUpdateProfile({ projects })}
+          isLoading={isSaving}
+        />
+      </section>
+
+      {/* SECTION 05: FACULTY REPUTATION & REVIEWS */}
       {user?._id && (
-        <div className="mt-8">
+        <section className="space-y-3">
+          <div className="flex items-center justify-between border-b border-gray-200 pb-2.5">
+            <div className="flex items-center gap-2.5">
+              <span className="text-xs font-mono font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded-lg border border-blue-100">
+                05
+              </span>
+              <h2 className="text-sm font-black text-gray-900 tracking-tight">
+                Verified Faculty Evaluations & Endorsements
+              </h2>
+            </div>
+            <span className="text-xs text-gray-400 font-medium">Academic Integrity & Ratings</span>
+          </div>
+
           <ReputationAndReviewsCard
             targetId={user._id}
             targetType="student"
             title="Verified Academic Reputation & Faculty Evaluations"
           />
-        </div>
+        </section>
       )}
 
       {/* Edit Profile Modal */}

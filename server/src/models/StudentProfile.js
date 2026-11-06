@@ -62,9 +62,7 @@ const studentProfileSchema = new mongoose.Schema(
     },
     skills: [
       {
-        type: String,
-        trim: true,
-        lowercase: true,
+        type: mongoose.Schema.Types.Mixed,
       },
     ],
     education: [
@@ -83,6 +81,7 @@ const studentProfileSchema = new mongoose.Schema(
         technologies: [{ type: String, trim: true }],
         projectUrl: { type: String },
         githubUrl: { type: String },
+        imageUrl: { type: String, default: '' },
       },
     ],
     certificates: [
@@ -91,7 +90,10 @@ const studentProfileSchema = new mongoose.Schema(
         issuer: { type: String, required: true },
         issueDate: { type: Date },
         credentialUrl: { type: String },
-        certificateFileUrl: { type: String },
+        certificateFileUrl: { type: String, default: '' },
+        credentialId: { type: String, default: '' },
+        type: { type: String, default: 'certificate' },
+        description: { type: String, default: '' },
       },
     ],
     badges: [
@@ -99,6 +101,10 @@ const studentProfileSchema = new mongoose.Schema(
         name: { type: String, required: true },
         issuedBy: { type: String, required: true },
         earnedAt: { type: Date, default: Date.now },
+        credentialId: { type: String, default: '' },
+        credentialUrl: { type: String, default: '' },
+        imageUrl: { type: String, default: '' },
+        description: { type: String, default: '' },
       },
     ],
     experience: [

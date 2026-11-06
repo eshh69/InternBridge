@@ -2,12 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { Modal } from '../../../components/ui/Modal';
 import { Input } from '../../../components/ui/Input';
 import { Button } from '../../../components/ui/Button';
-import { User, Phone, GraduationCap, Globe, Plus, Trash2 } from 'lucide-react';
+import { User, GraduationCap, Globe, Plus, Trash2 } from 'lucide-react';
 
 const ACADEMIC_YEARS = ['1st Year', '2nd Year', '3rd Year', '4th Year', 'Graduate'];
 
 export const ProfileEditModal = ({ isOpen, onClose, profile, user, onSave, isLoading }) => {
   const [activeTab, setActiveTab] = useState('personal');
+  const [sameAsPhone, setSameAsPhone] = useState(false);
 
   const [formData, setFormData] = useState({
     name: '',
@@ -33,12 +34,15 @@ export const ProfileEditModal = ({ isOpen, onClose, profile, user, onSave, isLoa
 
   useEffect(() => {
     if (profile || user) {
+      const userPhone = profile?.phone || '';
+      const userWhatsapp = profile?.whatsapp || '';
+
       setFormData({
         name: user?.name || profile?.user?.name || '',
         age: profile?.age !== null && profile?.age !== undefined ? String(profile.age) : '',
         address: profile?.address || '',
-        phone: profile?.phone || '',
-        whatsapp: profile?.whatsapp || '',
+        phone: userPhone,
+        whatsapp: userWhatsapp,
         university: profile?.university || '',
         degree: profile?.degree || '',
         fieldOfStudy: profile?.fieldOfStudy || '',
@@ -51,6 +55,8 @@ export const ProfileEditModal = ({ isOpen, onClose, profile, user, onSave, isLoa
         behance: profile?.links?.behance || '',
         other: profile?.links?.other || '',
       });
+
+      setSameAsPhone(Boolean(userPhone && userPhone === userWhatsapp));
 
       let existingCustom = [];
       if (Array.isArray(profile?.links?.customLinks) && profile.links.customLinks.length > 0) {
@@ -69,9 +75,37 @@ export const ProfileEditModal = ({ isOpen, onClose, profile, user, onSave, isLoa
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setFormData((prev) => {
+      const updated = { ...prev, [name]: value };
+      if (name === 'phone' && sameAsPhone) {
+        updated.whatsapp = value;
+      }
+      return updated;
+    });
     if (errors[name]) {
       setErrors((prev) => ({ ...prev, [name]: null }));
+    }
+  };
+
+  const handleSameAsPhoneToggle = (e) => {
+    const checked = e.target.checked;
+    setSameAsPhone(checked);
+    if (checked) {
+      setFormData((prev) => ({ ...prev, whatsapp: prev.phone }));
+      if (errors.whatsapp) {
+        setErrors((prev) => ({ ...prev, whatsapp: null }));
+      }
+    }
+  };
+
+  const handleWhatsappChange = (e) => {
+    const { value } = e.target;
+    if (sameAsPhone && value !== formData.phone) {
+      setSameAsPhone(false);
+    }
+    setFormData((prev) => ({ ...prev, whatsapp: value }));
+    if (errors.whatsapp) {
+      setErrors((prev) => ({ ...prev, whatsapp: null }));
     }
   };
 
@@ -165,10 +199,10 @@ export const ProfileEditModal = ({ isOpen, onClose, profile, user, onSave, isLoa
       maxWidth="max-w-3xl"
       footer={
         <>
-          <Button variant="secondary" onClick={onClose} disabled={isLoading}>
+          <Button variant="secondary" onClick={onClose} disabled={isLoading} className="rounded-xl text-xs">
             Cancel
           </Button>
-          <Button variant="primary" onClick={handleSubmit} isLoading={isLoading}>
+          <Button variant="primary" onClick={handleSubmit} isLoading={isLoading} className="rounded-xl text-xs font-semibold px-4 bg-blue-600 hover:bg-blue-700 text-white shadow-xs">
             Save All Changes
           </Button>
         </>
@@ -176,14 +210,14 @@ export const ProfileEditModal = ({ isOpen, onClose, profile, user, onSave, isLoa
     >
       <div className="space-y-5">
         {/* Navigation Tabs */}
-        <div className="flex border-b border-gray-200">
+        <div className="flex gap-2 p-1 bg-gray-100/80 rounded-xl">
           <button
             type="button"
             onClick={() => setActiveTab('personal')}
-            className={`flex items-center gap-2 py-2.5 px-4 text-xs font-semibold border-b-2 transition-colors ${
+            className={`flex-1 flex items-center justify-center gap-2 py-2 px-3 text-xs font-semibold rounded-lg transition-all ${
               activeTab === 'personal'
-                ? 'border-indigo-600 text-indigo-600 bg-indigo-50/40 rounded-t-lg'
-                : 'border-transparent text-gray-500 hover:text-gray-700'
+                ? 'bg-white text-blue-700 shadow-xs border border-gray-200/80'
+                : 'text-gray-500 hover:text-gray-900'
             }`}
           >
             <User className="w-3.5 h-3.5" />
@@ -193,10 +227,10 @@ export const ProfileEditModal = ({ isOpen, onClose, profile, user, onSave, isLoa
           <button
             type="button"
             onClick={() => setActiveTab('academic')}
-            className={`flex items-center gap-2 py-2.5 px-4 text-xs font-semibold border-b-2 transition-colors ${
+            className={`flex-1 flex items-center justify-center gap-2 py-2 px-3 text-xs font-semibold rounded-lg transition-all ${
               activeTab === 'academic'
-                ? 'border-indigo-600 text-indigo-600 bg-indigo-50/40 rounded-t-lg'
-                : 'border-transparent text-gray-500 hover:text-gray-700'
+                ? 'bg-white text-blue-700 shadow-xs border border-gray-200/80'
+                : 'text-gray-500 hover:text-gray-900'
             }`}
           >
             <GraduationCap className="w-3.5 h-3.5" />
@@ -206,10 +240,10 @@ export const ProfileEditModal = ({ isOpen, onClose, profile, user, onSave, isLoa
           <button
             type="button"
             onClick={() => setActiveTab('links')}
-            className={`flex items-center gap-2 py-2.5 px-4 text-xs font-semibold border-b-2 transition-colors ${
+            className={`flex-1 flex items-center justify-center gap-2 py-2 px-3 text-xs font-semibold rounded-lg transition-all ${
               activeTab === 'links'
-                ? 'border-indigo-600 text-indigo-600 bg-indigo-50/40 rounded-t-lg'
-                : 'border-transparent text-gray-500 hover:text-gray-700'
+                ? 'bg-white text-blue-700 shadow-xs border border-gray-200/80'
+                : 'text-gray-500 hover:text-gray-900'
             }`}
           >
             <Globe className="w-3.5 h-3.5" />
@@ -229,6 +263,7 @@ export const ProfileEditModal = ({ isOpen, onClose, profile, user, onSave, isLoa
                   onChange={handleChange}
                   placeholder="e.g. S.A.I.C. Kumara"
                   error={errors.name}
+                  className="rounded-xl text-xs"
                   required
                 />
 
@@ -242,7 +277,7 @@ export const ProfileEditModal = ({ isOpen, onClose, profile, user, onSave, isLoa
                   onChange={handleChange}
                   placeholder="e.g. 23"
                   error={errors.age}
-                  helperText="Optional"
+                  className="rounded-xl text-xs"
                 />
 
                 <div className="md:col-span-2">
@@ -252,7 +287,7 @@ export const ProfileEditModal = ({ isOpen, onClose, profile, user, onSave, isLoa
                     value={formData.address}
                     onChange={handleChange}
                     placeholder="e.g. Colombo, Sri Lanka (or Kandy / Oluvil)"
-                    helperText="Visible to recruiters for location compatibility"
+                    className="rounded-xl text-xs"
                   />
                 </div>
 
@@ -263,22 +298,38 @@ export const ProfileEditModal = ({ isOpen, onClose, profile, user, onSave, isLoa
                   value={formData.phone}
                   onChange={handleChange}
                   placeholder="e.g. +94 77 123 4567"
-                  helperText="Direct contact number"
+                  className="rounded-xl text-xs"
                 />
 
-                <Input
-                  label="WhatsApp Number"
-                  name="whatsapp"
-                  type="tel"
-                  value={formData.whatsapp}
-                  onChange={handleChange}
-                  placeholder="e.g. +94 77 123 4567"
-                  helperText="For quick recruiter communications"
-                />
-              </div>
-
-              <div className="p-3 bg-blue-50/60 border border-blue-100 rounded-lg text-xs text-blue-800">
-                💡 <strong>Tip:</strong> Your contact email is linked to your account ({user?.email || profile?.user?.email}).
+                <div>
+                  <div className="flex items-center justify-between mb-1">
+                    <label htmlFor="whatsapp-input" className="block text-xs font-semibold text-gray-700">
+                      WhatsApp Number
+                    </label>
+                    <label className="inline-flex items-center gap-1.5 text-xs text-blue-600 font-medium cursor-pointer select-none hover:text-blue-700">
+                      <input
+                        type="checkbox"
+                        id="same-as-phone-checkbox"
+                        checked={sameAsPhone}
+                        onChange={handleSameAsPhoneToggle}
+                        className="w-3.5 h-3.5 rounded border-gray-300 text-blue-600 focus:ring-blue-500 cursor-pointer"
+                      />
+                      <span>Same as phone</span>
+                    </label>
+                  </div>
+                  <input
+                    id="whatsapp-input"
+                    type="tel"
+                    name="whatsapp"
+                    value={formData.whatsapp}
+                    onChange={handleWhatsappChange}
+                    placeholder="e.g. +94 77 123 4567"
+                    className="w-full px-3 py-2 border border-gray-200 rounded-xl text-xs focus:outline-none focus:border-blue-500 transition-colors"
+                  />
+                  {errors.whatsapp && (
+                    <p className="mt-1 text-xs text-red-600">{errors.whatsapp}</p>
+                  )}
+                </div>
               </div>
             </div>
           )}
@@ -294,6 +345,7 @@ export const ProfileEditModal = ({ isOpen, onClose, profile, user, onSave, isLoa
                   onChange={handleChange}
                   placeholder="e.g. South Eastern University of Sri Lanka"
                   error={errors.university}
+                  className="rounded-xl text-xs"
                   required
                 />
 
@@ -304,6 +356,7 @@ export const ProfileEditModal = ({ isOpen, onClose, profile, user, onSave, isLoa
                   onChange={handleChange}
                   placeholder="e.g. BSc in Information and Communication Technology"
                   error={errors.degree}
+                  className="rounded-xl text-xs"
                   required
                 />
 
@@ -314,18 +367,19 @@ export const ProfileEditModal = ({ isOpen, onClose, profile, user, onSave, isLoa
                   onChange={handleChange}
                   placeholder="e.g. Software Engineering / ICT"
                   error={errors.fieldOfStudy}
+                  className="rounded-xl text-xs"
                   required
                 />
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">
                     Academic Year <span className="text-red-500">*</span>
                   </label>
                   <select
                     name="academicYear"
                     value={formData.academicYear}
                     onChange={handleChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-2xs text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
+                    className="w-full px-3 py-2 border border-gray-200 rounded-xl text-xs focus:outline-none focus:border-blue-500 transition-colors cursor-pointer"
                   >
                     {ACADEMIC_YEARS.map((year) => (
                       <option key={year} value={year}>
@@ -346,12 +400,12 @@ export const ProfileEditModal = ({ isOpen, onClose, profile, user, onSave, isLoa
                   onChange={handleChange}
                   placeholder="e.g. 3.75"
                   error={errors.gpa}
-                  helperText="Optional, leave blank if not applicable"
+                  className="rounded-xl text-xs"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-xs font-semibold text-gray-700 mb-1">
                   Professional Bio & Career Objective
                 </label>
                 <textarea
@@ -360,8 +414,8 @@ export const ProfileEditModal = ({ isOpen, onClose, profile, user, onSave, isLoa
                   value={formData.bio}
                   onChange={handleChange}
                   placeholder="Describe your technical background, areas of passion, and internship aspirations..."
-                  className={`w-full px-3 py-2 border rounded-lg shadow-2xs text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors ${
-                    errors.bio ? 'border-red-500' : 'border-gray-300'
+                  className={`w-full px-3 py-2.5 border rounded-xl text-xs focus:outline-none focus:border-blue-500 transition-colors ${
+                    errors.bio ? 'border-red-500' : 'border-gray-200'
                   }`}
                 />
                 <div className="flex justify-between items-center mt-1">
@@ -381,10 +435,6 @@ export const ProfileEditModal = ({ isOpen, onClose, profile, user, onSave, isLoa
           {/* TAB 3: Social & Creative Platforms */}
           {activeTab === 'links' && (
             <div className="space-y-4 animate-fade-in">
-              <p className="text-xs text-gray-500">
-                Showcase your code repositories, design portfolios, and online creative profiles to recruiters.
-              </p>
-
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <Input
                   label="GitHub Profile URL"
@@ -392,6 +442,7 @@ export const ProfileEditModal = ({ isOpen, onClose, profile, user, onSave, isLoa
                   value={formData.github}
                   onChange={handleChange}
                   placeholder="https://github.com/username"
+                  className="rounded-xl text-xs"
                 />
 
                 <Input
@@ -400,6 +451,7 @@ export const ProfileEditModal = ({ isOpen, onClose, profile, user, onSave, isLoa
                   value={formData.linkedin}
                   onChange={handleChange}
                   placeholder="https://linkedin.com/in/username"
+                  className="rounded-xl text-xs"
                 />
 
                 <Input
@@ -408,6 +460,7 @@ export const ProfileEditModal = ({ isOpen, onClose, profile, user, onSave, isLoa
                   value={formData.portfolio}
                   onChange={handleChange}
                   placeholder="https://yourportfolio.dev"
+                  className="rounded-xl text-xs"
                 />
 
                 <Input
@@ -416,39 +469,32 @@ export const ProfileEditModal = ({ isOpen, onClose, profile, user, onSave, isLoa
                   value={formData.behance}
                   onChange={handleChange}
                   placeholder="https://behance.net/username"
-                  helperText="UI/UX, 3D, Design, or Media portfolio"
+                  className="rounded-xl text-xs"
                 />
               </div>
 
               {/* Dynamic Multiple Custom Platforms Section */}
               <div className="pt-4 border-t border-gray-100 space-y-3">
                 <div className="flex items-center justify-between">
-                  <div>
-                    <h4 className="text-xs font-semibold text-gray-800">
-                      Additional Creative & Social Platform URLs
-                    </h4>
-                    <p className="text-[11px] text-gray-400">
-                      Add links for Medium, YouTube, Kaggle, ArtStation, Twitter / X, etc.
-                    </p>
-                  </div>
-                  <Button
+                  <h4 className="text-xs font-semibold text-gray-800">
+                    Additional Platform URLs
+                  </h4>
+                  <button
                     type="button"
-                    variant="secondary"
-                    size="sm"
                     onClick={handleAddCustomLink}
-                    className="p-1.5 text-indigo-600 border-indigo-200 hover:bg-indigo-50 !rounded-none"
+                    className="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors focus:outline-none"
                     title="Add Link Row"
                     aria-label="Add Link Row"
                   >
                     <Plus className="w-4 h-4" />
-                  </Button>
+                  </button>
                 </div>
 
                 {customLinks.length === 0 ? (
                   <div className="p-4 rounded-xl border border-dashed border-gray-200 bg-gray-50/50 text-center">
                     <p className="text-xs text-gray-400">
                       No additional platform links added. Click{' '}
-                      <span className="font-semibold text-indigo-600">&quot;+ Add Link Row&quot;</span>{' '}
+                      <span className="font-semibold text-blue-600">&quot;+ Add Link Row&quot;</span>{' '}
                       above to add custom platforms.
                     </p>
                   </div>
@@ -457,7 +503,7 @@ export const ProfileEditModal = ({ isOpen, onClose, profile, user, onSave, isLoa
                     {customLinks.map((link, idx) => (
                       <div
                         key={idx}
-                        className="flex items-center gap-2 bg-gray-50/80 p-2 rounded-lg border border-gray-200/80 transition-all hover:border-indigo-200"
+                        className="flex items-center gap-2 bg-gray-50/80 p-2 rounded-xl border border-gray-200/80 transition-all hover:border-blue-300"
                       >
                         <div className="w-1/3">
                           <input
@@ -465,7 +511,7 @@ export const ProfileEditModal = ({ isOpen, onClose, profile, user, onSave, isLoa
                             placeholder="Platform (e.g. Kaggle)"
                             value={link.label}
                             onChange={(e) => handleCustomLinkChange(idx, 'label', e.target.value)}
-                            className="w-full px-3 py-1.5 border border-gray-300 rounded-md text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white"
+                            className="w-full px-3 py-1.5 border border-gray-200 rounded-lg text-xs focus:outline-none focus:border-blue-500 bg-white"
                           />
                         </div>
                         <div className="flex-1">
@@ -474,13 +520,13 @@ export const ProfileEditModal = ({ isOpen, onClose, profile, user, onSave, isLoa
                             placeholder="https://..."
                             value={link.url}
                             onChange={(e) => handleCustomLinkChange(idx, 'url', e.target.value)}
-                            className="w-full px-3 py-1.5 border border-gray-300 rounded-md text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white"
+                            className="w-full px-3 py-1.5 border border-gray-200 rounded-lg text-xs focus:outline-none focus:border-blue-500 bg-white"
                           />
                         </div>
                         <button
                           type="button"
                           onClick={() => handleRemoveCustomLink(idx)}
-                          className="p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded transition-colors"
+                          className="p-1.5 text-gray-400 hover:text-rose-500 hover:bg-rose-50 rounded-lg transition-colors"
                           title="Remove this link row"
                         >
                           <Trash2 className="w-4 h-4" />

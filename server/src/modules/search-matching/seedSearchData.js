@@ -5,6 +5,10 @@ import { Company } from '../../models/Company.js';
 import { StudentProfile } from '../../models/StudentProfile.js';
 import { Internship } from '../../models/Internship.js';
 
+import path from 'path';
+import { fileURLToPath } from 'url';
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+dotenv.config({ path: path.resolve(__dirname, '../../../../.env') });
 dotenv.config();
 
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/internbridge';

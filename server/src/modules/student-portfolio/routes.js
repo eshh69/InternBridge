@@ -80,6 +80,57 @@ const handleAvatarUpload = (req, res, next) => {
   });
 };
 
+const handleProjectImageUpload = (req, res, next) => {
+  avatarUpload.single('image')(req, res, (err) => {
+    if (err instanceof multer.MulterError) {
+      if (err.code === 'LIMIT_FILE_SIZE') {
+        return sendError(res, 400, 'Image size exceeds the 5MB limit');
+      }
+      return sendError(res, 400, `Upload error: ${err.message}`);
+    } else if (err) {
+      return sendError(res, 400, err.message);
+    }
+    next();
+  });
+};
+
+// Memory storage for certificate and badge uploads (images and PDFs up to 10MB)
+const certificateUpload = multer({
+  storage: multer.memoryStorage(),
+  limits: {
+    fileSize: 10 * 1024 * 1024, // 10MB limit
+  },
+  fileFilter: (req, file, cb) => {
+    const allowedMimeTypes = [
+      'image/jpeg',
+      'image/png',
+      'image/webp',
+      'image/jpg',
+      'image/gif',
+      'application/pdf',
+    ];
+    if (allowedMimeTypes.includes(file.mimetype)) {
+      cb(null, true);
+    } else {
+      cb(new Error('Invalid file type. Only JPG, PNG, WEBP, GIF, and PDF files are allowed.'), false);
+    }
+  },
+});
+
+const handleCertificateUpload = (req, res, next) => {
+  certificateUpload.single('file')(req, res, (err) => {
+    if (err instanceof multer.MulterError) {
+      if (err.code === 'LIMIT_FILE_SIZE') {
+        return sendError(res, 400, 'File size exceeds the 10MB limit');
+      }
+      return sendError(res, 400, `Upload error: ${err.message}`);
+    } else if (err) {
+      return sendError(res, 400, err.message);
+    }
+    next();
+  });
+};
+
 // @desc    Get current student profile
 // @route   GET /api/v1/students/me
 // @access  Private (student)
@@ -173,16 +224,31 @@ router.put('/me', protect, authorize('student'), async (req, res, next) => {
     if (address !== undefined) updateFields.address = address.trim();
     if (age !== undefined) updateFields.age = age === '' || age === null ? null : Number(age);
 
-    // Sanitize skills: ensure array of lowercase, trimmed, unique strings
+    // Sanitize skills: ensure array of strings or structured skill objects
     if (skills !== undefined) {
       if (Array.isArray(skills)) {
-        updateFields.skills = Array.from(
-          new Set(
-            skills
-              .filter((s) => typeof s === 'string' && s.trim().length > 0)
-              .map((s) => s.trim().toLowerCase())
-          )
-        );
+        updateFields.skills = skills
+          .map((s) => {
+            if (typeof s === 'string' && s.trim().length > 0) {
+              return s.trim().toLowerCase();
+            }
+            if (s && typeof s === 'object' && s.name && typeof s.name === 'string') {
+              const trimmedName = s.name.trim().toLowerCase();
+              if (!trimmedName) return null;
+              const points = Array.isArray(s.points)
+                ? s.points
+                    .filter((p) => typeof p === 'string' && p.trim().length > 0)
+                    .map((p) => p.trim())
+                : [];
+              return {
+                name: trimmedName,
+                details: typeof s.details === 'string' ? s.details.trim() : '',
+                points,
+              };
+            }
+            return null;
+          })
+          .filter(Boolean);
       } else {
         updateFields.skills = [];
       }
@@ -286,6 +352,68 @@ router.post(
         avatarUrl,
         user,
         profile,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+// @desc    Upload project cover image to storage
+// @route   POST /api/v1/students/upload-project-image
+// @access  Private (student)
+router.post(
+  '/upload-project-image',
+  protect,
+  authorize('student'),
+  handleProjectImageUpload,
+  async (req, res, next) => {
+    try {
+      if (!req.file) {
+        return sendError(res, 400, 'Please select an image file to upload');
+      }
+
+      const folder = `projects/${req.user._id}`;
+      const imageUrl = await uploadFileToStorage(
+        req.file.buffer,
+        req.file.originalname,
+        req.file.mimetype,
+        folder
+      );
+
+      return sendSuccess(res, 200, 'Project image uploaded successfully', {
+        imageUrl,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+// @desc    Upload certificate or badge file (image or PDF)
+// @route   POST /api/v1/students/upload-certificate-file
+// @access  Private (student)
+router.post(
+  '/upload-certificate-file',
+  protect,
+  authorize('student'),
+  handleCertificateUpload,
+  async (req, res, next) => {
+    try {
+      if (!req.file) {
+        return sendError(res, 400, 'Please select a certificate file (image or PDF) to upload');
+      }
+
+      const folder = `certificates/${req.user._id}`;
+      const fileUrl = await uploadFileToStorage(
+        req.file.buffer,
+        req.file.originalname,
+        req.file.mimetype,
+        folder
+      );
+
+      return sendSuccess(res, 200, 'Certificate file uploaded successfully', {
+        fileUrl,
       });
     } catch (error) {
       next(error);

@@ -1,6 +1,4 @@
 import React, { useRef } from 'react';
-import { Card } from '../../../components/ui/Card';
-import { Button } from '../../../components/ui/Button';
 import { Spinner } from '../../../components/ui/Spinner';
 import {
   GraduationCap,
@@ -17,6 +15,9 @@ import {
   ExternalLink,
   Camera,
   Trash2,
+  FileText,
+  UploadCloud,
+  RefreshCw,
 } from 'lucide-react';
 
 const SKILL_COLOR_PALETTES = [
@@ -36,13 +37,19 @@ export const ProfileHeader = ({
   onUploadAvatar,
   onDeleteAvatar,
   isUploadingAvatar,
+  cvUrl: propCvUrl,
+  onUploadCv,
+  onDeleteCv,
+  isUploadingCv,
+  isDeletingCv,
 }) => {
   const avatarInputRef = useRef(null);
+  const cvInputRef = useRef(null);
 
-  const university = profile?.university || 'University not specified';
-  const degree = profile?.degree || 'Degree not specified';
+  const university = profile?.university;
+  const degree = profile?.degree;
   const fieldOfStudy = profile?.fieldOfStudy;
-  const academicYear = profile?.academicYear || '3rd Year';
+  const academicYear = profile?.academicYear;
   const gpa = profile?.gpa;
   const bio = profile?.bio;
   const phone = profile?.phone;
@@ -53,6 +60,7 @@ export const ProfileHeader = ({
   const skills = profile?.skills || [];
   const reputation = profile?.reputationScore || 0;
   const reviewCount = profile?.reviewCount || 0;
+  const cvUrl = propCvUrl !== undefined ? propCvUrl : profile?.cvUrl;
 
   const email = user?.email || profile?.user?.email;
   const name = user?.name || profile?.user?.name || 'Student';
@@ -68,14 +76,31 @@ export const ProfileHeader = ({
     }
   };
 
+  const handleCvFileChange = (e) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      if (onUploadCv) {
+        onUploadCv(file);
+      }
+      e.target.value = '';
+    }
+  };
+
+  const hasAnyLink =
+    links.github ||
+    links.linkedin ||
+    links.portfolio ||
+    links.behance ||
+    links.other ||
+    (Array.isArray(links.customLinks) && links.customLinks.some((l) => l?.url));
+
   return (
-    <Card className="relative overflow-hidden bg-gradient-to-br from-white via-slate-50/50 to-indigo-50/30 border border-gray-200/90 shadow-sm !rounded-[10px] !p-5 sm:!p-6">
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+    <div className="relative py-2 sm:py-4">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-start">
         {/* =========================================================================
-            SECTION 1 (LEFT): Profile Picture with Photo Upload & Delete Actions
+            SECTION 1 (LEFT): Normal Profile Picture (Vertical Rectangle aspect-[3/4])
            ========================================================================= */}
-        <div className="lg:col-span-3 flex flex-col items-center justify-center">
-          {/* Hidden File Input for Avatar */}
+        <div className="lg:col-span-3 flex flex-col items-center sm:items-start">
           <input
             ref={avatarInputRef}
             type="file"
@@ -84,281 +109,244 @@ export const ProfileHeader = ({
             onChange={handleAvatarFileChange}
           />
 
-          <div className="relative group w-56 h-56 sm:w-64 sm:h-64 lg:w-64 lg:h-64 xl:w-72 xl:h-72 aspect-square !rounded-none overflow-hidden p-1 bg-gradient-to-tr from-indigo-500 via-purple-500 to-pink-500 shadow-md">
-            <div className="w-full h-full !rounded-none overflow-hidden bg-white relative">
-              {avatarUrl ? (
-                <img
-                  src={avatarUrl}
-                  alt={name}
-                  className="w-full h-full object-cover !rounded-none"
-                />
-              ) : (
-                <div className="w-full h-full bg-gradient-to-br from-indigo-600 via-indigo-700 to-purple-700 text-white font-black text-7xl sm:text-8xl flex items-center justify-center shadow-inner !rounded-none">
-                  {name?.charAt(0).toUpperCase() || 'S'}
-                </div>
-              )}
+          <div className="relative group w-52 sm:w-[250px] aspect-[3/4] rounded-2xl overflow-hidden border border-gray-200/90 bg-slate-100 shadow-xs">
+            {avatarUrl ? (
+              <img
+                src={avatarUrl}
+                alt={name}
+                className="w-full h-full object-cover rounded-2xl"
+              />
+            ) : (
+              <div className="w-full h-full bg-slate-200 text-slate-600 font-extrabold text-6xl flex items-center justify-center rounded-2xl select-none">
+                {name?.charAt(0).toUpperCase() || 'S'}
+              </div>
+            )}
 
-              {/* Hover Overlay with Change / Delete Photo Actions */}
-              <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-2 p-3">
+            {/* Hover Overlay */}
+            <div className="absolute inset-0 bg-slate-900/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-2 p-3">
+              <button
+                type="button"
+                disabled={isUploadingAvatar}
+                onClick={() => avatarInputRef.current?.click()}
+                className="px-3.5 py-1.5 bg-white text-slate-900 text-xs font-semibold rounded-xl shadow-xs hover:bg-slate-100 flex items-center gap-1.5 transition-transform hover:scale-105"
+              >
+                <Camera className="w-3.5 h-3.5 text-blue-600" />
+                {isUploadingAvatar ? 'Saving...' : 'Change Photo'}
+              </button>
+
+              {avatarUrl && onDeleteAvatar && (
                 <button
                   type="button"
                   disabled={isUploadingAvatar}
-                  onClick={() => avatarInputRef.current?.click()}
-                  className="px-3.5 py-1.5 bg-white text-gray-900 text-xs font-bold !rounded-none shadow hover:bg-gray-100 flex items-center gap-1.5 transition-transform hover:scale-105"
-                  title="Upload new profile picture"
-                >
-                  <Camera className="w-4 h-4 text-indigo-600" />
-                  {isUploadingAvatar ? 'Uploading...' : 'Change Photo'}
-                </button>
-
-                {avatarUrl && onDeleteAvatar && (
-                  <button
-                    type="button"
-                    disabled={isUploadingAvatar}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      if (window.confirm('Are you sure you want to remove your profile picture?')) {
-                        onDeleteAvatar();
-                      }
-                    }}
-                    className="px-3 py-1 bg-red-600 text-white text-[11px] font-semibold !rounded-none shadow hover:bg-red-700 flex items-center gap-1 transition-transform hover:scale-105"
-                    title="Remove profile picture"
-                  >
-                    <Trash2 className="w-3.5 h-3.5" />
-                    Remove Photo
-                  </button>
-                )}
-              </div>
-
-              {/* Uploading Loader */}
-              {isUploadingAvatar && (
-                <div className="absolute inset-0 bg-white/80 flex flex-col items-center justify-center gap-1 text-xs font-semibold text-indigo-600">
-                  <Spinner size="md" />
-                  <span>Saving photo...</span>
-                </div>
-              )}
-            </div>
-
-            <span
-              className="absolute bottom-2.5 right-2.5 block w-4 h-4 bg-emerald-500 !rounded-none border-2 border-white shadow-md z-10"
-              title="Active Student"
-            />
-          </div>
-
-          {/* Quick Clickable Links under Photo for Mobile / Direct Access */}
-          <div className="flex items-center gap-2.5 mt-2.5 text-xs">
-            <button
-              type="button"
-              onClick={() => avatarInputRef.current?.click()}
-              disabled={isUploadingAvatar}
-              className="inline-flex items-center gap-1 font-semibold text-indigo-600 hover:text-indigo-800 transition-colors"
-            >
-              <Camera className="w-3.5 h-3.5" />
-              <span>Change Photo</span>
-            </button>
-            {avatarUrl && onDeleteAvatar && (
-              <>
-                <span className="text-gray-300">•</span>
-                <button
-                  type="button"
-                  onClick={() => {
-                    if (window.confirm('Are you sure you want to remove your profile picture?')) {
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    if (window.confirm('Remove profile photo?')) {
                       onDeleteAvatar();
                     }
                   }}
-                  disabled={isUploadingAvatar}
-                  className="inline-flex items-center gap-1 font-medium text-red-500 hover:text-red-700 transition-colors"
+                  className="px-3 py-1 bg-rose-600 text-white text-[11px] font-medium rounded-xl shadow-xs hover:bg-rose-700 flex items-center gap-1 transition-transform hover:scale-105"
                 >
                   <Trash2 className="w-3 h-3" />
-                  <span>Remove</span>
+                  Remove
                 </button>
-              </>
+              )}
+            </div>
+
+            {/* Uploading Loader */}
+            {isUploadingAvatar && (
+              <div className="absolute inset-0 bg-white/90 flex flex-col items-center justify-center gap-1.5 text-xs font-semibold text-blue-600">
+                <Spinner size="md" />
+                <span>Uploading...</span>
+              </div>
             )}
           </div>
         </div>
 
         {/* =========================================================================
-            SECTION 2 (MIDDLE): Name, Position, Small Description, Degree/Univ + GPA, Skills
-            (Pure text, No inside element borders, No border-radius)
+            SECTION 2 (RIGHT): Name, Degree, Bio, Contact Information (ABOVE Skills), Skills
            ========================================================================= */}
-        <div className="lg:col-span-5 flex flex-col justify-between space-y-3">
-          {/* 1. Name & Badges + Position under name */}
+        <div className="lg:col-span-9 flex flex-col justify-center space-y-3.5">
           <div className="space-y-1">
-            <div className="flex flex-wrap items-center gap-2">
-              <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight">
-                {name}
-              </h1>
-              <span className="text-xs px-2 py-0.5 !rounded-none bg-blue-50 text-blue-700 font-semibold">
-                Student
-              </span>
-              {age && (
-                <span className="text-xs px-2 py-0.5 !rounded-none bg-slate-100 text-slate-700 font-semibold">
-                  {age} yrs
-                </span>
-              )}
-              {reputation > 0 && (
-                <div className="flex items-center gap-1 px-2 py-0.5 !rounded-none bg-amber-50 text-amber-700 text-xs font-semibold">
-                  <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-500" />
-                  <span>{reputation.toFixed(1)}</span>
-                  <span className="text-gray-400">({reviewCount})</span>
-                </div>
-              )}
+            <div className="flex items-center justify-between gap-3">
+              <div className="flex flex-wrap items-baseline gap-3">
+                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black text-gray-900 tracking-tight leading-tight">
+                  {name}
+                </h1>
+                {age && (
+                  <span className="text-xs px-2.5 py-0.5 rounded-full bg-gray-100 text-gray-700 font-semibold tracking-normal border border-gray-200/80">
+                    {age} yrs
+                  </span>
+                )}
+                {reputation > 0 && (
+                  <div className="flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-amber-50 text-amber-700 text-xs font-semibold border border-amber-200/80">
+                    <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-500" />
+                    <span>{reputation.toFixed(1)}</span>
+                    {reviewCount > 0 && <span className="text-slate-400">({reviewCount})</span>}
+                  </div>
+                )}
+              </div>
+
+              {/* Minimal Edit Profile Button */}
+              <button
+                type="button"
+                onClick={onEditClick}
+                className="p-2 rounded-xl text-gray-400 hover:text-blue-600 hover:bg-blue-50 transition-colors focus:outline-none shrink-0"
+                title="Edit Profile"
+                aria-label="Edit Profile"
+              >
+                <Edit3 className="w-4 h-4" />
+              </button>
             </div>
 
-            {/* Position under the name */}
             {fieldOfStudy && (
-              <p className="text-sm font-semibold text-indigo-600 tracking-wide">
+              <p className="text-xs sm:text-sm font-semibold text-blue-600">
                 {fieldOfStudy}
               </p>
             )}
           </div>
 
-          {/* 2. Small Description (Just as text, no border box) */}
-          <div className="text-xs sm:text-sm text-gray-600 leading-relaxed">
-            {bio ? (
-              <p className="line-clamp-2">{bio}</p>
-            ) : (
-              <p className="text-gray-400 italic">
-                No description added yet. Click &quot;Edit Profile&quot; to add your bio.
-              </p>
-            )}
-          </div>
+          {/* Bio */}
+          {bio && (
+            <p className="text-xs sm:text-sm text-gray-500 leading-relaxed max-w-3xl">
+              {bio}
+            </p>
+          )}
 
-          {/* 3. Degree and University (Left) & GPA (Right) (Just text, no border box) */}
-          <div className="flex items-baseline justify-between gap-3 pt-1">
-            <div className="min-w-0 space-y-0.5">
-              <p className="text-sm font-bold text-gray-900 truncate">{degree}</p>
-              <div className="flex items-center gap-1.5 text-xs text-gray-600 truncate">
-                <GraduationCap className="w-3.5 h-3.5 text-indigo-600 shrink-0" />
-                <span className="truncate font-medium">{university}</span>
-                {academicYear && (
-                  <>
-                    <span className="text-gray-300">•</span>
-                    <span className="text-indigo-600 font-medium">{academicYear}</span>
-                  </>
+          {/* Degree & University & Resume (In place of isolated GPA) */}
+          {(degree || university || cvUrl || onUploadCv) && (
+            <div className="flex flex-wrap items-center justify-between gap-3 pt-0.5">
+              <div className="min-w-0 space-y-0.5">
+                {degree && <p className="text-sm font-bold text-gray-900 truncate">{degree}</p>}
+                <div className="flex items-center gap-1.5 text-xs text-gray-500 truncate">
+                  <GraduationCap className="w-3.5 h-3.5 text-blue-600 shrink-0" />
+                  {university && <span className="truncate">{university}</span>}
+                  {academicYear && (
+                    <>
+                      <span className="text-gray-300">•</span>
+                      <span className="text-blue-600 font-medium">{academicYear}</span>
+                    </>
+                  )}
+                  {gpa !== null && gpa !== undefined && (
+                    <>
+                      <span className="text-gray-300">•</span>
+                      <span className="text-emerald-600 font-bold">GPA {Number(gpa).toFixed(2)}</span>
+                    </>
+                  )}
+                </div>
+              </div>
+
+              {/* Resume Widget (replaces isolated GPA on the right) */}
+              <div className="shrink-0 flex items-center gap-1.5">
+                <input
+                  ref={cvInputRef}
+                  type="file"
+                  accept=".pdf,.doc,.docx"
+                  onChange={handleCvFileChange}
+                  className="hidden"
+                />
+
+                {cvUrl ? (
+                  <div className="flex items-center gap-1.5 bg-gray-50/90 border border-gray-200/90 rounded-xl p-1 shadow-2xs">
+                    <a
+                      href={cvUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs shadow-xs transition-all hover:scale-102"
+                      title="View Resume in new tab"
+                    >
+                      <FileText className="w-3.5 h-3.5" />
+                      <span>Resume</span>
+                      <ExternalLink className="w-3 h-3 text-blue-100" />
+                    </a>
+
+                    <button
+                      type="button"
+                      onClick={() => cvInputRef.current?.click()}
+                      disabled={isUploadingCv}
+                      className="p-1.5 rounded-lg text-gray-400 hover:text-blue-600 hover:bg-blue-50 transition-colors"
+                      title="Replace Resume document"
+                    >
+                      <RefreshCw
+                        className={`w-3.5 h-3.5 ${isUploadingCv ? 'animate-spin text-blue-600' : ''}`}
+                      />
+                    </button>
+
+                    {onDeleteCv && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          if (window.confirm('Remove your resume?')) {
+                            onDeleteCv();
+                          }
+                        }}
+                        disabled={isDeletingCv}
+                        className="p-1.5 rounded-lg text-gray-400 hover:text-rose-600 hover:bg-rose-50 transition-colors"
+                        title="Delete Resume"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    )}
+                  </div>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => cvInputRef.current?.click()}
+                    disabled={isUploadingCv}
+                    className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl border border-dashed border-blue-300 hover:border-blue-500 bg-blue-50/70 hover:bg-blue-100/70 text-blue-700 font-semibold text-xs transition-all shadow-2xs"
+                    title="Upload Resume (PDF, DOCX)"
+                  >
+                    <UploadCloud className="w-3.5 h-3.5 text-blue-600" />
+                    <span>{isUploadingCv ? 'Uploading...' : 'Upload Resume'}</span>
+                  </button>
                 )}
               </div>
             </div>
+          )}
 
-            {gpa !== null && gpa !== undefined && (
-              <div className="shrink-0 flex items-baseline gap-1.5 pl-2">
-                <span className="text-[11px] uppercase font-bold text-emerald-600 tracking-wider">
-                  GPA
-                </span>
-                <span className="text-base font-extrabold text-emerald-600">
-                  {Number(gpa).toFixed(2)}
-                </span>
-              </div>
-            )}
-          </div>
+          {/* =========================================================================
+              CONTACT INFORMATION & SOCIAL LINKS (SHOWN DIRECTLY ABOVE SKILL CARDS)
+             ========================================================================= */}
+          {(email || phone || whatsapp || address || hasAnyLink) && (
+            <div className="pt-2.5 pb-1 border-t border-gray-100 flex flex-wrap items-center gap-x-4 gap-y-2 text-xs">
+              {email && (
+                <div className="flex items-center gap-1.5 text-gray-600">
+                  <Mail className="w-3.5 h-3.5 text-gray-400 shrink-0" />
+                  <a href={`mailto:${email}`} className="truncate hover:text-blue-600 font-medium">
+                    {email}
+                  </a>
+                </div>
+              )}
 
-          {/* 4. Skills tags (Text tags with no borders, no border radius) */}
-          <div className="flex flex-wrap items-center gap-1.5 pt-1">
-            {skills && skills.length > 0 ? (
-              <>
-                {skills.slice(0, 7).map((skill, idx) => (
-                  <span
-                    key={idx}
-                    className={`text-xs font-semibold px-2 py-0.5 !rounded-none ${
-                      SKILL_COLOR_PALETTES[idx % SKILL_COLOR_PALETTES.length]
-                    }`}
-                  >
-                    {skill}
-                  </span>
-                ))}
-                {skills.length > 7 && (
-                  <span className="text-xs text-gray-500 font-medium px-2 py-0.5 bg-gray-100 !rounded-none">
-                    +{skills.length - 7} more
-                  </span>
-                )}
-              </>
-            ) : (
-              <span className="text-xs text-gray-400 italic">No skills listed yet</span>
-            )}
-          </div>
-        </div>
+              {phone && (
+                <div className="flex items-center gap-1.5 text-gray-600">
+                  <Phone className="w-3.5 h-3.5 text-gray-400 shrink-0" />
+                  <a href={`tel:${phone}`} className="hover:text-blue-600 font-medium">
+                    {phone}
+                  </a>
+                </div>
+              )}
 
-        {/* =========================================================================
-            SECTION 3 (RIGHT): Contact Details & External Links
-            (Contact details as clean text without box borders, Only buttons styled)
-           ========================================================================= */}
-        <div className="lg:col-span-4 flex flex-col justify-between space-y-4 border-t lg:border-t-0 lg:border-l border-gray-200/80 lg:pl-6 pt-4 lg:pt-0">
-          {/* Header Row: Contact Details Title & Edit Profile Button */}
-          <div className="flex items-center justify-between">
-            <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wider">
-              Contact Details
-            </h3>
-            <Button
-              variant="primary"
-              size="sm"
-              onClick={onEditClick}
-              className="gap-1.5 shadow-xs text-xs px-3 py-1 font-semibold !rounded-none"
-            >
-              <Edit3 className="w-3.5 h-3.5" />
-              Edit Profile
-            </Button>
-          </div>
+              {whatsapp && (
+                <div className="flex items-center gap-1.5 text-emerald-700">
+                  <MessageCircle className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
+                  <span className="font-semibold">{whatsapp}</span>
+                </div>
+              )}
 
-          {/* Contact Details List (Just as text + icon, no box borders) */}
-          <div className="space-y-2.5 text-xs">
-            {email && (
-              <div className="flex items-center gap-2.5 text-gray-700">
-                <Mail className="w-4 h-4 text-blue-500 shrink-0" />
-                <a
-                  href={`mailto:${email}`}
-                  className="truncate hover:text-indigo-600 font-medium transition-colors"
-                >
-                  {email}
-                </a>
-              </div>
-            )}
+              {address && (
+                <div className="flex items-center gap-1.5 text-gray-500">
+                  <MapPin className="w-3.5 h-3.5 text-gray-400 shrink-0" />
+                  <span className="truncate">{address}</span>
+                </div>
+              )}
 
-            {phone ? (
-              <div className="flex items-center gap-2.5 text-gray-700">
-                <Phone className="w-4 h-4 text-indigo-500 shrink-0" />
-                <a
-                  href={`tel:${phone}`}
-                  className="hover:text-indigo-600 font-medium transition-colors"
-                >
-                  {phone}
-                </a>
-              </div>
-            ) : (
-              <div className="flex items-center gap-2.5 text-gray-400">
-                <Phone className="w-4 h-4 text-gray-400 shrink-0" />
-                <span className="italic">Phone not added</span>
-              </div>
-            )}
-
-            {whatsapp ? (
-              <div className="flex items-center gap-2.5 text-emerald-800">
-                <MessageCircle className="w-4 h-4 text-emerald-600 shrink-0" />
-                <span className="font-semibold text-emerald-900">{whatsapp}</span>
-              </div>
-            ) : (
-              <div className="flex items-center gap-2.5 text-gray-400">
-                <MessageCircle className="w-4 h-4 text-gray-400 shrink-0" />
-                <span className="italic">WhatsApp not added</span>
-              </div>
-            )}
-
-            {address && (
-              <div className="flex items-center gap-2.5 text-gray-600">
-                <MapPin className="w-4 h-4 text-rose-500 shrink-0" />
-                <span className="truncate font-medium">{address}</span>
-              </div>
-            )}
-          </div>
-
-          {/* External Links (Styled as buttons, with !rounded-none) */}
-          <div className="pt-3 border-t border-gray-150">
-            <div className="flex flex-wrap items-center gap-1.5">
+              {/* Social Links */}
               {links.github && (
                 <a
                   href={links.github.startsWith('http') ? links.github : `https://${links.github}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 text-xs font-semibold text-white bg-gray-900 hover:bg-black px-2.5 py-1 !rounded-none transition-all shadow-2xs hover:shadow"
+                  className="inline-flex items-center gap-1 text-xs font-medium text-gray-700 hover:text-gray-900 bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded-full border border-gray-200/80 transition-colors"
                 >
                   <Github className="w-3.5 h-3.5" />
                   GitHub
@@ -369,7 +357,7 @@ export const ProfileHeader = ({
                   href={links.linkedin.startsWith('http') ? links.linkedin : `https://${links.linkedin}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 text-xs font-semibold text-white bg-[#0A66C2] hover:bg-[#004182] px-2.5 py-1 !rounded-none transition-all shadow-2xs hover:shadow"
+                  className="inline-flex items-center gap-1 text-xs font-semibold text-[#0A66C2] bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded-full border border-blue-200/80 transition-colors"
                 >
                   <Linkedin className="w-3.5 h-3.5" />
                   LinkedIn
@@ -380,7 +368,7 @@ export const ProfileHeader = ({
                   href={links.portfolio.startsWith('http') ? links.portfolio : `https://${links.portfolio}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 text-xs font-semibold text-white bg-gradient-to-r from-indigo-500 to-purple-600 hover:opacity-90 px-2.5 py-1 !rounded-none transition-all shadow-2xs hover:shadow"
+                  className="inline-flex items-center gap-1 text-xs font-semibold text-blue-700 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded-full border border-blue-200/80 transition-colors"
                 >
                   <Globe className="w-3.5 h-3.5" />
                   Portfolio
@@ -391,7 +379,7 @@ export const ProfileHeader = ({
                   href={links.behance.startsWith('http') ? links.behance : `https://${links.behance}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 text-xs font-semibold text-white bg-[#053eff] hover:bg-blue-700 px-2.5 py-1 !rounded-none transition-all shadow-2xs hover:shadow"
+                  className="inline-flex items-center gap-1 text-xs font-semibold text-blue-700 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded-full border border-blue-200/80 transition-colors"
                 >
                   <Palette className="w-3.5 h-3.5" />
                   Behance
@@ -402,7 +390,7 @@ export const ProfileHeader = ({
                   href={links.other.startsWith('http') ? links.other : `https://${links.other}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 text-xs font-semibold text-gray-700 hover:text-gray-900 bg-gray-100 hover:bg-gray-200 px-2.5 py-1 !rounded-none transition-colors"
+                  className="inline-flex items-center gap-1 text-xs font-medium text-gray-700 hover:text-gray-900 bg-gray-100 px-3 py-1 rounded-full border border-gray-200/80"
                 >
                   <ExternalLink className="w-3.5 h-3.5" />
                   Website
@@ -419,26 +407,39 @@ export const ProfileHeader = ({
                       href={href}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 text-xs font-semibold text-indigo-700 hover:text-indigo-900 bg-indigo-50 hover:bg-indigo-100 px-2.5 py-1 !rounded-none transition-all shadow-2xs"
+                      className="inline-flex items-center gap-1 text-xs font-semibold text-blue-700 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded-full border border-blue-200/80 transition-colors"
                     >
                       <ExternalLink className="w-3.5 h-3.5" />
                       {label}
                     </a>
                   );
                 })}
-              {!links.github &&
-                !links.linkedin &&
-                !links.portfolio &&
-                !links.behance &&
-                !links.other &&
-                (!Array.isArray(links.customLinks) ||
-                  links.customLinks.filter((l) => l?.url).length === 0) && (
-                  <span className="text-xs text-gray-400 italic">No external links added</span>
-                )}
             </div>
-          </div>
+          )}
+
+          {/* Quick Skill Tags Preview (Directly UNDER Contact Information) */}
+          {skills.length > 0 && (
+            <div className="flex flex-wrap items-center gap-1.5 pt-0.5">
+              {skills.slice(0, 8).map((skill, index) => {
+                const skillName = typeof skill === 'string' ? skill : skill?.name || '';
+                return (
+                  <span
+                    key={skillName || index}
+                    className="text-xs font-medium px-3 py-1 rounded-full capitalize bg-gray-100 text-gray-700 border border-gray-200/80 hover:bg-gray-200 transition-colors"
+                  >
+                    {skillName}
+                  </span>
+                );
+              })}
+              {skills.length > 8 && (
+                <span className="text-xs font-semibold text-gray-400 px-1.5">
+                  +{skills.length - 8} more
+                </span>
+              )}
+            </div>
+          )}
         </div>
       </div>
-    </Card>
+    </div>
   );
 };
