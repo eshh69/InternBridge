@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Card } from '../../../components/ui/Card';
 import { Button } from '../../../components/ui/Button';
 import { Input } from '../../../components/ui/Input';
-import { X, Plus, Sparkles, Check } from 'lucide-react';
+import { X, Plus, Sparkles, Check, Trash2 } from 'lucide-react';
 
 const SUGGESTED_SKILLS = [
   'react',
@@ -45,13 +45,25 @@ export const SkillTagsSection = ({ skills = [], onSaveSkills, isLoading }) => {
       setCurrentSkills(updated);
       setHasChanges(true);
       setInputValue('');
+      // Auto-save on adding
+      onSaveSkills(updated);
     }
   };
 
   const handleRemoveSkill = (skillToRemove) => {
     const updated = currentSkills.filter((s) => s !== skillToRemove);
     setCurrentSkills(updated);
-    setHasChanges(true);
+    setHasChanges(false);
+    // Auto-save on removal so deleting is instant and permanent
+    onSaveSkills(updated);
+  };
+
+  const handleClearAll = () => {
+    if (window.confirm('Are you sure you want to remove all skills from your profile?')) {
+      setCurrentSkills([]);
+      setHasChanges(false);
+      onSaveSkills([]);
+    }
   };
 
   const handleKeyDown = (e) => {
@@ -63,6 +75,7 @@ export const SkillTagsSection = ({ skills = [], onSaveSkills, isLoading }) => {
 
   const handleSave = () => {
     onSaveSkills(currentSkills);
+    setHasChanges(false);
   };
 
   return (
@@ -75,18 +88,33 @@ export const SkillTagsSection = ({ skills = [], onSaveSkills, isLoading }) => {
           </span>
         </div>
 
-        {hasChanges && (
-          <Button
-            variant="primary"
-            size="sm"
-            onClick={handleSave}
-            isLoading={isLoading}
-            className="gap-1.5 self-start sm:self-auto !rounded-none"
-          >
-            <Check className="w-3.5 h-3.5" />
-            Save Skills
-          </Button>
-        )}
+        <div className="flex items-center gap-2 self-start sm:self-auto">
+          {currentSkills.length > 0 && (
+            <button
+              type="button"
+              onClick={handleClearAll}
+              disabled={isLoading}
+              className="text-[11px] text-gray-400 hover:text-red-500 font-medium transition-colors flex items-center gap-1"
+              title="Remove all skill tags"
+            >
+              <Trash2 className="w-3 h-3" />
+              Clear all
+            </button>
+          )}
+
+          {hasChanges && (
+            <Button
+              variant="primary"
+              size="sm"
+              onClick={handleSave}
+              isLoading={isLoading}
+              className="gap-1.5 !rounded-none text-xs"
+            >
+              <Check className="w-3.5 h-3.5" />
+              Save Skills
+            </Button>
+          )}
+        </div>
       </div>
 
       {/* Input to add skill */}
@@ -104,7 +132,7 @@ export const SkillTagsSection = ({ skills = [], onSaveSkills, isLoading }) => {
           variant="secondary"
           size="md"
           onClick={() => handleAddSkill()}
-          disabled={!inputValue.trim()}
+          disabled={!inputValue.trim() || isLoading}
           className="px-3.5 !rounded-none"
           title="Add Skill"
           aria-label="Add Skill"
@@ -125,6 +153,7 @@ export const SkillTagsSection = ({ skills = [], onSaveSkills, isLoading }) => {
               <button
                 type="button"
                 onClick={() => handleRemoveSkill(skill)}
+                disabled={isLoading}
                 className="text-gray-400 hover:text-red-500 !rounded-none p-0.5 transition-colors"
                 title={`Remove ${skill}`}
               >
@@ -151,6 +180,7 @@ export const SkillTagsSection = ({ skills = [], onSaveSkills, isLoading }) => {
               key={skill}
               type="button"
               onClick={() => handleAddSkill(skill)}
+              disabled={isLoading}
               className="inline-flex items-center gap-1 px-2.5 py-1 !rounded-none text-xs bg-gray-100/80 hover:bg-indigo-50 text-gray-700 hover:text-indigo-600 border border-transparent hover:border-indigo-200 transition-colors"
             >
               <Plus className="w-3 h-3 text-gray-400" />

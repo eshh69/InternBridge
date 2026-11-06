@@ -19,6 +19,8 @@ export const StudentPortfolioPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [isUploadingCv, setIsUploadingCv] = useState(false);
+  const [isDeletingCv, setIsDeletingCv] = useState(false);
+  const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [feedback, setFeedback] = useState({ type: '', message: '' });
 
@@ -95,6 +97,84 @@ export const StudentPortfolioPage = () => {
     }
   };
 
+  const handleDeleteCv = async () => {
+    try {
+      setIsDeletingCv(true);
+      const result = await studentPortfolioService.deleteCv();
+      if (result?.profile) {
+        setProfile(result.profile);
+      } else {
+        setProfile((prev) => ({ ...prev, cvUrl: null }));
+      }
+      showFeedback('success', 'CV removed successfully from your profile.');
+    } catch (err) {
+      showFeedback('danger', err.message || 'Failed to delete CV.');
+      throw err;
+    } finally {
+      setIsDeletingCv(false);
+    }
+  };
+
+  const handleUploadAvatar = async (file) => {
+    try {
+      setIsUploadingAvatar(true);
+      const result = await studentPortfolioService.uploadAvatar(file);
+      if (result?.profile) {
+        setProfile(result.profile);
+      }
+      if (result?.avatarUrl && user) {
+        user.avatarUrl = result.avatarUrl;
+        try {
+          const stored = localStorage.getItem('internbridge_user');
+          if (stored) {
+            const parsed = JSON.parse(stored);
+            localStorage.setItem(
+              'internbridge_user',
+              JSON.stringify({ ...parsed, avatarUrl: result.avatarUrl })
+            );
+          }
+        } catch {
+          // ignore storage error
+        }
+      }
+      showFeedback('success', 'Profile photo updated successfully!');
+    } catch (err) {
+      showFeedback('danger', err.message || 'Failed to upload profile photo.');
+    } finally {
+      setIsUploadingAvatar(false);
+    }
+  };
+
+  const handleDeleteAvatar = async () => {
+    try {
+      setIsUploadingAvatar(true);
+      const result = await studentPortfolioService.deleteAvatar();
+      if (result?.profile) {
+        setProfile(result.profile);
+      }
+      if (user) {
+        user.avatarUrl = null;
+        try {
+          const stored = localStorage.getItem('internbridge_user');
+          if (stored) {
+            const parsed = JSON.parse(stored);
+            localStorage.setItem(
+              'internbridge_user',
+              JSON.stringify({ ...parsed, avatarUrl: null })
+            );
+          }
+        } catch {
+          // ignore storage error
+        }
+      }
+      showFeedback('success', 'Profile photo removed.');
+    } catch (err) {
+      showFeedback('danger', err.message || 'Failed to remove profile photo.');
+    } finally {
+      setIsUploadingAvatar(false);
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[400px] space-y-3">
@@ -120,21 +200,26 @@ export const StudentPortfolioPage = () => {
         </Alert>
       )}
 
-      {/* Main Profile Header Card */}
+      {/* Main Profile Header Card with Avatar Upload / Delete */}
       <ProfileHeader
         profile={profile}
         user={user}
         onEditClick={() => setIsEditModalOpen(true)}
+        onUploadAvatar={handleUploadAvatar}
+        onDeleteAvatar={handleDeleteAvatar}
+        isUploadingAvatar={isUploadingAvatar}
       />
 
       {/* Grid Layout: Left / Right Columns */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Left Column (Skills & CV Uploader) */}
+        {/* Left Column (Skills & CV Uploader with Delete) */}
         <div className="space-y-6">
           <CvUploader
             cvUrl={profile?.cvUrl}
             onUploadCv={handleUploadCv}
+            onDeleteCv={handleDeleteCv}
             isLoading={isUploadingCv}
+            isDeletingCv={isDeletingCv}
           />
 
           <SkillTagsSection
@@ -151,7 +236,7 @@ export const StudentPortfolioPage = () => {
           />
         </div>
 
-        {/* Right Column (Featured Projects & Education / Experience) */}
+        {/* Right Column (Featured Projects & Education / Experience with Delete) */}
         <div className="lg:col-span-2 space-y-6">
           <ProjectsSection
             projects={profile?.projects || []}
