@@ -4,12 +4,12 @@ import multer from 'multer';
 import { protect, authorize } from '../../middleware/auth.js';
 import { StudentProfile } from '../../models/StudentProfile.js';
 import { User } from '../../models/User.js';
-import { uploadFileToStorage } from '../../services/storageService.js';
+import { uploadFileToStorage, deleteFileFromStorage } from '../../services/storageService.js';
 import { sendSuccess, sendError } from '../../utils/apiResponse.js';
 
 const router = express.Router();
 
-// Memory storage for multer file uploads
+// Memory storage for multer file uploads (CV Documents)
 const upload = multer({
   storage: multer.memoryStorage(),
   limits: {
@@ -29,12 +29,48 @@ const upload = multer({
   },
 });
 
+// Memory storage for multer image uploads (Profile Photo / Avatar)
+const avatarUpload = multer({
+  storage: multer.memoryStorage(),
+  limits: {
+    fileSize: 5 * 1024 * 1024, // 5MB limit
+  },
+  fileFilter: (req, file, cb) => {
+    const allowedMimeTypes = [
+      'image/jpeg',
+      'image/png',
+      'image/webp',
+      'image/jpg',
+      'image/gif',
+    ];
+    if (allowedMimeTypes.includes(file.mimetype)) {
+      cb(null, true);
+    } else {
+      cb(new Error('Invalid image type. Only JPG, PNG, WEBP, and GIF images are allowed.'), false);
+    }
+  },
+});
+
 // Middleware wrapper for multer error handling
 const handleUpload = (req, res, next) => {
   upload.single('cv')(req, res, (err) => {
     if (err instanceof multer.MulterError) {
       if (err.code === 'LIMIT_FILE_SIZE') {
         return sendError(res, 400, 'File size exceeds the 5MB limit');
+      }
+      return sendError(res, 400, `Upload error: ${err.message}`);
+    } else if (err) {
+      return sendError(res, 400, err.message);
+    }
+    next();
+  });
+};
+
+const handleAvatarUpload = (req, res, next) => {
+  avatarUpload.single('avatar')(req, res, (err) => {
+    if (err instanceof multer.MulterError) {
+      if (err.code === 'LIMIT_FILE_SIZE') {
+        return sendError(res, 400, 'Image size exceeds the 5MB limit');
       }
       return sendError(res, 400, `Upload error: ${err.message}`);
     } else if (err) {
@@ -207,6 +243,83 @@ router.put('/me', protect, authorize('student'), async (req, res, next) => {
   }
 });
 
+// @desc    Upload profile photo (Avatar) to storage and update user model
+// @route   POST /api/v1/students/upload-avatar
+// @access  Private (student)
+router.post(
+  '/upload-avatar',
+  protect,
+  authorize('student'),
+  handleAvatarUpload,
+  async (req, res, next) => {
+    try {
+      if (!req.file) {
+        return sendError(res, 400, 'Please select an image file to upload');
+      }
+
+      const folder = `avatars/${req.user._id}`;
+      const avatarUrl = await uploadFileToStorage(
+        req.file.buffer,
+        req.file.originalname,
+        req.file.mimetype,
+        folder
+      );
+
+      // If user had an existing avatar stored in Supabase, clean up old file
+      const currentUser = await User.findById(req.user._id);
+      if (currentUser?.avatarUrl && currentUser.avatarUrl.includes(folder)) {
+        await deleteFileFromStorage(currentUser.avatarUrl);
+      }
+
+      const user = await User.findByIdAndUpdate(
+        req.user._id,
+        { avatarUrl },
+        { new: true }
+      ).select('name email avatarUrl role');
+
+      const profile = await StudentProfile.findOne({ user: req.user._id }).populate(
+        'user',
+        'name email avatarUrl role'
+      );
+
+      return sendSuccess(res, 200, 'Profile photo updated successfully', {
+        avatarUrl,
+        user,
+        profile,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+// @desc    Remove profile photo (revert to initials)
+// @route   DELETE /api/v1/students/avatar
+// @access  Private (student)
+router.delete('/avatar', protect, authorize('student'), async (req, res, next) => {
+  try {
+    const user = await User.findById(req.user._id);
+    if (user?.avatarUrl) {
+      await deleteFileFromStorage(user.avatarUrl);
+      user.avatarUrl = null;
+      await user.save();
+    }
+
+    const profile = await StudentProfile.findOne({ user: req.user._id }).populate(
+      'user',
+      'name email avatarUrl role'
+    );
+
+    return sendSuccess(res, 200, 'Profile photo removed successfully', {
+      avatarUrl: null,
+      user,
+      profile,
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
 // @desc    Upload CV to storage and update profile
 // @route   POST /api/v1/students/upload-cv
 // @access  Private (student)
@@ -224,6 +337,12 @@ router.post('/upload-cv', protect, authorize('student'), handleUpload, async (re
       folder
     );
 
+    // If user had an existing CV in Supabase storage, delete old one
+    const currentProfile = await StudentProfile.findOne({ user: req.user._id });
+    if (currentProfile?.cvUrl && currentProfile.cvUrl !== cvUrl) {
+      await deleteFileFromStorage(currentProfile.cvUrl);
+    }
+
     const profile = await StudentProfile.findOneAndUpdate(
       { user: req.user._id },
       { $set: { cvUrl } },
@@ -233,6 +352,35 @@ router.post('/upload-cv', protect, authorize('student'), handleUpload, async (re
     return sendSuccess(res, 200, 'CV uploaded successfully', {
       cvUrl,
       profile,
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+// @desc    Delete current student's CV
+// @route   DELETE /api/v1/students/cv
+// @access  Private (student)
+router.delete('/cv', protect, authorize('student'), async (req, res, next) => {
+  try {
+    const profile = await StudentProfile.findOne({ user: req.user._id });
+    if (!profile) {
+      return sendError(res, 404, 'Profile not found');
+    }
+
+    if (profile.cvUrl) {
+      await deleteFileFromStorage(profile.cvUrl);
+      profile.cvUrl = null;
+      await profile.save();
+    }
+
+    const updatedProfile = await StudentProfile.findById(profile._id).populate(
+      'user',
+      'name email avatarUrl role'
+    );
+
+    return sendSuccess(res, 200, 'CV removed successfully', {
+      profile: updatedProfile,
     });
   } catch (error) {
     next(error);

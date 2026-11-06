@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { Card } from '../../../components/ui/Card';
 import { Button } from '../../../components/ui/Button';
+import { Spinner } from '../../../components/ui/Spinner';
 import {
   GraduationCap,
   Star,
@@ -14,6 +15,8 @@ import {
   Mail,
   Palette,
   ExternalLink,
+  Camera,
+  Trash2,
 } from 'lucide-react';
 
 const SKILL_COLOR_PALETTES = [
@@ -26,7 +29,16 @@ const SKILL_COLOR_PALETTES = [
   'bg-cyan-50 text-cyan-700',
 ];
 
-export const ProfileHeader = ({ profile, user, onEditClick }) => {
+export const ProfileHeader = ({
+  profile,
+  user,
+  onEditClick,
+  onUploadAvatar,
+  onDeleteAvatar,
+  isUploadingAvatar,
+}) => {
+  const avatarInputRef = useRef(null);
+
   const university = profile?.university || 'University not specified';
   const degree = profile?.degree || 'Degree not specified';
   const fieldOfStudy = profile?.fieldOfStudy;
@@ -44,19 +56,39 @@ export const ProfileHeader = ({ profile, user, onEditClick }) => {
 
   const email = user?.email || profile?.user?.email;
   const name = user?.name || profile?.user?.name || 'Student';
+  const avatarUrl = user?.avatarUrl || profile?.user?.avatarUrl;
+
+  const handleAvatarFileChange = (e) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      if (onUploadAvatar) {
+        onUploadAvatar(file);
+      }
+      e.target.value = '';
+    }
+  };
 
   return (
     <Card className="relative overflow-hidden bg-gradient-to-br from-white via-slate-50/50 to-indigo-50/30 border border-gray-200/90 shadow-sm !rounded-[10px] !p-5 sm:!p-6">
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
         {/* =========================================================================
-            SECTION 1 (LEFT): Profile Picture (Exact Square, No Border Radius)
+            SECTION 1 (LEFT): Profile Picture with Photo Upload & Delete Actions
            ========================================================================= */}
         <div className="lg:col-span-3 flex flex-col items-center justify-center">
-          <div className="relative w-56 h-56 sm:w-64 sm:h-64 lg:w-64 lg:h-64 xl:w-72 xl:h-72 aspect-square !rounded-none overflow-hidden p-1 bg-gradient-to-tr from-indigo-500 via-purple-500 to-pink-500 shadow-md">
-            <div className="w-full h-full !rounded-none overflow-hidden bg-white">
-              {user?.avatarUrl || profile?.user?.avatarUrl ? (
+          {/* Hidden File Input for Avatar */}
+          <input
+            ref={avatarInputRef}
+            type="file"
+            accept="image/jpeg,image/png,image/webp,image/jpg,image/gif"
+            className="hidden"
+            onChange={handleAvatarFileChange}
+          />
+
+          <div className="relative group w-56 h-56 sm:w-64 sm:h-64 lg:w-64 lg:h-64 xl:w-72 xl:h-72 aspect-square !rounded-none overflow-hidden p-1 bg-gradient-to-tr from-indigo-500 via-purple-500 to-pink-500 shadow-md">
+            <div className="w-full h-full !rounded-none overflow-hidden bg-white relative">
+              {avatarUrl ? (
                 <img
-                  src={user?.avatarUrl || profile?.user?.avatarUrl}
+                  src={avatarUrl}
                   alt={name}
                   className="w-full h-full object-cover !rounded-none"
                 />
@@ -65,11 +97,83 @@ export const ProfileHeader = ({ profile, user, onEditClick }) => {
                   {name?.charAt(0).toUpperCase() || 'S'}
                 </div>
               )}
+
+              {/* Hover Overlay with Change / Delete Photo Actions */}
+              <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-2 p-3">
+                <button
+                  type="button"
+                  disabled={isUploadingAvatar}
+                  onClick={() => avatarInputRef.current?.click()}
+                  className="px-3.5 py-1.5 bg-white text-gray-900 text-xs font-bold !rounded-none shadow hover:bg-gray-100 flex items-center gap-1.5 transition-transform hover:scale-105"
+                  title="Upload new profile picture"
+                >
+                  <Camera className="w-4 h-4 text-indigo-600" />
+                  {isUploadingAvatar ? 'Uploading...' : 'Change Photo'}
+                </button>
+
+                {avatarUrl && onDeleteAvatar && (
+                  <button
+                    type="button"
+                    disabled={isUploadingAvatar}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if (window.confirm('Are you sure you want to remove your profile picture?')) {
+                        onDeleteAvatar();
+                      }
+                    }}
+                    className="px-3 py-1 bg-red-600 text-white text-[11px] font-semibold !rounded-none shadow hover:bg-red-700 flex items-center gap-1 transition-transform hover:scale-105"
+                    title="Remove profile picture"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                    Remove Photo
+                  </button>
+                )}
+              </div>
+
+              {/* Uploading Loader */}
+              {isUploadingAvatar && (
+                <div className="absolute inset-0 bg-white/80 flex flex-col items-center justify-center gap-1 text-xs font-semibold text-indigo-600">
+                  <Spinner size="md" />
+                  <span>Saving photo...</span>
+                </div>
+              )}
             </div>
+
             <span
-              className="absolute bottom-2.5 right-2.5 block w-4 h-4 bg-emerald-500 !rounded-none border-2 border-white shadow-md"
+              className="absolute bottom-2.5 right-2.5 block w-4 h-4 bg-emerald-500 !rounded-none border-2 border-white shadow-md z-10"
               title="Active Student"
             />
+          </div>
+
+          {/* Quick Clickable Links under Photo for Mobile / Direct Access */}
+          <div className="flex items-center gap-2.5 mt-2.5 text-xs">
+            <button
+              type="button"
+              onClick={() => avatarInputRef.current?.click()}
+              disabled={isUploadingAvatar}
+              className="inline-flex items-center gap-1 font-semibold text-indigo-600 hover:text-indigo-800 transition-colors"
+            >
+              <Camera className="w-3.5 h-3.5" />
+              <span>Change Photo</span>
+            </button>
+            {avatarUrl && onDeleteAvatar && (
+              <>
+                <span className="text-gray-300">•</span>
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (window.confirm('Are you sure you want to remove your profile picture?')) {
+                      onDeleteAvatar();
+                    }
+                  }}
+                  disabled={isUploadingAvatar}
+                  className="inline-flex items-center gap-1 font-medium text-red-500 hover:text-red-700 transition-colors"
+                >
+                  <Trash2 className="w-3 h-3" />
+                  <span>Remove</span>
+                </button>
+              </>
+            )}
           </div>
         </div>
 

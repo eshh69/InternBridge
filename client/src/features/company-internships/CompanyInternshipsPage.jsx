@@ -167,11 +167,13 @@ export const CompanyInternshipsPage = () => {
   };
 
   const handleFormSubmit = async (payload) => {
+    if (isSubmitting) return;
     setIsSubmitting(true);
     setErrorAlert('');
     try {
       if (selectedForEdit) {
         const res = await updateInternship(selectedForEdit._id, payload);
+        if (!res.success || !res.data?._id) throw new Error(res.message || 'The server did not confirm the update.');
         const updated = res.data;
         setInternships((prev) =>
           prev.map((i) => (i._id === updated._id ? { ...i, ...updated } : i))
@@ -179,6 +181,7 @@ export const CompanyInternshipsPage = () => {
         notifySuccess(`Internship "${updated.title}" updated successfully.`);
       } else {
         const res = await createInternship(payload);
+        if (!res.success || !res.data?._id) throw new Error(res.message || 'The server did not confirm creation.');
         const created = res.data;
         setInternships((prev) => [created, ...prev]);
         setStats((prev) => ({
@@ -190,8 +193,10 @@ export const CompanyInternshipsPage = () => {
         notifySuccess(`Internship "${created.title}" created successfully.`);
       }
       setIsFormModalOpen(false);
+      await loadCompanyData();
     } catch (err) {
-      setErrorAlert(err.message || 'Operation failed.');
+      // The open form owns submission errors so they remain visible above the overlay.
+      throw err;
     } finally {
       setIsSubmitting(false);
     }
@@ -287,15 +292,18 @@ export const CompanyInternshipsPage = () => {
   ];
 
   return (
-    <div className="space-y-6">
-      {/* Top Header & Breadcrumb */}
+    <div className="space-y-5">
+      {/* ── Page Header ── */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
-            Company & Internship Management
+          <p className="text-[11px] font-bold text-indigo-500 uppercase tracking-widest mb-1">
+            Company Dashboard
+          </p>
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight leading-tight">
+            Company &amp; Internship Management
           </h1>
-          <p className="text-sm text-slate-500 mt-0.5 font-medium">
-            Post and manage internship opportunities
+          <p className="text-sm text-slate-500 mt-1 font-medium">
+            Post and manage internship opportunities.
           </p>
         </div>
 
@@ -303,13 +311,13 @@ export const CompanyInternshipsPage = () => {
           onClick={handleOpenCreateModal}
           variant="primary"
           size="md"
-          className="gap-2 shadow-sm shrink-0"
+          className="gap-2 shadow-md shrink-0 px-5"
         >
           <PlusCircle className="w-4 h-4" /> Post New Internship
         </Button>
       </div>
 
-      {/* Global Alerts */}
+      {/* ── Global Alerts ── */}
       {errorAlert && (
         <Alert type="danger" title="Action Failed">
           {errorAlert}
@@ -322,9 +330,9 @@ export const CompanyInternshipsPage = () => {
         </Alert>
       )}
 
-      {/* Modern Accessible Navigation Tabs */}
-      <div className="bg-white p-1.5 rounded-xl border border-slate-200/90 shadow-2xs w-fit max-w-full overflow-x-auto">
-        <nav className="flex space-x-1.5" aria-label="Portal Navigation Tabs">
+      {/* ── Tab Navigation ── */}
+      <div className="bg-white p-1.5 rounded-xl border border-slate-200/90 shadow-sm w-fit max-w-full overflow-x-auto">
+        <nav className="flex space-x-1" aria-label="Portal Navigation Tabs">
           {tabsConfig.map((tab) => {
             const Icon = tab.icon;
             const isActive = currentTab === tab.id;
@@ -332,24 +340,18 @@ export const CompanyInternshipsPage = () => {
               <button
                 key={tab.id}
                 onClick={() => handleTabChange(tab.id)}
-                className={`py-2 px-3 sm:px-4 text-sm font-semibold rounded-lg flex items-center gap-2 transition-all duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-1 select-none ${
+                className={`py-2 px-3 sm:px-4 text-sm font-semibold rounded-lg flex items-center gap-2 transition-all duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-1 select-none whitespace-nowrap ${
                   isActive
-                    ? 'bg-indigo-600 text-white shadow-xs'
+                    ? 'bg-indigo-600 text-white shadow-sm'
                     : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/80'
                 }`}
               >
-                <Icon
-                  className={`w-4 h-4 ${
-                    isActive ? 'text-white' : 'text-slate-400'
-                  }`}
-                />
+                <Icon className={`w-4 h-4 ${isActive ? 'text-white' : 'text-slate-400'}`} />
                 <span>{tab.label}</span>
                 {tab.count !== undefined && (
                   <span
-                    className={`text-xs px-1.5 py-0.2 rounded-full font-bold ${
-                      isActive
-                        ? 'bg-indigo-700/80 text-white'
-                        : 'bg-slate-200/80 text-slate-700'
+                    className={`text-[11px] px-1.5 py-0.5 rounded-full font-bold leading-none ${
+                      isActive ? 'bg-indigo-700/80 text-white' : 'bg-slate-200 text-slate-700'
                     }`}
                   >
                     {tab.count}
@@ -375,6 +377,9 @@ export const CompanyInternshipsPage = () => {
           onOpenCreateModal={handleOpenCreateModal}
           onSwitchTab={handleTabChange}
           onViewInternship={handleOpenViewModal}
+          onEditInternship={handleOpenEditModal}
+          onStatusChange={handleStatusToggle}
+          onDeleteInternship={handleOpenDeleteModal}
         />
       )}
 
@@ -394,7 +399,7 @@ export const CompanyInternshipsPage = () => {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Search listings by title, skill, discipline, or location..."
-                  className="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors shadow-2xs"
+                  className="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors shadow-xs"
                 />
               </div>
 
@@ -411,13 +416,13 @@ export const CompanyInternshipsPage = () => {
                     onClick={() => setStatusFilter(f.id)}
                     className={`px-3 py-1.5 text-xs font-semibold rounded-lg border whitespace-nowrap transition-colors flex items-center gap-1.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 ${
                       statusFilter === f.id
-                        ? 'bg-indigo-50 border-indigo-400 text-indigo-700 shadow-2xs'
+                        ? 'bg-indigo-50 border-indigo-400 text-indigo-700 shadow-xs'
                         : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50'
                     }`}
                   >
                     {f.label}
                     <span
-                      className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ${
+                      className={`text-[10px] px-1.5 py-0.5 rounded-full font-bold ${
                         statusFilter === f.id
                           ? 'bg-indigo-200 text-indigo-800'
                           : 'bg-slate-100 text-slate-500'
