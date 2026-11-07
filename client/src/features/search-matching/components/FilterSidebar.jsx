@@ -11,6 +11,7 @@ import {
   Banknote,
   Code2,
   Filter,
+  Check,
 } from 'lucide-react';
 
 const POPULAR_SKILLS = [
@@ -201,15 +202,24 @@ export const FilterSidebar = ({
               return (
                 <label
                   key={idx}
-                  className="flex items-center justify-between text-xs text-gray-700 hover:text-gray-900 cursor-pointer select-none py-0.5"
+                  className="flex items-center justify-between text-xs text-gray-700 hover:text-gray-900 cursor-pointer select-none py-1 group"
                 >
                   <div className="flex items-center gap-2.5">
                     <input
                       type="checkbox"
                       checked={isChecked}
                       onChange={() => onChange('locationType', isChecked ? 'All' : item.value)}
-                      className="rounded border-gray-300 text-[#1E3B2F] focus:ring-[#1E3B2F] h-4 w-4"
+                      className="sr-only peer"
                     />
+                    <div
+                      className={`w-4 h-4 rounded flex items-center justify-center transition-all ${
+                        isChecked
+                          ? 'bg-[#1E3B2F] border border-[#1E3B2F] text-white shadow-2xs'
+                          : 'bg-white border border-gray-300 group-hover:border-[#1E3B2F]/60'
+                      } peer-focus-visible:ring-2 peer-focus-visible:ring-[#1E3B2F] peer-focus-visible:ring-offset-1`}
+                    >
+                      {isChecked && <Check className="w-3 h-3 stroke-[3]" />}
+                    </div>
                     <span>{item.label}</span>
                   </div>
                   <span className="text-[11px] text-gray-400 font-medium">
