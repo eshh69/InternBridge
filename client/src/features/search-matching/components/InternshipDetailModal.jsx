@@ -86,7 +86,7 @@ export const InternshipDetailModal = ({
           {!isCompany && (
             <Button
               variant="primary"
-              className="!bg-[#1E3B2F] hover:!bg-[#152A22] !text-[#F5F0E6] !rounded-none shadow-xs"
+              className="!bg-[#1E3B2F] hover:!bg-[#152A22] !text-[#F5F0E6] rounded-lg shadow-xs"
               onClick={() => {
                 onClose();
                 onApply(internship);
@@ -102,7 +102,7 @@ export const InternshipDetailModal = ({
         {/* Header Block */}
         <div className="flex items-start justify-between gap-4">
           <div className="flex items-start gap-3.5">
-            <div className="w-14 h-14 rounded-none bg-[#F5F0E6] border border-[#C8B48A]/40 flex items-center justify-center flex-shrink-0 text-[#1E3B2F] font-bold text-xl overflow-hidden shadow-xs">
+            <div className="w-14 h-14 rounded-xl bg-[#F5F0E6] border border-[#C8B48A]/40 flex items-center justify-center flex-shrink-0 text-[#1E3B2F] font-bold text-xl overflow-hidden shadow-xs">
               {company?.logoUrl ? (
                 <img
                   src={company.logoUrl}
@@ -137,7 +137,7 @@ export const InternshipDetailModal = ({
               <Badge
                 variant={matchScore >= 80 ? 'success' : matchScore >= 50 ? 'forest' : 'neutral'}
                 size="lg"
-                className="gap-1 font-bold shadow-xs !rounded-none"
+                className="gap-1 font-bold shadow-xs "
               >
                 <Sparkles className="w-4 h-4" />
                 {matchScore}% Match
@@ -149,7 +149,7 @@ export const InternshipDetailModal = ({
 
         {/* Quick Facts Grid */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          <div className="bg-gray-50 p-3 rounded-none border border-gray-100">
+          <div className="bg-gray-50 p-3 rounded-xl border border-gray-100">
             <span className="text-[11px] font-medium text-gray-400 uppercase tracking-wider block mb-1">
               Location
             </span>
@@ -159,7 +159,7 @@ export const InternshipDetailModal = ({
             </p>
           </div>
 
-          <div className="bg-gray-50 p-3 rounded-none border border-gray-100">
+          <div className="bg-gray-50 p-3 rounded-xl border border-gray-100">
             <span className="text-[11px] font-medium text-gray-400 uppercase tracking-wider block mb-1">
               Stipend
             </span>
@@ -169,7 +169,7 @@ export const InternshipDetailModal = ({
             </p>
           </div>
 
-          <div className="bg-gray-50 p-3 rounded-none border border-gray-100">
+          <div className="bg-gray-50 p-3 rounded-xl border border-gray-100">
             <span className="text-[11px] font-medium text-gray-400 uppercase tracking-wider block mb-1">
               Duration
             </span>
@@ -179,7 +179,7 @@ export const InternshipDetailModal = ({
             </p>
           </div>
 
-          <div className="bg-gray-50 p-3 rounded-none border border-gray-100">
+          <div className="bg-gray-50 p-3 rounded-xl border border-gray-100">
             <span className="text-[11px] font-medium text-gray-400 uppercase tracking-wider block mb-1">
               Deadline
             </span>
@@ -192,7 +192,7 @@ export const InternshipDetailModal = ({
 
         {/* Skill Gap Analysis (for student) */}
         {isStudent && matchScore !== undefined && (
-          <div className="bg-gradient-to-br from-[#7F8C6A]/15 to-[#F5F0E6]/60 p-4 rounded-none border border-[#C8B48A]/40 space-y-3">
+          <div className="bg-gradient-to-br from-[#7F8C6A]/15 to-[#F5F0E6]/60 p-4 rounded-xl border border-[#C8B48A]/40 space-y-3">
             <div className="flex items-center justify-between">
               <h4 className="text-xs font-bold uppercase tracking-wider text-[#1E3B2F] flex items-center gap-1.5">
                 <Sparkles className="w-4 h-4 text-[#1E3B2F]" /> Skills Fit & Gap Breakdown
@@ -212,7 +212,7 @@ export const InternshipDetailModal = ({
                   {matchedSkills.map((s, idx) => (
                     <span
                       key={idx}
-                      className="inline-flex items-center px-2.5 py-0.5 rounded-none text-xs font-medium bg-gray-100 text-gray-700 border border-gray-200"
+                      className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-700 border border-gray-200"
                     >
                       {formatSkillName(s)}
                     </span>
@@ -231,7 +231,7 @@ export const InternshipDetailModal = ({
                   {missingSkills.map((s, idx) => (
                     <span
                       key={idx}
-                      className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-none text-xs font-medium bg-amber-50 text-amber-800 border border-amber-200"
+                      className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-50 text-amber-800 border border-amber-200"
                     >
                       <AlertCircle className="w-3 h-3 text-amber-600" /> {s}
                     </span>
@@ -274,7 +274,7 @@ export const InternshipDetailModal = ({
 
         {/* Company About */}
         {company?.description && (
-          <div className="p-3.5 bg-gray-50 rounded-none border border-gray-100 space-y-1">
+          <div className="p-3.5 bg-gray-50 rounded-xl border border-gray-100 space-y-1">
             <h4 className="text-xs font-bold text-gray-900 flex items-center gap-1.5">
               <Building2 className="w-3.5 h-3.5 text-gray-500" /> About {company.name}
             </h4>

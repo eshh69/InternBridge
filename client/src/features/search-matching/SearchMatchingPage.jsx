@@ -268,14 +268,14 @@ export const SearchMatchingPage = () => {
     <div className="space-y-6">
       {/* Tab Switcher on Top */}
       <div className="flex items-center justify-between">
-        <div className="flex items-center bg-gray-100 p-1 rounded-none border border-[#C8B48A]/40">
+        <div className="flex items-center bg-gray-100 p-1 rounded-xl border border-[#C8B48A]/40">
           <button
             type="button"
             onClick={() => {
               setActiveTab('all_internships');
               setPage(1);
             }}
-            className={`flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-semibold rounded-none transition-all ${
+            className={`flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-semibold rounded-lg transition-all ${
               activeTab === 'all_internships'
                 ? 'bg-white text-[#1E3B2F] font-bold shadow-xs'
                 : 'text-gray-600 hover:text-gray-900'
@@ -291,7 +291,7 @@ export const SearchMatchingPage = () => {
                 setActiveTab('top_matches');
                 setPage(1);
               }}
-              className={`flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-semibold rounded-none transition-all ${
+              className={`flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-semibold rounded-lg transition-all ${
                 activeTab === 'top_matches'
                   ? 'bg-white text-[#1E3B2F] font-bold shadow-xs'
                   : 'text-gray-600 hover:text-gray-900'
@@ -308,7 +308,7 @@ export const SearchMatchingPage = () => {
                 setActiveTab('candidates');
                 setPage(1);
               }}
-              className={`flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-semibold rounded-none transition-all ${
+              className={`flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-semibold rounded-lg transition-all ${
                 activeTab === 'candidates'
                   ? 'bg-white text-[#1E3B2F] font-bold shadow-xs'
                   : 'text-gray-600 hover:text-gray-900'
@@ -332,9 +332,9 @@ export const SearchMatchingPage = () => {
 
       {/* Student Profile Skills Quick-Match Banner */}
       {isStudent && studentSkills.length > 0 && (
-        <div className="bg-gradient-to-r from-[#7F8C6A]/20 via-[#F5F0E6] to-white rounded-none border border-[#C8B48A]/40 p-4 sm:p-5 flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-2xs">
+        <div className="bg-gradient-to-r from-[#7F8C6A]/20 via-[#F5F0E6] to-white rounded-xl border border-[#C8B48A]/40 p-4 sm:p-5 flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-2xs">
           <div className="flex items-start gap-3.5">
-            <div className="p-2.5 bg-[#1E3B2F] text-white rounded-none shadow-xs flex-shrink-0 mt-0.5 md:mt-0">
+            <div className="p-2.5 bg-[#1E3B2F] text-white rounded-xl shadow-xs flex-shrink-0 mt-0.5 md:mt-0">
               <Sparkles className="w-5 h-5 text-[#C8B48A]" />
             </div>
             <div className="space-y-1">
@@ -342,7 +342,7 @@ export const SearchMatchingPage = () => {
                 <h4 className="text-sm font-bold text-gray-900">
                   Matched with Your Profile Skills
                 </h4>
-                <span className="text-[10px] font-semibold px-2 py-0.5 bg-[#7F8C6A]/20 text-[#1E3B2F] rounded-none">
+                <span className="text-[10px] font-semibold px-2 py-0.5 bg-[#7F8C6A]/20 text-[#1E3B2F] rounded-full">
                   {studentSkills.length} Skills in Portfolio
                 </span>
               </div>
@@ -351,7 +351,7 @@ export const SearchMatchingPage = () => {
                 {studentSkills.map((skill) => (
                   <span
                     key={skill}
-                    className="inline-flex items-center px-2 py-0.5 rounded-none text-[11px] font-semibold bg-white border border-[#C8B48A]/40 text-[#1E3B2F] shadow-3xs"
+                    className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-white border border-[#C8B48A]/40 text-[#1E3B2F] shadow-3xs"
                   >
                     {formatSkillName(skill)}
                   </span>
@@ -376,7 +376,7 @@ export const SearchMatchingPage = () => {
                   handleFilterChange('skills', studentSkills.join(','));
                 }
               }}
-              className={`px-4 py-2 text-xs font-bold rounded-none shadow-xs transition-all flex items-center gap-1.5 cursor-pointer ${
+              className={`px-4 py-2 text-xs font-bold rounded-lg shadow-xs transition-all flex items-center gap-1.5 cursor-pointer ${
                 studentSkills.every((s) =>
                   (filters.skills || '')
                     .toLowerCase()
@@ -406,7 +406,7 @@ export const SearchMatchingPage = () => {
                 setActiveTab('top_matches');
                 setPage(1);
               }}
-              className="px-3.5 py-2 text-xs font-semibold rounded-none bg-white border border-[#C8B48A]/40 text-gray-700 hover:bg-gray-50 shadow-3xs transition-colors flex items-center gap-1"
+              className="px-3.5 py-2 text-xs font-semibold rounded-lg bg-white border border-[#C8B48A]/40 text-gray-700 hover:bg-gray-50 shadow-3xs transition-colors flex items-center gap-1"
             >
               Ranked Matches
             </button>
@@ -438,7 +438,7 @@ export const SearchMatchingPage = () => {
         {/* RIGHT COLUMN: HERO BANNER + SEARCH ROW + OPPORTUNITY CARDS */}
         <div className="flex-1 w-full space-y-4">
           {/* 1. HERO SECTION WITH MOTIVATION GRAPHIC */}
-          <div className="bg-white rounded-none border border-[#C8B48A]/35 shadow-xs relative overflow-hidden flex flex-col md:flex-row md:items-stretch justify-between">
+          <div className="bg-white rounded-2xl border border-[#C8B48A]/35 shadow-xs relative overflow-hidden flex flex-col md:flex-row md:items-stretch justify-between">
             {/* Left Content */}
             <div className="p-6 md:py-6 md:pl-7 md:pr-4 flex-1 flex flex-col justify-center z-10 max-w-xl space-y-1.5">
               <span className="text-[11px] font-bold tracking-widest text-gray-400 uppercase">
@@ -474,7 +474,7 @@ export const SearchMatchingPage = () => {
           </div>
 
           {/* 2. SEARCH BAR & CONTROLS ROW */}
-          <div className="bg-white rounded-none border border-[#C8B48A]/35 shadow-xs p-2.5 flex flex-col sm:flex-row items-center gap-2">
+          <div className="bg-white rounded-xl border border-[#C8B48A]/35 shadow-xs p-2.5 flex flex-col sm:flex-row items-center gap-2">
             {/* Keyword Input */}
             <div className="relative flex-1 w-full">
               <Search className="w-4 h-4 text-gray-400 absolute left-3.5 top-3" />
@@ -486,7 +486,7 @@ export const SearchMatchingPage = () => {
                   setPage(1);
                 }}
                 placeholder="Search by job title, keywords, company or location..."
-                className="w-full pl-10 pr-8 py-2 text-xs sm:text-sm rounded-none border-0 focus:outline-none focus:ring-0 text-gray-800 placeholder-gray-400 font-medium"
+                className="w-full pl-10 pr-8 py-2 text-xs sm:text-sm rounded-lg border-0 focus:outline-none focus:ring-0 text-gray-800 placeholder-gray-400 font-medium"
               />
               {searchTerm && (
                 <button
@@ -503,11 +503,11 @@ export const SearchMatchingPage = () => {
             <button
               type="button"
               onClick={() => setIsMobileFiltersOpen(true)}
-              className="md:hidden w-full sm:w-auto px-3 py-2 border border-[#C8B48A]/40 rounded-none text-xs font-semibold text-gray-700 flex items-center justify-center gap-1.5"
+              className="md:hidden w-full sm:w-auto px-3 py-2 border border-[#C8B48A]/40 rounded-lg text-xs font-semibold text-gray-700 flex items-center justify-center gap-1.5"
             >
               <Filter className="w-4 h-4 text-gray-500" /> Filters
               {activeFiltersCount > 0 && (
-                <span className="w-4 h-4 rounded-none bg-[#1E3B2F] text-[#F5F0E6] text-[10px] flex items-center justify-center font-bold">
+                <span className="w-4 h-4 rounded-full bg-[#1E3B2F] text-[#F5F0E6] text-[10px] flex items-center justify-center font-bold">
                   {activeFiltersCount}
                 </span>
               )}
@@ -519,7 +519,7 @@ export const SearchMatchingPage = () => {
                 <select
                   value={filters.location || ''}
                   onChange={(e) => handleFilterChange('location', e.target.value)}
-                  className="w-full pl-7 pr-7 py-2 text-xs font-semibold border-0 rounded-none bg-transparent text-gray-700 focus:outline-none appearance-none cursor-pointer"
+                  className="w-full pl-7 pr-7 py-2 text-xs font-semibold border-0 rounded-lg bg-transparent text-gray-700 focus:outline-none appearance-none cursor-pointer"
                 >
                   <option value="">All Locations</option>
                   <option value="Colombo">Colombo, Sri Lanka</option>
@@ -540,7 +540,7 @@ export const SearchMatchingPage = () => {
                     setSortOption(e.target.value);
                     setPage(1);
                   }}
-                  className="w-full pl-7 pr-7 py-2 text-xs font-semibold border-0 rounded-none bg-transparent text-gray-700 focus:outline-none appearance-none cursor-pointer"
+                  className="w-full pl-7 pr-7 py-2 text-xs font-semibold border-0 rounded-lg bg-transparent text-gray-700 focus:outline-none appearance-none cursor-pointer"
                 >
                   <option value="newest">Relevance</option>
                   {isStudent && <option value="highest_match">Highest Match</option>}
@@ -559,11 +559,11 @@ export const SearchMatchingPage = () => {
             </span>
 
             {/* Grid vs List View Mode Toggle */}
-            <div className="flex items-center gap-1 bg-gray-100 p-0.5 rounded-none border border-[#C8B48A]/40">
+            <div className="flex items-center gap-1 bg-gray-100 p-0.5 rounded-lg border border-[#C8B48A]/40">
               <button
                 type="button"
                 onClick={() => setViewMode('grid')}
-                className={`p-1.5 rounded-none transition-all ${
+                className={`p-1.5 rounded-md transition-all ${
                   viewMode === 'grid'
                     ? 'bg-[#1E3B2F] text-[#F5F0E6] shadow-xs'
                     : 'text-gray-500 hover:text-gray-900'
@@ -575,7 +575,7 @@ export const SearchMatchingPage = () => {
               <button
                 type="button"
                 onClick={() => setViewMode('list')}
-                className={`p-1.5 rounded-none transition-all ${
+                className={`p-1.5 rounded-md transition-all ${
                   viewMode === 'list'
                     ? 'bg-[#1E3B2F] text-[#F5F0E6] shadow-xs'
                     : 'text-gray-500 hover:text-gray-900'
@@ -589,7 +589,7 @@ export const SearchMatchingPage = () => {
 
           {/* Loading State */}
           {isLoading && (
-            <div className="flex justify-center items-center py-24 bg-white rounded-none border border-[#C8B48A]/40">
+            <div className="flex justify-center items-center py-24 bg-white rounded-xl border border-[#C8B48A]/40">
               <Spinner size="lg" />
             </div>
           )}
@@ -610,7 +610,7 @@ export const SearchMatchingPage = () => {
 
           {/* Empty State */}
           {!isLoading && !error && items.length === 0 && (
-            <div className="bg-white rounded-none border border-[#C8B48A]/40 p-10">
+            <div className="bg-white rounded-xl border border-[#C8B48A]/40 p-10">
               <EmptyState
                 icon={<Briefcase className="w-12 h-12 text-gray-400" />}
                 title="No opportunities found"
@@ -682,7 +682,7 @@ export const SearchMatchingPage = () => {
                   type="button"
                   disabled={page <= 1}
                   onClick={() => setPage((p) => Math.max(1, p - 1))}
-                  className="w-8 h-8 rounded-none border border-[#C8B48A]/40 text-gray-600 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center transition-all text-xs"
+                  className="w-8 h-8 rounded-lg border border-[#C8B48A]/40 text-gray-600 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center transition-all text-xs"
                 >
                   <ChevronLeft className="w-4 h-4" />
                 </button>
@@ -691,7 +691,7 @@ export const SearchMatchingPage = () => {
                   <button
                     key={p}
                     onClick={() => setPage(p)}
-                    className={`w-8 h-8 rounded-none text-xs font-semibold transition-all ${
+                    className={`w-8 h-8 rounded-lg text-xs font-semibold transition-all ${
                       page === p
                         ? 'bg-[#1E3B2F] text-[#F5F0E6] shadow-xs'
                         : 'border border-[#C8B48A]/40 text-gray-700 hover:bg-gray-50'
@@ -705,7 +705,7 @@ export const SearchMatchingPage = () => {
                   type="button"
                   disabled={page >= pagination.pages}
                   onClick={() => setPage((p) => Math.min(pagination.pages, p + 1))}
-                  className="w-8 h-8 rounded-none border border-[#C8B48A]/40 text-gray-600 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center transition-all text-xs"
+                  className="w-8 h-8 rounded-lg border border-[#C8B48A]/40 text-gray-600 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center transition-all text-xs"
                 >
                   <ChevronRight className="w-4 h-4" />
                 </button>

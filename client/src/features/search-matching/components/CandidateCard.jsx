@@ -36,7 +36,7 @@ export const CandidateCard = ({ candidate, queriedSkills = [] }) => {
   );
 
   return (
-    <Card className="hover:border-[#1E3B2F] hover:shadow-md transition-all duration-200 border-[#C8B48A]/35 bg-white !rounded-none">
+    <Card className="hover:border-[#1E3B2F] hover:shadow-md transition-all duration-200 border-[#C8B48A]/35 bg-white rounded-2xl">
       <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
         {/* Left: Avatar & Candidate Info */}
         <div className="flex items-start gap-3.5">
@@ -146,7 +146,7 @@ export const CandidateCard = ({ candidate, queriedSkills = [] }) => {
         </div>
 
         <div className="flex items-center gap-2">
-          <Button variant="primary" size="sm" className="gap-1.5 !rounded-none !bg-[#1E3B2F] hover:!bg-[#152A22] !text-[#F5F0E6] shadow-xs"
+          <Button variant="primary" size="sm" className="gap-1.5 rounded-lg !bg-[#1E3B2F] hover:!bg-[#152A22] !text-[#F5F0E6] shadow-xs"
             onClick={() => navigate('/chat')}
           >
             <MessageSquare className="w-3.5 h-3.5" /> Message
