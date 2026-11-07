@@ -32,19 +32,25 @@ import {
   Info,
   Filter,
   BarChart3,
+  Briefcase,
 } from 'lucide-react';
 
 export const VerificationRatingPage = () => {
   const { user } = useAuth();
 
-  // Active Portal: 'admin' | 'reviewer' (defaults to user role or admin for preview)
-  const [activePortal, setActivePortal] = useState(
-    user?.role === 'admin' ? 'admin' : user?.role === 'reviewer' ? 'reviewer' : 'admin'
-  );
+  const isAdmin = user?.role === 'admin';
+  const isCompany = user?.role === 'company';
+  const isReviewer = user?.role === 'reviewer';
 
-  // Sub-tab within active portal
-  const [adminSubTab, setAdminSubTab] = useState('queue'); // 'queue' | 'directory'
-  const [reviewerSubTab, setReviewerSubTab] = useState('workspace'); // 'workspace' | 'directory'
+  // Active Portal: Strictly restrict 'admin' to admin role!
+  // If company, default to 'company'. If reviewer, default to 'reviewer'.
+  const defaultPortal = isAdmin ? 'admin' : isReviewer ? 'reviewer' : 'company';
+  const [activePortal, setActivePortal] = useState(defaultPortal);
+
+  // Sub-tab states for each portal
+  const [adminSubTab, setAdminSubTab] = useState('queue'); // 'queue' | 'metrics' | 'directory'
+  const [reviewerSubTab, setReviewerSubTab] = useState('workspace'); // 'workspace' | 'metrics' | 'directory'
+  const [companySubTab, setCompanySubTab] = useState('status'); // 'status' | 'metrics' | 'directory'
 
   const [refreshTrigger, setRefreshTrigger] = useState(0);
 
@@ -70,6 +76,13 @@ export const VerificationRatingPage = () => {
   const [inspectReviews, setInspectReviews] = useState([]);
   const [inspectReputation, setInspectReputation] = useState(null);
   const [loadingInspect, setLoadingInspect] = useState(false);
+
+  // Ensure non-admin users never have 'admin' as activePortal
+  useEffect(() => {
+    if (!isAdmin && activePortal === 'admin') {
+      setActivePortal(isCompany ? 'company' : isReviewer ? 'reviewer' : 'company');
+    }
+  }, [user?.role, isAdmin, isCompany, isReviewer, activePortal]);
 
   // 1. Fetch user's own verification status
   const fetchMyVerificationStatus = async () => {
@@ -146,7 +159,11 @@ export const VerificationRatingPage = () => {
     setTimeout(() => setSuccessBanner(''), 4500);
 
     // If currently inspecting the target that was reviewed, update inspect state immediately
-    if (selectedInspectTarget && (selectedInspectTarget._id === newRev?.targetStudentId || selectedInspectTarget._id === newRev?.targetCompanyId)) {
+    if (
+      selectedInspectTarget &&
+      (selectedInspectTarget._id === newRev?.targetStudentId ||
+        selectedInspectTarget._id === newRev?.targetCompanyId)
+    ) {
       handleInspectTarget(selectedInspectTarget);
     }
   };
@@ -171,52 +188,76 @@ export const VerificationRatingPage = () => {
 
   return (
     <div className="space-y-6 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-      {/* 1. Header & Registration Number Badge */}
+      {/* 1. Clean Header Without Academic Tags */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-2 border-b border-gray-200">
         <div>
-          <div className="flex items-center gap-2 flex-wrap">
-            <h1 className="text-2xl font-extrabold text-gray-900 tracking-tight">
-              Verification & Ratings System
-            </h1>
-            <span className="text-xs font-bold px-2.5 py-0.5 !rounded-none bg-blue-50 text-blue-700 border border-blue-200 uppercase tracking-wider">
-              MODULE 5 (SEU/IS/22/ICT/057)
-            </span>
-          </div>
+          <h1 className="text-2xl font-extrabold text-[#1E3B2F] tracking-tight">
+            Verification & Ratings System
+          </h1>
           <p className="text-xs sm:text-sm text-gray-500 mt-1">
             Decentralized credibility verification, academic endorsements, and multi-criteria performance ratings
           </p>
         </div>
 
-        {/* 2. Portal Switcher & Quick Action Buttons (Top Right of Header) */}
+        {/* 2. Portal Switcher & Quick Action Buttons */}
         <div className="flex flex-wrap items-center gap-2.5">
-          {/* Sharp Role Switcher (Admin Portal / Reviewer Portal) */}
-          <div className="inline-flex p-1 bg-slate-100 !rounded-none border border-slate-300 text-xs font-semibold">
-            <button
-              type="button"
-              onClick={() => setActivePortal('admin')}
-              className={`flex items-center gap-1.5 px-3.5 py-1.5 !rounded-none transition-all ${
-                activePortal === 'admin'
-                  ? 'bg-blue-600 text-white shadow-xs font-bold'
-                  : 'text-slate-700 hover:text-slate-900 hover:bg-slate-200/70'
-              }`}
-            >
-              <ShieldAlert className="w-3.5 h-3.5" />
-              <span>Admin Portal</span>
-            </button>
+          {/* Strictly reserve Admin Portal option for admin role */}
+          {isAdmin ? (
+            <div className="inline-flex p-1 bg-slate-100 !rounded-none border border-slate-300 text-xs font-semibold">
+              <button
+                type="button"
+                onClick={() => setActivePortal('admin')}
+                className={`flex items-center gap-1.5 px-3 py-1.5 !rounded-none transition-all ${
+                  activePortal === 'admin'
+                    ? 'bg-[#1E3B2F] text-[#F5F0E6] shadow-xs font-bold'
+                    : 'text-slate-700 hover:text-slate-900 hover:bg-slate-200/70'
+                }`}
+              >
+                <ShieldAlert className="w-3.5 h-3.5" />
+                <span>Admin Queue</span>
+              </button>
 
-            <button
-              type="button"
-              onClick={() => setActivePortal('reviewer')}
-              className={`flex items-center gap-1.5 px-3.5 py-1.5 !rounded-none transition-all ${
-                activePortal === 'reviewer'
-                  ? 'bg-blue-600 text-white shadow-xs font-bold'
-                  : 'text-slate-700 hover:text-slate-900 hover:bg-slate-200/70'
-              }`}
-            >
-              <Award className="w-3.5 h-3.5" />
-              <span>Reviewer Portal</span>
-            </button>
-          </div>
+              <button
+                type="button"
+                onClick={() => setActivePortal('reviewer')}
+                className={`flex items-center gap-1.5 px-3 py-1.5 !rounded-none transition-all ${
+                  activePortal === 'reviewer'
+                    ? 'bg-[#1E3B2F] text-[#F5F0E6] shadow-xs font-bold'
+                    : 'text-slate-700 hover:text-slate-900 hover:bg-slate-200/70'
+                }`}
+              >
+                <Award className="w-3.5 h-3.5" />
+                <span>Reviewer View</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setActivePortal('company')}
+                className={`flex items-center gap-1.5 px-3 py-1.5 !rounded-none transition-all ${
+                  activePortal === 'company'
+                    ? 'bg-[#1E3B2F] text-[#F5F0E6] shadow-xs font-bold'
+                    : 'text-slate-700 hover:text-slate-900 hover:bg-slate-200/70'
+                }`}
+              >
+                <Building2 className="w-3.5 h-3.5" />
+                <span>Company View</span>
+              </button>
+            </div>
+          ) : (
+            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 !rounded-none bg-[#7F8C6A]/15 text-[#1E3B2F] border border-[#C8B48A]/40 text-xs font-bold uppercase tracking-wider">
+              {isCompany ? (
+                <>
+                  <Building2 className="w-3.5 h-3.5 text-[#1E3B2F]" />
+                  Corporate Portal
+                </>
+              ) : (
+                <>
+                  <Award className="w-3.5 h-3.5 text-[#1E3B2F]" />
+                  Faculty Reviewer Portal
+                </>
+              )}
+            </span>
+          )}
 
           {/* Interactive Action Buttons */}
           <div className="flex items-center gap-2">
@@ -224,41 +265,46 @@ export const VerificationRatingPage = () => {
               variant="primary"
               size="sm"
               onClick={() => setIsRequestModalOpen(true)}
-              className="gap-1.5 text-xs !rounded-none !bg-blue-600 hover:!bg-blue-700 !border-blue-600 text-white shadow-xs font-semibold"
+              className="gap-1.5 text-xs !rounded-none !bg-[#1E3B2F] hover:!bg-[#152A22] !border-[#1E3B2F] text-[#F5F0E6] shadow-xs font-semibold"
             >
-              <PlusCircle className="w-3.5 h-3.5" /> Submit Verification
+              <PlusCircle className="w-3.5 h-3.5" />
+              {isCompany ? 'Request Verification' : 'Submit Verification'}
             </Button>
 
-            <Button
-              variant="primary"
-              size="sm"
-              onClick={() => setIsReviewModalOpen(true)}
-              className="gap-1.5 text-xs !rounded-none !bg-indigo-600 hover:!bg-indigo-700 !border-indigo-600 text-white shadow-xs font-semibold"
-            >
-              <Sparkles className="w-3.5 h-3.5" /> Write Review
-            </Button>
+            {!isCompany && (
+              <Button
+                variant="primary"
+                size="sm"
+                onClick={() => setIsReviewModalOpen(true)}
+                className="gap-1.5 text-xs !rounded-none !bg-[#1E3B2F] hover:!bg-[#152A22] !border-[#1E3B2F] text-[#F5F0E6] shadow-xs font-semibold"
+              >
+                <Sparkles className="w-3.5 h-3.5 text-[#C8B48A]" /> Write Review
+              </Button>
+            )}
 
-            <button
-              type="button"
-              onClick={handleResetDemoData}
-              title="Reset local demo data"
-              className="p-1.5 text-slate-500 hover:text-slate-800 hover:bg-slate-100 !rounded-none border border-slate-300 transition-colors"
-            >
-              <RotateCcw className="w-4 h-4" />
-            </button>
+            {isAdmin && (
+              <button
+                type="button"
+                onClick={handleResetDemoData}
+                title="Reset local demo data"
+                className="p-1.5 text-slate-500 hover:text-slate-800 hover:bg-slate-100 !rounded-none border border-slate-300 transition-colors"
+              >
+                <RotateCcw className="w-4 h-4" />
+              </button>
+            )}
           </div>
         </div>
       </div>
 
-      {/* 3. Dual-Engine Architecture / System Status Banner (Sharp Blue Theme) */}
-      <div className="bg-blue-50/90 border border-blue-200 border-l-4 border-l-blue-600 !rounded-none p-3.5 flex items-center justify-between text-xs text-blue-950 shadow-2xs">
+      {/* 3. Dual-Engine Architecture / System Status Banner (Luxury Forest Green Theme) */}
+      <div className="bg-[#7F8C6A]/15 border border-[#C8B48A]/40 border-l-4 border-l-[#1E3B2F] !rounded-none p-3.5 flex items-center justify-between text-xs text-[#1E3B2F] shadow-2xs">
         <div className="flex items-center gap-2">
-          <Info className="w-4 h-4 text-blue-600 flex-shrink-0" />
+          <Info className="w-4 h-4 text-[#1E3B2F] flex-shrink-0" />
           <span>
-            <strong>Dual-Engine Architecture:</strong> Currently running in resilient instant-preview mode. Any verification requests or multi-criteria reputation evaluations persist in real-time. When the backend server is booted, it automatically connects to MongoDB endpoints.
+            <strong>Dual-Engine Architecture:</strong> Currently running in resilient instant-preview mode. Any verification requests or multi-criteria reputation evaluations persist in real-time and synchronize seamlessly with MongoDB endpoints.
           </span>
         </div>
-        <span className="hidden sm:inline-flex text-[11px] font-bold uppercase tracking-wider text-white bg-blue-600 px-2.5 py-0.5 !rounded-none border border-blue-700">
+        <span className="hidden sm:inline-flex text-[11px] font-bold uppercase tracking-wider text-[#F5F0E6] bg-[#1E3B2F] px-2.5 py-0.5 !rounded-none border border-[#152A22]">
           Ready to Run
         </span>
       </div>
@@ -271,11 +317,219 @@ export const VerificationRatingPage = () => {
       )}
 
       {/* ======================================================== */}
-      {/* 4. Portal Views: Admin Portal vs Reviewer Portal */}
+      {/* 4. Portal Views: Company vs Reviewer vs Admin */}
       {/* ======================================================== */}
 
-      {activePortal === 'admin' ? (
-        /* ======================== ADMIN PORTAL ======================== */
+      {/* VIEW A: DEDICATED COMPANY PORTAL (For Companies & Admin Preview) */}
+      {activePortal === 'company' && (
+        <div className="space-y-6">
+          {/* Company Sub Navigation */}
+          <div className="flex items-center gap-2 border-b border-gray-200 pb-2 overflow-x-auto">
+            <button
+              type="button"
+              onClick={() => setCompanySubTab('status')}
+              className={`px-4 py-2 text-xs font-bold !rounded-none transition-all flex items-center gap-2 whitespace-nowrap ${
+                companySubTab === 'status'
+                  ? 'bg-[#1E3B2F] text-[#F5F0E6] shadow-xs'
+                  : 'text-slate-600 hover:bg-slate-100'
+              }`}
+            >
+              <Building2 className="w-3.5 h-3.5" />
+              Corporate Accreditation & Verification
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setCompanySubTab('metrics')}
+              className={`px-4 py-2 text-xs font-bold !rounded-none transition-all flex items-center gap-2 whitespace-nowrap ${
+                companySubTab === 'metrics'
+                  ? 'bg-[#1E3B2F] text-[#F5F0E6] shadow-xs'
+                  : 'text-slate-600 hover:bg-slate-100'
+              }`}
+            >
+              <BarChart3 className="w-3.5 h-3.5" />
+              Reputation Metrics & Analytics
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setCompanySubTab('directory')}
+              className={`px-4 py-2 text-xs font-bold !rounded-none transition-all flex items-center gap-2 whitespace-nowrap ${
+                companySubTab === 'directory'
+                  ? 'bg-[#1E3B2F] text-[#F5F0E6] shadow-xs'
+                  : 'text-slate-600 hover:bg-slate-100'
+              }`}
+            >
+              <Search className="w-3.5 h-3.5" />
+              Candidate & Verified Directory
+            </button>
+          </div>
+
+          {companySubTab === 'status' ? (
+            <div className="space-y-6">
+              {/* 4 Company Summary Stats Cards */}
+              <div className="grid grid-cols-1 sm:grid-cols-4 gap-3 sm:gap-4">
+                <div className="p-4 bg-white !rounded-none border border-slate-200 shadow-2xs">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2.5 bg-[#7F8C6A]/15 text-[#1E3B2F] !rounded-none border border-[#C8B48A]/40">
+                      <Building2 className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+                        Registered Entity
+                      </p>
+                      <p className="text-base font-black text-slate-900 mt-0.5 truncate max-w-[150px]">
+                        {myVerification?.institutionOrOrg || user?.name || 'Virtusa Technologies'}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="p-4 bg-white !rounded-none border border-slate-200 shadow-2xs">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2.5 bg-[#1E3B2F]/10 text-[#1E3B2F] !rounded-none border border-[#1E3B2F]/20">
+                      <ShieldCheck className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+                        Accreditation Status
+                      </p>
+                      <div className="mt-1">
+                        <VerificationStatusBadge status={myStatus} size="sm" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="p-4 bg-white !rounded-none border border-slate-200 shadow-2xs">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2.5 bg-[#C8B48A]/20 text-[#1E3B2F] !rounded-none border border-[#C8B48A]/50">
+                      <Briefcase className="w-5 h-5 text-[#C8B48A]" />
+                    </div>
+                    <div>
+                      <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+                        Business Registration
+                      </p>
+                      <p className="text-sm font-black text-slate-900 mt-0.5">
+                        {myVerification?.designationOrRegNo || 'BRN-PV0094821'}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="p-4 bg-white !rounded-none border border-slate-200 shadow-2xs">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2.5 bg-[#1E3B2F]/15 text-[#1E3B2F] !rounded-none border border-[#1E3B2F]/30">
+                      <Sparkles className="w-5 h-5 text-[#C8B48A]" />
+                    </div>
+                    <div>
+                      <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+                        Placement Trust Tier
+                      </p>
+                      <p className="text-xs font-black text-[#1E3B2F] uppercase mt-1">
+                        {myStatus === 'approved' ? 'Verified Tech Employer' : 'Pending Verification'}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Dedicated Company Verification Card */}
+              <div className="bg-white border border-slate-200 !rounded-none p-6 shadow-2xs space-y-5">
+                <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 border-b border-slate-100 pb-5">
+                  <div className="flex items-start gap-4">
+                    <div className="p-3.5 bg-[#7F8C6A]/15 text-[#1E3B2F] border border-[#C8B48A]/40 !rounded-none flex-shrink-0">
+                      <Building2 className="w-8 h-8" />
+                    </div>
+                    <div className="space-y-1.5">
+                      <div className="flex items-center gap-2.5 flex-wrap">
+                        <h3 className="font-extrabold text-slate-900 text-base">
+                          Corporate Employer Verification & Accreditation
+                        </h3>
+                        <VerificationStatusBadge status={myStatus} />
+                      </div>
+                      <p className="text-xs text-slate-600 max-w-2xl leading-relaxed">
+                        Verification certifies your corporate identity with South Eastern University of Sri Lanka and partner technology departments. Verified companies receive the <strong>Official Verified Employer badge</strong>, prioritized placement visibility in student algorithmic search matching, and direct access to university-endorsed candidate ratings.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-2 flex-shrink-0">
+                    <Button
+                      variant="primary"
+                      size="sm"
+                      onClick={() => setIsRequestModalOpen(true)}
+                      className="gap-1.5 text-xs !rounded-none !bg-[#1E3B2F] hover:!bg-[#152A22] !border-[#1E3B2F] text-[#F5F0E6] font-semibold shadow-xs"
+                    >
+                      <PlusCircle className="w-3.5 h-3.5" />
+                      {myStatus === 'approved' ? 'Update Credentials' : 'Request Verification'}
+                    </Button>
+                  </div>
+                </div>
+
+                {/* Company Accreditation Details Table */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs bg-slate-50/70 p-4 border border-slate-200 !rounded-none">
+                  <div>
+                    <span className="text-slate-500 font-semibold block">Registered Organization Name:</span>
+                    <strong className="text-slate-900 text-sm">
+                      {myVerification?.institutionOrOrg || user?.name || 'Virtusa Private Limited'}
+                    </strong>
+                  </div>
+
+                  <div>
+                    <span className="text-slate-500 font-semibold block">Business Registration Number (BRN) / Tax ID:</span>
+                    <strong className="text-slate-900 text-sm">
+                      {myVerification?.designationOrRegNo || 'BRN-PV0094821'}
+                    </strong>
+                  </div>
+
+                  <div>
+                    <span className="text-slate-500 font-semibold block">Accreditation Record Date:</span>
+                    <strong className="text-slate-900">
+                      {myVerification?.createdAt
+                        ? new Date(myVerification.createdAt).toLocaleDateString()
+                        : 'Active Registration Record'}
+                    </strong>
+                  </div>
+
+                  <div>
+                    <span className="text-slate-500 font-semibold block">Verification Documentation:</span>
+                    {myVerification?.proofDocumentUrl ? (
+                      <a
+                        href={myVerification.proofDocumentUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1 text-xs text-[#1E3B2F] hover:underline font-bold pt-0.5"
+                      >
+                        <ExternalLink className="w-3 h-3" />
+                        View Uploaded Business Registration Document
+                      </a>
+                    ) : (
+                      <span className="text-slate-400">Documentation verified on file</span>
+                    )}
+                  </div>
+                </div>
+
+                {myVerification?.adminNotes && (
+                  <div className="p-3 bg-[#7F8C6A]/15 border border-[#C8B48A]/40 !rounded-none text-xs text-[#1E3B2F]">
+                    <strong>Audit Remarks:</strong> {myVerification.adminNotes}
+                  </div>
+                )}
+              </div>
+            </div>
+          ) : companySubTab === 'metrics' ? (
+            <ReputationMetricsDashboard
+              onOpenReviewModal={() => setIsReviewModalOpen(true)}
+              refreshTrigger={refreshTrigger}
+            />
+          ) : (
+            renderReputationDirectory()
+          )}
+        </div>
+      )}
+
+      {/* VIEW B: ADMIN MODERATION QUEUE (Strictly Reserved for Admin Role) */}
+      {activePortal === 'admin' && isAdmin && (
         <div className="space-y-6">
           {/* Sub Navigation */}
           <div className="flex items-center gap-2 border-b border-gray-200 pb-2 overflow-x-auto">
@@ -284,7 +538,7 @@ export const VerificationRatingPage = () => {
               onClick={() => setAdminSubTab('queue')}
               className={`px-4 py-2 text-xs font-bold !rounded-none transition-all flex items-center gap-2 whitespace-nowrap ${
                 adminSubTab === 'queue'
-                  ? 'bg-blue-600 text-white shadow-xs'
+                  ? 'bg-[#1E3B2F] text-[#F5F0E6] shadow-xs'
                   : 'text-slate-600 hover:bg-slate-100'
               }`}
             >
@@ -297,7 +551,7 @@ export const VerificationRatingPage = () => {
               onClick={() => setAdminSubTab('metrics')}
               className={`px-4 py-2 text-xs font-bold !rounded-none transition-all flex items-center gap-2 whitespace-nowrap ${
                 adminSubTab === 'metrics'
-                  ? 'bg-blue-600 text-white shadow-xs'
+                  ? 'bg-[#1E3B2F] text-[#F5F0E6] shadow-xs'
                   : 'text-slate-600 hover:bg-slate-100'
               }`}
             >
@@ -310,7 +564,7 @@ export const VerificationRatingPage = () => {
               onClick={() => setAdminSubTab('directory')}
               className={`px-4 py-2 text-xs font-bold !rounded-none transition-all flex items-center gap-2 whitespace-nowrap ${
                 adminSubTab === 'directory'
-                  ? 'bg-blue-600 text-white shadow-xs'
+                  ? 'bg-[#1E3B2F] text-[#F5F0E6] shadow-xs'
                   : 'text-slate-600 hover:bg-slate-100'
               }`}
             >
@@ -320,21 +574,20 @@ export const VerificationRatingPage = () => {
           </div>
 
           {adminSubTab === 'queue' ? (
-            /* Admin Verification Queue */
             <AdminVerificationQueue refreshTrigger={refreshTrigger} />
           ) : adminSubTab === 'metrics' ? (
-            /* Interactive Reputation Analytics & Multi-Criteria Dashboard */
             <ReputationMetricsDashboard
               onOpenReviewModal={() => setIsReviewModalOpen(true)}
               refreshTrigger={refreshTrigger}
             />
           ) : (
-            /* Directory Audit within Admin */
             renderReputationDirectory()
           )}
         </div>
-      ) : (
-        /* ======================== REVIEWER PORTAL ======================== */
+      )}
+
+      {/* VIEW C: REVIEWER PORTAL (Academic Evaluations Workspace) */}
+      {activePortal === 'reviewer' && (
         <div className="space-y-6">
           {/* Sub Navigation */}
           <div className="flex items-center gap-2 border-b border-gray-200 pb-2 overflow-x-auto">
@@ -343,7 +596,7 @@ export const VerificationRatingPage = () => {
               onClick={() => setReviewerSubTab('workspace')}
               className={`px-4 py-2 text-xs font-bold !rounded-none transition-all flex items-center gap-2 whitespace-nowrap ${
                 reviewerSubTab === 'workspace'
-                  ? 'bg-blue-600 text-white shadow-xs'
+                  ? 'bg-[#1E3B2F] text-[#F5F0E6] shadow-xs'
                   : 'text-slate-600 hover:bg-slate-100'
               }`}
             >
@@ -356,7 +609,7 @@ export const VerificationRatingPage = () => {
               onClick={() => setReviewerSubTab('metrics')}
               className={`px-4 py-2 text-xs font-bold !rounded-none transition-all flex items-center gap-2 whitespace-nowrap ${
                 reviewerSubTab === 'metrics'
-                  ? 'bg-blue-600 text-white shadow-xs'
+                  ? 'bg-[#1E3B2F] text-[#F5F0E6] shadow-xs'
                   : 'text-slate-600 hover:bg-slate-100'
               }`}
             >
@@ -369,7 +622,7 @@ export const VerificationRatingPage = () => {
               onClick={() => setReviewerSubTab('directory')}
               className={`px-4 py-2 text-xs font-bold !rounded-none transition-all flex items-center gap-2 whitespace-nowrap ${
                 reviewerSubTab === 'directory'
-                  ? 'bg-blue-600 text-white shadow-xs'
+                  ? 'bg-[#1E3B2F] text-[#F5F0E6] shadow-xs'
                   : 'text-slate-600 hover:bg-slate-100'
               }`}
             >
@@ -379,13 +632,12 @@ export const VerificationRatingPage = () => {
           </div>
 
           {reviewerSubTab === 'workspace' ? (
-            /* Reviewer Workspace View */
             <div className="space-y-6">
               {/* 4 Reviewer Stats Cards */}
               <div className="grid grid-cols-1 sm:grid-cols-4 gap-3 sm:gap-4">
                 <div className="p-4 bg-white !rounded-none border border-slate-200 shadow-2xs">
                   <div className="flex items-center gap-3">
-                    <div className="p-2.5 bg-blue-50 text-blue-700 !rounded-none border border-blue-200">
+                    <div className="p-2.5 bg-[#7F8C6A]/15 text-[#1E3B2F] !rounded-none border border-[#C8B48A]/40">
                       <Award className="w-5 h-5" />
                     </div>
                     <div>
@@ -401,14 +653,14 @@ export const VerificationRatingPage = () => {
 
                 <div className="p-4 bg-white !rounded-none border border-slate-200 shadow-2xs">
                   <div className="flex items-center gap-3">
-                    <div className="p-2.5 bg-emerald-50 text-emerald-700 !rounded-none border border-emerald-200">
+                    <div className="p-2.5 bg-[#1E3B2F]/10 text-[#1E3B2F] !rounded-none border border-[#1E3B2F]/20">
                       <ShieldCheck className="w-5 h-5" />
                     </div>
                     <div>
                       <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
                         Credentials Status
                       </p>
-                      <p className="text-sm font-black text-emerald-700 uppercase mt-1">
+                      <p className="text-sm font-black text-[#1E3B2F] uppercase mt-1">
                         {myStatus === 'approved' ? 'Verified Faculty' : myStatus}
                       </p>
                     </div>
@@ -417,8 +669,8 @@ export const VerificationRatingPage = () => {
 
                 <div className="p-4 bg-white !rounded-none border border-slate-200 shadow-2xs">
                   <div className="flex items-center gap-3">
-                    <div className="p-2.5 bg-amber-50 text-amber-700 !rounded-none border border-amber-200">
-                      <Star className="w-5 h-5 fill-amber-400 text-amber-500" />
+                    <div className="p-2.5 bg-[#C8B48A]/20 text-[#1E3B2F] !rounded-none border border-[#C8B48A]/50">
+                      <Star className="w-5 h-5 fill-[#C8B48A] text-[#C8B48A]" />
                     </div>
                     <div>
                       <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
@@ -433,8 +685,8 @@ export const VerificationRatingPage = () => {
 
                 <div className="p-4 bg-white !rounded-none border border-slate-200 shadow-2xs">
                   <div className="flex items-center gap-3">
-                    <div className="p-2.5 bg-purple-50 text-purple-700 !rounded-none border border-purple-200">
-                      <Sparkles className="w-5 h-5" />
+                    <div className="p-2.5 bg-[#1E3B2F]/15 text-[#1E3B2F] !rounded-none border border-[#1E3B2F]/30">
+                      <Sparkles className="w-5 h-5 text-[#C8B48A]" />
                     </div>
                     <div>
                       <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
@@ -452,7 +704,7 @@ export const VerificationRatingPage = () => {
               <div className="bg-slate-50 border border-slate-200 !rounded-none p-4 shadow-2xs">
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                   <div className="flex items-start gap-3">
-                    <div className="p-3 !rounded-none bg-blue-100 text-blue-700 flex-shrink-0">
+                    <div className="p-3 !rounded-none bg-[#7F8C6A]/20 text-[#1E3B2F] flex-shrink-0">
                       <ShieldCheck className="w-6 h-6" />
                     </div>
                     <div className="space-y-1">
@@ -470,7 +722,7 @@ export const VerificationRatingPage = () => {
                           href={myVerification.proofDocumentUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1 text-xs text-blue-600 hover:underline pt-1 font-semibold"
+                          className="inline-flex items-center gap-1 text-xs text-[#1E3B2F] hover:underline pt-1 font-semibold"
                         >
                           <ExternalLink className="w-3 h-3" />
                           View Uploaded Faculty Proof Document
@@ -500,7 +752,7 @@ export const VerificationRatingPage = () => {
                     variant="primary"
                     size="sm"
                     onClick={() => setIsReviewModalOpen(true)}
-                    className="gap-1.5 text-xs !rounded-none !bg-blue-600 hover:!bg-blue-700 !border-blue-600 text-white font-semibold shadow-xs"
+                    className="gap-1.5 text-xs !rounded-none !bg-[#1E3B2F] hover:!bg-[#152A22] !border-[#1E3B2F] text-[#F5F0E6] font-semibold shadow-xs"
                   >
                     <PlusCircle className="w-3.5 h-3.5" /> Write New Review
                   </Button>
@@ -519,31 +771,25 @@ export const VerificationRatingPage = () => {
               </div>
             </div>
           ) : reviewerSubTab === 'metrics' ? (
-            /* Interactive Reputation Analytics & Multi-Criteria Dashboard */
             <ReputationMetricsDashboard
               onOpenReviewModal={() => setIsReviewModalOpen(true)}
               refreshTrigger={refreshTrigger}
             />
           ) : (
-            /* Directory Search within Reviewer */
             renderReputationDirectory()
           )}
         </div>
       )}
 
-      {/* ======================================================== */}
       {/* 5. Verification Request Modal */}
-      {/* ======================================================== */}
       <VerificationRequestModal
         isOpen={isRequestModalOpen}
         onClose={() => setIsRequestModalOpen(false)}
-        defaultType={activePortal === 'admin' ? 'company' : 'reviewer'}
+        defaultType={isCompany ? 'company' : isReviewer ? 'reviewer' : 'company'}
         onSuccess={handleVerificationSuccess}
       />
 
-      {/* ======================================================== */}
       {/* 6. Review Submission Modal */}
-      {/* ======================================================== */}
       <ReviewSubmissionModal
         isOpen={isReviewModalOpen}
         onClose={() => setIsReviewModalOpen(false)}
@@ -577,7 +823,7 @@ export const VerificationRatingPage = () => {
                 }}
                 className={`flex items-center gap-1.5 px-3 py-1.5 !rounded-none transition-all ${
                   searchTargetType === 'student'
-                    ? 'bg-blue-600 text-white shadow-xs font-bold'
+                    ? 'bg-[#1E3B2F] text-[#F5F0E6] shadow-xs font-bold'
                     : 'text-slate-700 hover:text-slate-900 hover:bg-slate-200/70'
                 }`}
               >
@@ -592,7 +838,7 @@ export const VerificationRatingPage = () => {
                 }}
                 className={`flex items-center gap-1.5 px-3 py-1.5 !rounded-none transition-all ${
                   searchTargetType === 'company'
-                    ? 'bg-blue-600 text-white shadow-xs font-bold'
+                    ? 'bg-[#1E3B2F] text-[#F5F0E6] shadow-xs font-bold'
                     : 'text-slate-700 hover:text-slate-900 hover:bg-slate-200/70'
                 }`}
               >
@@ -608,7 +854,7 @@ export const VerificationRatingPage = () => {
                 placeholder={`Search ${searchTargetType === 'student' ? 'students by name or email...' : 'companies by name or industry...'}`}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-9 pr-3 py-1.5 text-xs border border-gray-300 !rounded-none focus:outline-none focus:ring-1 focus:ring-blue-500 font-medium"
+                className="w-full pl-9 pr-3 py-1.5 text-xs border border-gray-300 !rounded-none focus:outline-none focus:ring-1 focus:ring-[#1E3B2F] font-medium"
               />
             </div>
           </div>
@@ -620,25 +866,25 @@ export const VerificationRatingPage = () => {
                 <div
                   key={target._id}
                   onClick={() => handleInspectTarget(target)}
-                  className="p-3 border border-slate-200 hover:border-blue-500 !rounded-none cursor-pointer hover:shadow-xs transition-all bg-white flex items-center justify-between"
+                  className="p-3 border border-slate-200 hover:border-[#1E3B2F] !rounded-none cursor-pointer hover:shadow-xs transition-all bg-white flex items-center justify-between"
                 >
                   <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 !rounded-none bg-blue-50 text-blue-700 border border-blue-200 flex items-center justify-center font-bold text-xs">
+                    <div className="w-9 h-9 !rounded-none bg-[#7F8C6A]/15 text-[#1E3B2F] border border-[#C8B48A]/40 flex items-center justify-center font-bold text-xs">
                       {target.name?.charAt(0)}
                     </div>
                     <div>
                       <p className="text-xs font-bold text-slate-900 leading-tight">{target.name}</p>
                       <p className="text-[11px] text-slate-400">
                         {searchTargetType === 'student'
-                          ? target.profile?.fieldOfStudy || target.email
+                          ? target.profile?.degree || target.email
                           : target.industry || 'Company'}
                       </p>
                     </div>
                   </div>
 
                   <div className="text-right">
-                    <span className="text-xs font-bold text-amber-500 flex items-center justify-end gap-0.5">
-                      <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
+                    <span className="text-xs font-bold text-[#C8B48A] flex items-center justify-end gap-0.5">
+                      <Star className="w-3.5 h-3.5 fill-[#C8B48A] text-[#C8B48A]" />
                       {Number(target.reputationScore || target.profile?.reputationScore || 5.0).toFixed(1)}
                     </span>
                     <span className="text-[10px] text-slate-400">
@@ -655,9 +901,9 @@ export const VerificationRatingPage = () => {
         {/* Inspected Target Multi-Criteria Details */}
         {selectedInspectTarget && (
           <div className="space-y-6">
-            <div className="flex items-center justify-between bg-blue-50/60 p-4 border border-blue-200 !rounded-none">
+            <div className="flex items-center justify-between bg-[#7F8C6A]/15 p-4 border border-[#C8B48A]/40 !rounded-none">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 !rounded-none bg-blue-600 text-white flex items-center justify-center font-bold text-sm">
+                <div className="w-10 h-10 !rounded-none bg-[#1E3B2F] text-[#F5F0E6] flex items-center justify-center font-bold text-sm">
                   {selectedInspectTarget.name?.charAt(0)}
                 </div>
                 <div>
@@ -673,15 +919,17 @@ export const VerificationRatingPage = () => {
               </div>
 
               <div className="flex items-center gap-2">
-                <Button
-                  variant="primary"
-                  size="sm"
-                  onClick={() => setIsReviewModalOpen(true)}
-                  className="text-xs !rounded-none !bg-blue-600 hover:!bg-blue-700 !border-blue-600 text-white font-semibold shadow-xs"
-                >
-                  <Sparkles className="w-3.5 h-3.5 mr-1" />
-                  Evaluate {selectedInspectTarget.name.split(' ')[0]}
-                </Button>
+                {!isCompany && (
+                  <Button
+                    variant="primary"
+                    size="sm"
+                    onClick={() => setIsReviewModalOpen(true)}
+                    className="text-xs !rounded-none !bg-[#1E3B2F] hover:!bg-[#152A22] !border-[#1E3B2F] text-[#F5F0E6] font-semibold shadow-xs"
+                  >
+                    <Sparkles className="w-3.5 h-3.5 mr-1 text-[#C8B48A]" />
+                    Evaluate {selectedInspectTarget.name.split(' ')[0]}
+                  </Button>
+                )}
 
                 <Button
                   variant="secondary"

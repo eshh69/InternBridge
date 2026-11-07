@@ -64,9 +64,9 @@ export const StarRating = ({
               <Star
                 className={`${currentSize} ${
                   isFilled
-                    ? 'fill-amber-400 text-amber-400'
+                    ? 'fill-[#C8B48A] text-[#C8B48A]'
                     : isHalf
-                    ? 'fill-amber-200 text-amber-400'
+                    ? 'fill-[#C8B48A]/50 text-[#C8B48A]'
                     : 'text-gray-300'
                 }`}
               />
