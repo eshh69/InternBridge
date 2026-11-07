@@ -496,6 +496,7 @@ export const StudentPortfolioPage = () => {
       <ProfileHeader
         profile={profile}
         user={user}
+        strengthData={strengthData}
         onEditClick={() => setIsEditModalOpen(true)}
         onUploadAvatar={handleUploadAvatar}
         onDeleteAvatar={handleDeleteAvatar}
@@ -507,7 +508,7 @@ export const StudentPortfolioPage = () => {
         isDeletingCv={isDeletingCv}
       />
 
-      {/* 2. Key Overview Section (Matching Screenshot's KPI Metric Cards) */}
+      {/* 3. Key Overview Section: 5 Separate Single Metric Cards in a Grid */}
       <div className="space-y-3">
         <div className="flex items-center justify-between pb-1">
           <div className="flex items-center gap-2">
@@ -522,7 +523,7 @@ export const StudentPortfolioPage = () => {
           </span>
         </div>
 
-        {/* 5 KPI Metric Cards Row */}
+        {/* 5 Individual KPI Metric Cards Row */}
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
           {kpiCards.map((card, idx) => (
             <div
@@ -559,11 +560,9 @@ export const StudentPortfolioPage = () => {
           ))}
         </div>
       </div>
-
-      {/* 3. Main Content Grid (Two-Column Asymmetric Layout) */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        {/* Left Column (8 cols): Primary Sections */}
-        <div className="lg:col-span-8 space-y-8">
+      
+{/* 4. Primary Portfolio Sections 01 through 06 (Full Width) */}
+      <div className="w-full space-y-8">
           {/* SECTION 01: EDUCATION & QUALIFICATIONS */}
           <section className="space-y-3 bg-white border border-[#C8B48A]/35 rounded-2xl p-5 sm:p-6 shadow-2xs">
             <div className="flex items-center justify-between border-b border-gray-100 pb-3">
@@ -696,174 +695,6 @@ export const StudentPortfolioPage = () => {
             </section>
           )}
         </div>
-
-        {/* Right Column (4 cols): Quick Actions & Career Tools (Matching Screenshot) */}
-        <div className="lg:col-span-4 space-y-6 lg:sticky lg:top-24">
-          {/* Quick Actions Card */}
-          <div className="bg-white border border-[#C8B48A]/40 rounded-2xl p-5 shadow-2xs space-y-4">
-            <div className="flex items-center justify-between border-b border-gray-100 pb-3">
-              <div className="flex items-center gap-2">
-                <div className="w-7 h-7 rounded-lg bg-[#7F8C6A]/15 border border-[#7F8C6A]/30 flex items-center justify-center">
-                  <Zap className="w-4 h-4 text-[#1E3B2F]" />
-                </div>
-                <div>
-                  <h3 className="text-sm font-extrabold text-gray-900">Quick Actions</h3>
-                  <p className="text-[11px] text-gray-500">Accelerate your internship search</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Hidden resume input for quick action */}
-            <input
-              ref={sideCvInputRef}
-              type="file"
-              accept=".pdf,.doc,.docx"
-              onChange={(e) => {
-                if (e.target.files && e.target.files[0]) {
-                  handleUploadCv(e.target.files[0]);
-                  e.target.value = '';
-                }
-              }}
-              className="hidden"
-            />
-
-            {/* Action Item 1: Upload / Replace CV */}
-            <button
-              type="button"
-              onClick={() => sideCvInputRef.current?.click()}
-              disabled={isUploadingCv}
-              className="w-full text-left p-3.5 rounded-xl border border-gray-200/90 hover:border-[#1E3B2F]/40 hover:bg-[#F5F0E6]/30 flex items-center justify-between gap-3 transition-all group"
-            >
-              <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-xl bg-[#7F8C6A]/15 text-[#1E3B2F] flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform">
-                  <FileText className="w-4 h-4" />
-                </div>
-                <div>
-                  <p className="text-xs font-bold text-gray-900 group-hover:text-[#1E3B2F] transition-colors">
-                    {profile?.cvUrl ? 'Replace Resume (CV)' : 'Upload Resume (CV)'}
-                  </p>
-                  <p className="text-[11px] text-gray-500">
-                    {isUploadingCv ? 'Uploading to cloud...' : 'Reach verified corporate recruiters'}
-                  </p>
-                </div>
-              </div>
-              <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-[#1E3B2F] transition-colors" />
-            </button>
-
-            {/* Action Item 2: Edit Profile */}
-            <button
-              type="button"
-              onClick={() => setIsEditModalOpen(true)}
-              className="w-full text-left p-3.5 rounded-xl border border-gray-200/90 hover:border-[#1E3B2F]/40 hover:bg-[#F5F0E6]/30 flex items-center justify-between gap-3 transition-all group"
-            >
-              <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-xl bg-[#C8B48A]/25 text-[#1E3B2F] flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform">
-                  <Sparkles className="w-4 h-4" />
-                </div>
-                <div>
-                  <p className="text-xs font-bold text-gray-900 group-hover:text-[#1E3B2F] transition-colors">
-                    Update Profile Details
-                  </p>
-                  <p className="text-[11px] text-gray-500">Keep bio, GPA, and socials updated</p>
-                </div>
-              </div>
-              <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-[#1E3B2F] transition-colors" />
-            </button>
-
-            {/* Action Item 3: Explore Internships */}
-            <button
-              type="button"
-              onClick={() => navigate('/search')}
-              className="w-full text-left p-3.5 rounded-xl border border-gray-200/90 hover:border-[#1E3B2F]/40 hover:bg-[#F5F0E6]/30 flex items-center justify-between gap-3 transition-all group"
-            >
-              <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-xl bg-[#1E3B2F]/10 text-[#1E3B2F] flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform">
-                  <Search className="w-4 h-4" />
-                </div>
-                <div>
-                  <p className="text-xs font-bold text-gray-900 group-hover:text-[#1E3B2F] transition-colors">
-                    Search Internships
-                  </p>
-                  <p className="text-[11px] text-gray-500">Discover top algorithmic matches</p>
-                </div>
-              </div>
-              <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-[#1E3B2F] transition-colors" />
-            </button>
-
-            {/* Action Item 4: Real-time Messages */}
-            <button
-              type="button"
-              onClick={() => navigate('/chat')}
-              className="w-full text-left p-3.5 rounded-xl border border-gray-200/90 hover:border-[#1E3B2F]/40 hover:bg-[#F5F0E6]/30 flex items-center justify-between gap-3 transition-all group"
-            >
-              <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-xl bg-[#7F8C6A]/15 text-[#1E3B2F] flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform">
-                  <MessageSquare className="w-4 h-4" />
-                </div>
-                <div>
-                  <p className="text-xs font-bold text-gray-900 group-hover:text-[#1E3B2F] transition-colors">
-                    Direct Recruiter Chat
-                  </p>
-                  <p className="text-[11px] text-gray-500">Connect with hiring managers live</p>
-                </div>
-              </div>
-              <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-[#1E3B2F] transition-colors" />
-            </button>
-          </div>
-
-          {/* Profile Strength Card */}
-          <div className="bg-gradient-to-br from-[#F5F0E6] to-[#EAE2D2] border border-[#C8B48A]/40 rounded-2xl p-5 shadow-2xs space-y-3.5">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-extrabold uppercase tracking-wider text-[#1E3B2F] flex items-center gap-1.5">
-                <ShieldCheck className="w-3.5 h-3.5 text-[#1E3B2F]" />
-                Portfolio Strength
-              </span>
-              <span className={`text-[11px] font-bold px-2.5 py-0.5 rounded-lg border shadow-2xs ${strengthData.badgeStyle}`}>
-                {strengthData.label}
-              </span>
-            </div>
-
-            {/* Progress Bar */}
-            <div className="w-full bg-[#1E3B2F]/10 rounded-full h-2.5 overflow-hidden p-0.5">
-              <div
-                className="bg-gradient-to-r from-[#1E3B2F] to-[#7F8C6A] h-full rounded-full transition-all duration-700 shadow-xs"
-                style={{
-                  width: `${strengthData.score}%`,
-                }}
-              />
-            </div>
-
-            {/* Granular Breakdown Chips */}
-            <div className="grid grid-cols-3 gap-1.5 pt-1 text-[10px] font-semibold text-gray-700">
-              <div className="bg-white/80 rounded-md px-2 py-1 border border-[#C8B48A]/30 flex justify-between">
-                <span>Projects</span>
-                <span className="text-[#1E3B2F] font-bold">{strengthData.breakdown.projects}/25</span>
-              </div>
-              <div className="bg-white/80 rounded-md px-2 py-1 border border-[#C8B48A]/30 flex justify-between">
-                <span>Faculty</span>
-                <span className="text-[#1E3B2F] font-bold">{strengthData.breakdown.faculty}/20</span>
-              </div>
-              <div className="bg-white/80 rounded-md px-2 py-1 border border-[#C8B48A]/30 flex justify-between">
-                <span>Skills</span>
-                <span className="text-[#1E3B2F] font-bold">{strengthData.breakdown.skills}/20</span>
-              </div>
-              <div className="bg-white/80 rounded-md px-2 py-1 border border-[#C8B48A]/30 flex justify-between">
-                <span>Academic</span>
-                <span className="text-[#1E3B2F] font-bold">{strengthData.breakdown.academic}/20</span>
-              </div>
-              <div className="bg-white/80 rounded-md px-2 py-1 border border-[#C8B48A]/30 flex justify-between col-span-2">
-                <span>Credentials & Links</span>
-                <span className="text-[#1E3B2F] font-bold">{strengthData.breakdown.credentials}/15</span>
-              </div>
-            </div>
-
-            {/* Contextual Tip */}
-            <div className="bg-white/90 rounded-xl p-2.5 border border-[#C8B48A]/40 text-[11px] text-gray-700 leading-relaxed flex items-start gap-2 shadow-2xs">
-              <p>{strengthData.tip}</p>
-            </div>
-          </div>
-        </div>
-      </div>
 
       {/* Edit Profile Modal */}
       <ProfileEditModal

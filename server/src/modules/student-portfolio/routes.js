@@ -4,6 +4,7 @@ import multer from 'multer';
 import { protect, authorize } from '../../middleware/auth.js';
 import { StudentProfile } from '../../models/StudentProfile.js';
 import { User } from '../../models/User.js';
+import { Company } from '../../models/Company.js';
 import { uploadFileToStorage, deleteFileFromStorage } from '../../services/storageService.js';
 import { sendSuccess, sendError } from '../../utils/apiResponse.js';
 
@@ -509,6 +510,29 @@ router.delete('/cv', protect, authorize('student'), async (req, res, next) => {
 
     return sendSuccess(res, 200, 'CV removed successfully', {
       profile: updatedProfile,
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+// @desc    Search registered companies on InternBridge
+// @route   GET /api/v1/students/companies/search
+// @access  Private
+router.get('/companies/search', protect, async (req, res, next) => {
+  try {
+    const { query } = req.query;
+    const filter = {};
+    if (query && typeof query === 'string' && query.trim()) {
+      filter.name = { $regex: query.trim(), $options: 'i' };
+    }
+    const companies = await Company.find(filter)
+      .select('_id name logoUrl website industry location verificationStatus')
+      .limit(10)
+      .lean();
+
+    return sendSuccess(res, 200, 'Companies retrieved successfully', {
+      companies: companies || [],
     });
   } catch (error) {
     next(error);

@@ -111,11 +111,16 @@ const studentProfileSchema = new mongoose.Schema(
       {
         title: { type: String, required: true },
         company: { type: String, required: true },
-        location: { type: String },
+        companyId: { type: mongoose.Schema.Types.ObjectId, ref: 'Company', default: null },
+        companyLogo: { type: String, default: '' },
+        companyWebsite: { type: String, default: '' },
+        employmentType: { type: String, default: 'Internship' },
+        location: { type: String, default: '' },
         startDate: { type: Date },
         endDate: { type: Date },
         isCurrent: { type: Boolean, default: false },
-        description: { type: String },
+        description: { type: String, default: '' },
+        skills: [{ type: String }],
       },
     ],
     links: {
