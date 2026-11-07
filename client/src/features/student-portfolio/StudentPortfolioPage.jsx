@@ -270,11 +270,158 @@ export const StudentPortfolioPage = () => {
   const experienceCount = profile?.experience?.length || 0;
   const credentialsCount = (profile?.certificates?.length || 0) + (profile?.badges?.length || 0);
   const currentGpa = profile?.gpa ? Number(profile.gpa).toFixed(2) : '3.82';
-  const studentUserId =
+    const studentUserId =
     user?.id ||
     user?._id ||
     profile?.user?._id ||
     (typeof profile?.user === 'string' ? profile?.user : null);
+
+  // Comprehensive Challenging Portfolio Readiness Score Calculation (100-Point Model)
+  const calculatePortfolioStrength = (profile, user) => {
+    if (!profile) {
+      return {
+        score: 40,
+        tier: 'Developing',
+        label: 'Developing (40%)',
+        badgeStyle: 'bg-gray-100 text-gray-700 border-gray-300',
+        tip: '💡 Complete your core profile information to build strength.',
+        breakdown: { projects: 0, faculty: 0, academic: 0, skills: 0, credentials: 0 },
+      };
+    }
+
+    let score = 0;
+
+    // 1. Demonstrated Projects Portfolio (Max 25 pts) — Min 3 projects required for full volume marks
+    const projects = profile.projects || [];
+    const pCount = projects.length;
+    let projectPts = 0;
+    if (pCount >= 3) projectPts += 12;
+    else if (pCount === 2) projectPts += 8;
+    else if (pCount === 1) projectPts += 4;
+
+    const hasGithubProject = projects.some((p) => Boolean(p?.githubUrl && p.githubUrl.trim()));
+    if (hasGithubProject) projectPts += 7;
+
+    const hasLiveOrDemo = projects.some((p) => Boolean(p?.projectUrl && p.projectUrl.trim()));
+    if (hasLiveOrDemo) projectPts += 6;
+    score += Math.min(25, projectPts);
+
+    // 2. Verified Faculty / Third-Party Review (Max 20 pts)
+    const reviewCount = profile.reviewCount || 0;
+    const reputationScore = profile.reputationScore || 0;
+    let reviewPts = 0;
+    if (reviewCount >= 1) reviewPts += 10;
+    if (reputationScore >= 80) reviewPts += 10;
+    else if (reputationScore >= 60) reviewPts += 6;
+    else if (reputationScore > 0) reviewPts += 3;
+    score += Math.min(20, reviewPts);
+
+    // 3. Academic Integrity & GPA (Max 20 pts)
+    let academicPts = 0;
+    if (profile.degree && profile.university) academicPts += 5;
+    const parsedGpa = profile.gpa ? parseFloat(profile.gpa) : null;
+    if (parsedGpa !== null && !isNaN(parsedGpa)) {
+      if (parsedGpa >= 3.7) academicPts += 15;
+      else if (parsedGpa >= 3.3) academicPts += 10;
+      else if (parsedGpa >= 3.0) academicPts += 6;
+      else academicPts += 3;
+    } else {
+      academicPts += 5;
+    }
+    score += Math.min(20, academicPts);
+
+    // 4. Technical Skill Breadth & Depth (Max 20 pts)
+    const skills = profile.skills || [];
+    const sCount = skills.length;
+    let skillPts = 0;
+    if (sCount >= 8) skillPts += 10;
+    else if (sCount >= 5) skillPts += 7;
+    else if (sCount >= 1) skillPts += 4;
+
+    const skillStrings = skills.map((s) => (typeof s === 'string' ? s : s?.name || '').toLowerCase());
+    const hasWebOrFrontend = skillStrings.some((s) =>
+      /react|vue|angular|html|css|tailwind|javascript|typescript|next/.test(s)
+    );
+    const hasBackendOrDb = skillStrings.some((s) =>
+      /node|express|python|java|sql|mongo|postgres|c#|\.net|php|django|spring/.test(s)
+    );
+    if (hasWebOrFrontend && hasBackendOrDb) {
+      skillPts += 10;
+    } else if (sCount >= 4) {
+      skillPts += 5;
+    }
+    score += Math.min(20, skillPts);
+
+    // 5. Professional Credentials & Online Presence (Max 15 pts)
+    let credPts = 0;
+    if (profile.cvUrl) credPts += 5;
+    const hasAvatar = Boolean(user?.avatarUrl || profile.user?.avatarUrl);
+    if (hasAvatar) credPts += 5;
+    const links = profile.links || {};
+    if (links.github || links.linkedin || links.portfolio) credPts += 5;
+    score += Math.min(15, credPts);
+
+    const finalScore = Math.min(100, Math.max(10, Math.round(score)));
+
+    // Tier definitions & Smart Hint
+    let tier = 'Developing';
+    let label = `Developing (${finalScore}%)`;
+    let badgeStyle = 'bg-gray-100 text-gray-700 border-gray-300';
+    let tip = '';
+
+    if (finalScore >= 90) {
+      tier = 'Elite';
+      label = `Elite (${finalScore}%)`;
+      badgeStyle = 'bg-[#1E3B2F] text-[#F5F0E6] border-[#152A22]';
+      tip = '🌟 Exceptional standing! Top tier priority in recruiter search algorithms.';
+    } else if (finalScore >= 75) {
+      tier = 'Advanced';
+      label = `Advanced (${finalScore}%)`;
+      badgeStyle = 'bg-[#7F8C6A]/25 text-[#1E3B2F] border-[#7F8C6A]/40';
+      if (reviewCount === 0) {
+        tip = '💡 Tip: Obtain 1 faculty endorsement to unlock Elite (90%+) status!';
+      } else if (sCount < 8) {
+        tip = `💡 Tip: Expand skills to 8+ competencies to reach Elite status.`;
+      } else {
+        tip = '💡 Tip: Add live demo links to your projects to maximize score.';
+      }
+    } else if (finalScore >= 50) {
+      tier = 'Intermediate';
+      label = `Intermediate (${finalScore}%)`;
+      badgeStyle = 'bg-amber-50 text-amber-900 border-amber-300';
+      if (pCount < 3) {
+        tip = `💡 Tip: Add ${3 - pCount} more featured project(s) to reach 3+ projects.`;
+      } else if (reviewCount === 0) {
+        tip = '💡 Tip: Request a faculty evaluation from Section 06 to boost standing.';
+      } else if (!profile.cvUrl) {
+        tip = '💡 Tip: Upload your resume (CV) to boost standing.';
+      } else {
+        tip = '💡 Tip: Add more verified skills and project demos to reach Advanced tier.';
+      }
+    } else {
+      tier = 'Developing';
+      label = `Developing (${finalScore}%)`;
+      badgeStyle = 'bg-gray-100 text-gray-700 border-gray-300';
+      tip = '💡 Tip: Add 3+ featured projects, skills, and upload your CV to improve.';
+    }
+
+    return {
+      score: finalScore,
+      tier,
+      label,
+      badgeStyle,
+      tip,
+      breakdown: {
+        projects: Math.min(25, projectPts),
+        faculty: Math.min(20, reviewPts),
+        academic: Math.min(20, academicPts),
+        skills: Math.min(20, skillPts),
+        credentials: Math.min(15, credPts),
+      },
+    };
+  };
+
+  const strengthData = calculatePortfolioStrength(profile, user);
 
   const kpiCards = [
     {
@@ -665,29 +812,55 @@ export const StudentPortfolioPage = () => {
           </div>
 
           {/* Profile Strength Card */}
-          <div className="bg-gradient-to-br from-[#F5F0E6] to-[#EAE2D2] border border-[#C8B48A]/40 rounded-2xl p-5 shadow-2xs space-y-3">
+          <div className="bg-gradient-to-br from-[#F5F0E6] to-[#EAE2D2] border border-[#C8B48A]/40 rounded-2xl p-5 shadow-2xs space-y-3.5">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-extrabold uppercase tracking-wider text-[#1E3B2F]">
+              <span className="text-xs font-extrabold uppercase tracking-wider text-[#1E3B2F] flex items-center gap-1.5">
+                <ShieldCheck className="w-3.5 h-3.5 text-[#1E3B2F]" />
                 Portfolio Strength
               </span>
-              <span className="text-xs font-bold text-[#1E3B2F] bg-white px-2 py-0.5 rounded-md border border-[#C8B48A]/40">
-                {profile?.cvUrl && skillsCount >= 5 && projectsCount >= 1 ? 'Strong (95%)' : 'Good (80%)'}
+              <span className={`text-[11px] font-bold px-2.5 py-0.5 rounded-lg border shadow-2xs ${strengthData.badgeStyle}`}>
+                {strengthData.label}
               </span>
             </div>
 
             {/* Progress Bar */}
-            <div className="w-full bg-[#1E3B2F]/10 rounded-full h-2 overflow-hidden">
+            <div className="w-full bg-[#1E3B2F]/10 rounded-full h-2.5 overflow-hidden p-0.5">
               <div
-                className="bg-[#1E3B2F] h-2 rounded-full transition-all duration-500"
+                className="bg-gradient-to-r from-[#1E3B2F] to-[#7F8C6A] h-full rounded-full transition-all duration-700 shadow-xs"
                 style={{
-                  width: `${profile?.cvUrl && skillsCount >= 5 && projectsCount >= 1 ? 95 : 80}%`,
+                  width: `${strengthData.score}%`,
                 }}
               />
             </div>
 
-            <p className="text-[11px] text-gray-600 leading-relaxed">
-              Your profile is verified and prioritized for algorithmic candidate matching by partner companies.
-            </p>
+            {/* Granular Breakdown Chips */}
+            <div className="grid grid-cols-3 gap-1.5 pt-1 text-[10px] font-semibold text-gray-700">
+              <div className="bg-white/80 rounded-md px-2 py-1 border border-[#C8B48A]/30 flex justify-between">
+                <span>Projects</span>
+                <span className="text-[#1E3B2F] font-bold">{strengthData.breakdown.projects}/25</span>
+              </div>
+              <div className="bg-white/80 rounded-md px-2 py-1 border border-[#C8B48A]/30 flex justify-between">
+                <span>Faculty</span>
+                <span className="text-[#1E3B2F] font-bold">{strengthData.breakdown.faculty}/20</span>
+              </div>
+              <div className="bg-white/80 rounded-md px-2 py-1 border border-[#C8B48A]/30 flex justify-between">
+                <span>Skills</span>
+                <span className="text-[#1E3B2F] font-bold">{strengthData.breakdown.skills}/20</span>
+              </div>
+              <div className="bg-white/80 rounded-md px-2 py-1 border border-[#C8B48A]/30 flex justify-between">
+                <span>Academic</span>
+                <span className="text-[#1E3B2F] font-bold">{strengthData.breakdown.academic}/20</span>
+              </div>
+              <div className="bg-white/80 rounded-md px-2 py-1 border border-[#C8B48A]/30 flex justify-between col-span-2">
+                <span>Credentials & Links</span>
+                <span className="text-[#1E3B2F] font-bold">{strengthData.breakdown.credentials}/15</span>
+              </div>
+            </div>
+
+            {/* Contextual Tip */}
+            <div className="bg-white/90 rounded-xl p-2.5 border border-[#C8B48A]/40 text-[11px] text-gray-700 leading-relaxed flex items-start gap-2 shadow-2xs">
+              <p>{strengthData.tip}</p>
+            </div>
           </div>
         </div>
       </div>
