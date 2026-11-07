@@ -168,11 +168,11 @@ export const ReviewSubmissionModal = ({
               }}
               className={`flex items-center justify-center gap-2 py-2 px-3 text-xs font-semibold !rounded-none border transition-all ${
                 targetType === 'student'
-                  ? 'bg-blue-50 border-blue-600 text-blue-700 font-bold shadow-xs'
+                  ? 'bg-[#7F8C6A]/15 border-[#1E3B2F] text-[#1E3B2F] font-bold shadow-xs'
                   : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50'
               }`}
             >
-              <User className="w-3.5 h-3.5 text-blue-600" />
+              <User className="w-3.5 h-3.5 text-[#1E3B2F]" />
               Evaluate Student Candidate
             </button>
 
@@ -184,11 +184,11 @@ export const ReviewSubmissionModal = ({
               }}
               className={`flex items-center justify-center gap-2 py-2 px-3 text-xs font-semibold !rounded-none border transition-all ${
                 targetType === 'company'
-                  ? 'bg-blue-50 border-blue-600 text-blue-700 font-bold shadow-xs'
+                  ? 'bg-[#7F8C6A]/15 border-[#1E3B2F] text-[#1E3B2F] font-bold shadow-xs'
                   : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50'
               }`}
             >
-              <Building2 className="w-3.5 h-3.5 text-blue-600" />
+              <Building2 className="w-3.5 h-3.5 text-[#1E3B2F]" />
               Evaluate Corporate Partner
             </button>
           </div>
@@ -201,9 +201,9 @@ export const ReviewSubmissionModal = ({
           </label>
 
           {selectedTarget ? (
-            <div className="flex items-center justify-between p-3 bg-blue-50/70 border border-blue-200 !rounded-none">
+            <div className="flex items-center justify-between p-3 bg-[#7F8C6A]/15 border border-[#C8B48A]/40 !rounded-none">
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 !rounded-none bg-blue-600 text-white flex items-center justify-center font-bold text-xs">
+                <div className="w-8 h-8 !rounded-none bg-[#1E3B2F] text-[#F5F0E6] flex items-center justify-center font-bold text-xs">
                   {selectedTarget.name?.charAt(0) || 'T'}
                 </div>
                 <div>
@@ -219,7 +219,7 @@ export const ReviewSubmissionModal = ({
                 variant="ghost"
                 size="sm"
                 onClick={() => setSelectedTarget(null)}
-                className="text-xs text-blue-600 hover:text-blue-800 !rounded-none font-semibold"
+                className="text-xs text-[#1E3B2F] hover:text-[#152A22] !rounded-none font-semibold"
               >
                 Change Target
               </Button>
@@ -233,7 +233,7 @@ export const ReviewSubmissionModal = ({
                   placeholder={`Search ${targetType === 'student' ? 'students by name or email...' : 'companies by name or industry...'}`}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-9 pr-3 py-1.5 text-xs border border-gray-300 !rounded-none focus:outline-none focus:ring-1 focus:ring-blue-500 font-medium"
+                  className="w-full pl-9 pr-3 py-1.5 text-xs border border-gray-300 !rounded-none focus:outline-none focus:ring-1 focus:ring-[#1E3B2F] font-medium"
                 />
               </div>
 
@@ -251,7 +251,7 @@ export const ReviewSubmissionModal = ({
                       key={target._id}
                       type="button"
                       onClick={() => setSelectedTarget(target)}
-                      className="w-full text-left p-2.5 hover:bg-blue-50/50 flex items-center justify-between transition-colors"
+                      className="w-full text-left p-2.5 hover:bg-[#7F8C6A]/10 flex items-center justify-between transition-colors"
                     >
                       <div className="flex items-center gap-2">
                         <div className="w-6 h-6 !rounded-none bg-slate-200 text-slate-700 flex items-center justify-center font-bold text-xs">
@@ -266,7 +266,7 @@ export const ReviewSubmissionModal = ({
                           </p>
                         </div>
                       </div>
-                      <span className="text-[10px] font-bold px-2 py-0.5 bg-blue-100 text-blue-700 uppercase tracking-wider">
+                      <span className="text-[10px] font-bold px-2 py-0.5 bg-[#7F8C6A]/20 text-[#1E3B2F] uppercase tracking-wider">
                         Select
                       </span>
                     </button>
@@ -285,7 +285,7 @@ export const ReviewSubmissionModal = ({
             </span>
             <div className="flex items-center gap-1.5">
               <span className="text-xs text-slate-500">Overall Rating:</span>
-              <span className="text-sm font-extrabold text-blue-700">{computedOverall}</span>
+              <span className="text-sm font-extrabold text-[#1E3B2F]">{computedOverall}</span>
               <span className="text-xs text-slate-400">/ 5.0</span>
             </div>
           </div>
@@ -363,7 +363,7 @@ export const ReviewSubmissionModal = ({
             }
             value={comments}
             onChange={(e) => setComments(e.target.value)}
-            className="w-full px-3 py-2 text-xs border border-gray-300 !rounded-none shadow-2xs focus:outline-none focus:ring-1 focus:ring-blue-500"
+            className="w-full px-3 py-2 text-xs border border-gray-300 !rounded-none shadow-2xs focus:outline-none focus:ring-1 focus:ring-[#1E3B2F]"
           />
         </div>
 
@@ -377,7 +377,7 @@ export const ReviewSubmissionModal = ({
             variant="primary"
             isLoading={submitting}
             disabled={!selectedTarget}
-            className="text-xs !rounded-none !bg-blue-600 hover:!bg-blue-700 !border-blue-600 text-white font-semibold shadow-xs"
+            className="text-xs !rounded-none !bg-[#1E3B2F] hover:!bg-[#152A22] !border-[#1E3B2F] text-[#F5F0E6] font-semibold shadow-xs"
           >
             Publish Verified Review
           </Button>

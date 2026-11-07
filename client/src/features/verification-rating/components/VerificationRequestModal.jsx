@@ -128,11 +128,11 @@ export const VerificationRequestModal = ({
               onClick={() => handleTypeChange('reviewer')}
               className={`flex items-center justify-center gap-2 py-2 px-3 text-xs font-semibold !rounded-none border transition-all ${
                 verificationType === 'reviewer'
-                  ? 'bg-blue-50 border-blue-600 text-blue-700 font-bold shadow-xs'
+                  ? 'bg-[#7F8C6A]/15 border-[#1E3B2F] text-[#1E3B2F] font-bold shadow-xs'
                   : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50'
               }`}
             >
-              <GraduationCap className="w-4 h-4 text-blue-600" />
+              <GraduationCap className="w-4 h-4 text-[#1E3B2F]" />
               Academic Reviewer
             </button>
 
@@ -141,11 +141,11 @@ export const VerificationRequestModal = ({
               onClick={() => handleTypeChange('company')}
               className={`flex items-center justify-center gap-2 py-2 px-3 text-xs font-semibold !rounded-none border transition-all ${
                 verificationType === 'company'
-                  ? 'bg-blue-50 border-blue-600 text-blue-700 font-bold shadow-xs'
+                  ? 'bg-[#7F8C6A]/15 border-[#1E3B2F] text-[#1E3B2F] font-bold shadow-xs'
                   : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50'
               }`}
             >
-              <Building2 className="w-4 h-4 text-blue-600" />
+              <Building2 className="w-4 h-4 text-[#1E3B2F]" />
               Corporate Company
             </button>
           </div>
@@ -178,10 +178,10 @@ export const VerificationRequestModal = ({
           <label className="block text-xs font-semibold text-gray-700 mb-1">
             Proof Document (Certificate of Incorporation, Faculty ID, or Appointment Letter)
           </label>
-          <div className="mt-1 flex justify-center px-6 pt-4 pb-5 border-2 border-gray-300 border-dashed !rounded-none hover:border-blue-500 transition-colors bg-gray-50/50">
+          <div className="mt-1 flex justify-center px-6 pt-4 pb-5 border-2 border-gray-300 border-dashed !rounded-none hover:border-[#1E3B2F] transition-colors bg-gray-50/50">
             <div className="space-y-1.5 text-center">
               {file ? (
-                <div className="flex items-center justify-center gap-2 text-blue-600">
+                <div className="flex items-center justify-center gap-2 text-[#1E3B2F]">
                   <FileText className="w-7 h-7" />
                   <div className="text-left">
                     <p className="text-xs font-bold text-gray-900">{file.name}</p>
@@ -190,11 +190,11 @@ export const VerificationRequestModal = ({
                 </div>
               ) : (
                 <>
-                  <UploadCloud className="mx-auto h-8 w-8 text-blue-500" />
+                  <UploadCloud className="mx-auto h-8 w-8 text-[#1E3B2F]" />
                   <div className="flex text-xs text-gray-600 justify-center">
                     <label
                       htmlFor="proof-upload"
-                      className="relative cursor-pointer !rounded-none font-bold text-blue-600 hover:text-blue-500 focus-within:outline-none"
+                      className="relative cursor-pointer !rounded-none font-bold text-[#1E3B2F] hover:text-[#152A22] focus-within:outline-none"
                     >
                       <span>Upload Proof Document</span>
                       <input
@@ -232,7 +232,7 @@ export const VerificationRequestModal = ({
             type="submit"
             variant="primary"
             isLoading={loading}
-            className="text-xs !rounded-none !bg-blue-600 hover:!bg-blue-700 !border-blue-600 text-white font-semibold shadow-xs"
+            className="text-xs !rounded-none !bg-[#1E3B2F] hover:!bg-[#152A22] !border-[#1E3B2F] text-[#F5F0E6] font-semibold shadow-xs"
           >
             Submit for Verification
           </Button>
