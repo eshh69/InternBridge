@@ -246,7 +246,7 @@ export const InternshipFormModal = ({
               <select
                 value={formData.area}
                 onChange={(e) => setFormData({ ...formData, area: e.target.value })}
-                className="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 bg-white shadow-2xs"
+                className="w-full px-3 py-2 border border-[#C8B48A]/35 rounded-xl text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#1E3B2F]/20 focus:border-[#1E3B2F] bg-white shadow-2xs"
               >
                 {PREDEFINED_AREAS.map((a) => (
                   <option key={a} value={a}>
@@ -266,10 +266,10 @@ export const InternshipFormModal = ({
                     key={type}
                     type="button"
                     onClick={() => setFormData({ ...formData, locationType: type })}
-                    className={`py-2 text-xs font-semibold rounded-xl border text-center transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 ${
+                    className={`py-2 text-xs font-semibold rounded-xl border text-center transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-[#1E3B2F]/20 ${
                       formData.locationType === type
-                        ? 'border-indigo-600 bg-indigo-50 text-indigo-700 shadow-2xs font-bold'
-                        : 'border-slate-200 text-slate-700 hover:bg-slate-50'
+                        ? 'border-[#1E3B2F] bg-[#1E3B2F] hover:bg-[#152A22] text-[#F5F0E6] shadow-xs font-semibold'
+                        : 'border-[#C8B48A]/35 text-slate-700 hover:bg-[#F5F0E6]'
                     }`}
                   >
                     {type}
@@ -331,14 +331,14 @@ export const InternshipFormModal = ({
           </div>
 
           {/* Active Skills Pills */}
-          <div className="flex flex-wrap gap-1.5 min-h-[36px] p-2 bg-slate-50 rounded-xl border border-slate-200">
+          <div className="flex flex-wrap gap-1.5 min-h-[36px] p-2 bg-[#F5F0E6] rounded-xl border border-[#C8B48A]/35">
             {skills.length === 0 ? (
               <span className="text-xs text-slate-400 italic py-0.5">No skills added yet.</span>
             ) : (
               skills.map((skill) => (
                 <span
                   key={skill}
-                  className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-indigo-50 text-indigo-700 border border-indigo-200/60 shadow-2xs"
+                  className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-[#7F8C6A]/15 text-[#1E3B2F] border border-[#7F8C6A]/30 shadow-2xs"
                 >
                   {skill}
                   <button
@@ -356,7 +356,7 @@ export const InternshipFormModal = ({
           {/* Quick Add Suggestions */}
           <div className="flex items-center gap-1.5 flex-wrap pt-1">
             <span className="text-xs text-slate-500 flex items-center gap-1 font-medium">
-              <Sparkles className="w-3.5 h-3.5 text-indigo-600" /> Suggestions:
+              <Sparkles className="w-3.5 h-3.5 text-[#1E3B2F]" /> Suggestions:
             </span>
             {COMMON_SKILLS.filter(
               (s) => !skills.map((k) => k.toLowerCase()).includes(s.toLowerCase())
@@ -367,7 +367,7 @@ export const InternshipFormModal = ({
                   key={suggestion}
                   type="button"
                   onClick={() => handleAddSkill(suggestion)}
-                  className="text-xs px-2.5 py-1 bg-white border border-slate-200 rounded-lg text-slate-700 hover:border-indigo-400 hover:text-indigo-600 hover:bg-indigo-50/50 transition-colors shadow-2xs"
+                  className="text-xs px-2.5 py-1 bg-white border border-[#C8B48A]/35 rounded-lg text-slate-700 hover:border-[#7F8C6A]/30 hover:text-[#1E3B2F] hover:bg-[#7F8C6A]/15 transition-colors shadow-2xs"
                 >
                   + {suggestion}
                 </button>
@@ -402,7 +402,7 @@ export const InternshipFormModal = ({
         </div>
 
         {/* Stipend Details */}
-        <div className="p-4 bg-slate-50/80 rounded-xl border border-slate-200 space-y-3">
+        <div className="p-4 bg-[#F5F0E6]/80 rounded-xl border border-[#C8B48A]/35 space-y-3">
           <div className="flex items-center justify-between">
             <div>
               <span className="text-sm font-bold text-slate-900">Internship Compensation</span>
@@ -415,7 +415,7 @@ export const InternshipFormModal = ({
                 onChange={(e) => setFormData({ ...formData, stipendPaid: e.target.checked })}
                 className="sr-only peer"
               />
-              <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+              <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-[#C8B48A]/35 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#1E3B2F]"></div>
               <span className="ml-2.5 text-xs font-semibold text-slate-800">
                 {formData.stipendPaid ? 'Paid' : 'Unpaid'}
               </span>
@@ -439,7 +439,7 @@ export const InternshipFormModal = ({
                 <select
                   value={formData.stipendCurrency}
                   onChange={(e) => setFormData({ ...formData, stipendCurrency: e.target.value })}
-                  className="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 bg-white text-slate-800 shadow-2xs"
+                  className="w-full px-3 py-2 border border-[#C8B48A]/35 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#1E3B2F]/20 focus:border-[#1E3B2F] bg-white text-slate-800 shadow-2xs"
                 >
                   <option value="LKR">LKR (Sri Lankan Rupee)</option>
                   <option value="USD">USD ($)</option>
@@ -463,7 +463,7 @@ export const InternshipFormModal = ({
               placeholder="Outline the day-to-day work, projects, mentoring, and technologies the intern will use..."
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-              className="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 shadow-2xs transition-colors"
+              className="w-full px-3 py-2 border border-[#C8B48A]/35 rounded-xl text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#1E3B2F]/20 focus:border-[#1E3B2F] shadow-2xs transition-colors"
             />
           </div>
 
@@ -477,7 +477,7 @@ export const InternshipFormModal = ({
               placeholder="e.g. Currently pursuing BSc in Software Engineering&#10;Familiarity with Agile practices&#10;Problem solving attitude"
               value={formData.qualificationsText}
               onChange={(e) => setFormData({ ...formData, qualificationsText: e.target.value })}
-              className="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 shadow-2xs transition-colors"
+              className="w-full px-3 py-2 border border-[#C8B48A]/35 rounded-xl text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#1E3B2F]/20 focus:border-[#1E3B2F] shadow-2xs transition-colors"
             />
           </div>
         </div>
