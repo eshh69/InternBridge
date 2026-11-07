@@ -257,7 +257,7 @@ export const LoginPage = () => {
             <SupabaseSignInButton
               role={selectedRole}
               intent="login"
-              buttonText={`Continue with Google (${currentRole.label})`}
+              buttonText="Continue with Google"
               onError={(msg) => setError(msg)}
             />
           </div>

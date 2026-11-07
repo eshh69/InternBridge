@@ -270,11 +270,158 @@ export const StudentPortfolioPage = () => {
   const experienceCount = profile?.experience?.length || 0;
   const credentialsCount = (profile?.certificates?.length || 0) + (profile?.badges?.length || 0);
   const currentGpa = profile?.gpa ? Number(profile.gpa).toFixed(2) : '3.82';
-  const studentUserId =
+    const studentUserId =
     user?.id ||
     user?._id ||
     profile?.user?._id ||
     (typeof profile?.user === 'string' ? profile?.user : null);
+
+  // Comprehensive Challenging Portfolio Readiness Score Calculation (100-Point Model)
+  const calculatePortfolioStrength = (profile, user) => {
+    if (!profile) {
+      return {
+        score: 40,
+        tier: 'Developing',
+        label: 'Developing (40%)',
+        badgeStyle: 'bg-gray-100 text-gray-700 border-gray-300',
+        tip: '💡 Complete your core profile information to build strength.',
+        breakdown: { projects: 0, faculty: 0, academic: 0, skills: 0, credentials: 0 },
+      };
+    }
+
+    let score = 0;
+
+    // 1. Demonstrated Projects Portfolio (Max 25 pts) — Min 3 projects required for full volume marks
+    const projects = profile.projects || [];
+    const pCount = projects.length;
+    let projectPts = 0;
+    if (pCount >= 3) projectPts += 12;
+    else if (pCount === 2) projectPts += 8;
+    else if (pCount === 1) projectPts += 4;
+
+    const hasGithubProject = projects.some((p) => Boolean(p?.githubUrl && p.githubUrl.trim()));
+    if (hasGithubProject) projectPts += 7;
+
+    const hasLiveOrDemo = projects.some((p) => Boolean(p?.projectUrl && p.projectUrl.trim()));
+    if (hasLiveOrDemo) projectPts += 6;
+    score += Math.min(25, projectPts);
+
+    // 2. Verified Faculty / Third-Party Review (Max 20 pts)
+    const reviewCount = profile.reviewCount || 0;
+    const reputationScore = profile.reputationScore || 0;
+    let reviewPts = 0;
+    if (reviewCount >= 1) reviewPts += 10;
+    if (reputationScore >= 80) reviewPts += 10;
+    else if (reputationScore >= 60) reviewPts += 6;
+    else if (reputationScore > 0) reviewPts += 3;
+    score += Math.min(20, reviewPts);
+
+    // 3. Academic Integrity & GPA (Max 20 pts)
+    let academicPts = 0;
+    if (profile.degree && profile.university) academicPts += 5;
+    const parsedGpa = profile.gpa ? parseFloat(profile.gpa) : null;
+    if (parsedGpa !== null && !isNaN(parsedGpa)) {
+      if (parsedGpa >= 3.7) academicPts += 15;
+      else if (parsedGpa >= 3.3) academicPts += 10;
+      else if (parsedGpa >= 3.0) academicPts += 6;
+      else academicPts += 3;
+    } else {
+      academicPts += 5;
+    }
+    score += Math.min(20, academicPts);
+
+    // 4. Technical Skill Breadth & Depth (Max 20 pts)
+    const skills = profile.skills || [];
+    const sCount = skills.length;
+    let skillPts = 0;
+    if (sCount >= 8) skillPts += 10;
+    else if (sCount >= 5) skillPts += 7;
+    else if (sCount >= 1) skillPts += 4;
+
+    const skillStrings = skills.map((s) => (typeof s === 'string' ? s : s?.name || '').toLowerCase());
+    const hasWebOrFrontend = skillStrings.some((s) =>
+      /react|vue|angular|html|css|tailwind|javascript|typescript|next/.test(s)
+    );
+    const hasBackendOrDb = skillStrings.some((s) =>
+      /node|express|python|java|sql|mongo|postgres|c#|\.net|php|django|spring/.test(s)
+    );
+    if (hasWebOrFrontend && hasBackendOrDb) {
+      skillPts += 10;
+    } else if (sCount >= 4) {
+      skillPts += 5;
+    }
+    score += Math.min(20, skillPts);
+
+    // 5. Professional Credentials & Online Presence (Max 15 pts)
+    let credPts = 0;
+    if (profile.cvUrl) credPts += 5;
+    const hasAvatar = Boolean(user?.avatarUrl || profile.user?.avatarUrl);
+    if (hasAvatar) credPts += 5;
+    const links = profile.links || {};
+    if (links.github || links.linkedin || links.portfolio) credPts += 5;
+    score += Math.min(15, credPts);
+
+    const finalScore = Math.min(100, Math.max(10, Math.round(score)));
+
+    // Tier definitions & Smart Hint
+    let tier = 'Developing';
+    let label = `Developing (${finalScore}%)`;
+    let badgeStyle = 'bg-gray-100 text-gray-700 border-gray-300';
+    let tip = '';
+
+    if (finalScore >= 90) {
+      tier = 'Elite';
+      label = `Elite (${finalScore}%)`;
+      badgeStyle = 'bg-[#1E3B2F] text-[#F5F0E6] border-[#152A22]';
+      tip = '🌟 Exceptional standing! Top tier priority in recruiter search algorithms.';
+    } else if (finalScore >= 75) {
+      tier = 'Advanced';
+      label = `Advanced (${finalScore}%)`;
+      badgeStyle = 'bg-[#7F8C6A]/25 text-[#1E3B2F] border-[#7F8C6A]/40';
+      if (reviewCount === 0) {
+        tip = '💡 Tip: Obtain 1 faculty endorsement to unlock Elite (90%+) status!';
+      } else if (sCount < 8) {
+        tip = `💡 Tip: Expand skills to 8+ competencies to reach Elite status.`;
+      } else {
+        tip = '💡 Tip: Add live demo links to your projects to maximize score.';
+      }
+    } else if (finalScore >= 50) {
+      tier = 'Intermediate';
+      label = `Intermediate (${finalScore}%)`;
+      badgeStyle = 'bg-amber-50 text-amber-900 border-amber-300';
+      if (pCount < 3) {
+        tip = `💡 Tip: Add ${3 - pCount} more featured project(s) to reach 3+ projects.`;
+      } else if (reviewCount === 0) {
+        tip = '💡 Tip: Request a faculty evaluation from Section 06 to boost standing.';
+      } else if (!profile.cvUrl) {
+        tip = '💡 Tip: Upload your resume (CV) to boost standing.';
+      } else {
+        tip = '💡 Tip: Add more verified skills and project demos to reach Advanced tier.';
+      }
+    } else {
+      tier = 'Developing';
+      label = `Developing (${finalScore}%)`;
+      badgeStyle = 'bg-gray-100 text-gray-700 border-gray-300';
+      tip = '💡 Tip: Add 3+ featured projects, skills, and upload your CV to improve.';
+    }
+
+    return {
+      score: finalScore,
+      tier,
+      label,
+      badgeStyle,
+      tip,
+      breakdown: {
+        projects: Math.min(25, projectPts),
+        faculty: Math.min(20, reviewPts),
+        academic: Math.min(20, academicPts),
+        skills: Math.min(20, skillPts),
+        credentials: Math.min(15, credPts),
+      },
+    };
+  };
+
+  const strengthData = calculatePortfolioStrength(profile, user);
 
   const kpiCards = [
     {
@@ -349,6 +496,7 @@ export const StudentPortfolioPage = () => {
       <ProfileHeader
         profile={profile}
         user={user}
+        strengthData={strengthData}
         onEditClick={() => setIsEditModalOpen(true)}
         onUploadAvatar={handleUploadAvatar}
         onDeleteAvatar={handleDeleteAvatar}
@@ -360,7 +508,7 @@ export const StudentPortfolioPage = () => {
         isDeletingCv={isDeletingCv}
       />
 
-      {/* 2. Key Overview Section (Matching Screenshot's KPI Metric Cards) */}
+      {/* 3. Key Overview Section: 5 Separate Single Metric Cards in a Grid */}
       <div className="space-y-3">
         <div className="flex items-center justify-between pb-1">
           <div className="flex items-center gap-2">
@@ -375,7 +523,7 @@ export const StudentPortfolioPage = () => {
           </span>
         </div>
 
-        {/* 5 KPI Metric Cards Row */}
+        {/* 5 Individual KPI Metric Cards Row */}
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
           {kpiCards.map((card, idx) => (
             <div
@@ -412,11 +560,9 @@ export const StudentPortfolioPage = () => {
           ))}
         </div>
       </div>
-
-      {/* 3. Main Content Grid (Two-Column Asymmetric Layout) */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        {/* Left Column (8 cols): Primary Sections */}
-        <div className="lg:col-span-8 space-y-8">
+      
+{/* 4. Primary Portfolio Sections 01 through 06 (Full Width) */}
+      <div className="w-full space-y-8">
           {/* SECTION 01: EDUCATION & QUALIFICATIONS */}
           <section className="space-y-3 bg-white border border-[#C8B48A]/35 rounded-2xl p-5 sm:p-6 shadow-2xs">
             <div className="flex items-center justify-between border-b border-gray-100 pb-3">
@@ -549,148 +695,6 @@ export const StudentPortfolioPage = () => {
             </section>
           )}
         </div>
-
-        {/* Right Column (4 cols): Quick Actions & Career Tools (Matching Screenshot) */}
-        <div className="lg:col-span-4 space-y-6 lg:sticky lg:top-24">
-          {/* Quick Actions Card */}
-          <div className="bg-white border border-[#C8B48A]/40 rounded-2xl p-5 shadow-2xs space-y-4">
-            <div className="flex items-center justify-between border-b border-gray-100 pb-3">
-              <div className="flex items-center gap-2">
-                <div className="w-7 h-7 rounded-lg bg-[#7F8C6A]/15 border border-[#7F8C6A]/30 flex items-center justify-center">
-                  <Zap className="w-4 h-4 text-[#1E3B2F]" />
-                </div>
-                <div>
-                  <h3 className="text-sm font-extrabold text-gray-900">Quick Actions</h3>
-                  <p className="text-[11px] text-gray-500">Accelerate your internship search</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Hidden resume input for quick action */}
-            <input
-              ref={sideCvInputRef}
-              type="file"
-              accept=".pdf,.doc,.docx"
-              onChange={(e) => {
-                if (e.target.files && e.target.files[0]) {
-                  handleUploadCv(e.target.files[0]);
-                  e.target.value = '';
-                }
-              }}
-              className="hidden"
-            />
-
-            {/* Action Item 1: Upload / Replace CV */}
-            <button
-              type="button"
-              onClick={() => sideCvInputRef.current?.click()}
-              disabled={isUploadingCv}
-              className="w-full text-left p-3.5 rounded-xl border border-gray-200/90 hover:border-[#1E3B2F]/40 hover:bg-[#F5F0E6]/30 flex items-center justify-between gap-3 transition-all group"
-            >
-              <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-xl bg-[#7F8C6A]/15 text-[#1E3B2F] flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform">
-                  <FileText className="w-4 h-4" />
-                </div>
-                <div>
-                  <p className="text-xs font-bold text-gray-900 group-hover:text-[#1E3B2F] transition-colors">
-                    {profile?.cvUrl ? 'Replace Resume (CV)' : 'Upload Resume (CV)'}
-                  </p>
-                  <p className="text-[11px] text-gray-500">
-                    {isUploadingCv ? 'Uploading to cloud...' : 'Reach verified corporate recruiters'}
-                  </p>
-                </div>
-              </div>
-              <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-[#1E3B2F] transition-colors" />
-            </button>
-
-            {/* Action Item 2: Edit Profile */}
-            <button
-              type="button"
-              onClick={() => setIsEditModalOpen(true)}
-              className="w-full text-left p-3.5 rounded-xl border border-gray-200/90 hover:border-[#1E3B2F]/40 hover:bg-[#F5F0E6]/30 flex items-center justify-between gap-3 transition-all group"
-            >
-              <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-xl bg-[#C8B48A]/25 text-[#1E3B2F] flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform">
-                  <Sparkles className="w-4 h-4" />
-                </div>
-                <div>
-                  <p className="text-xs font-bold text-gray-900 group-hover:text-[#1E3B2F] transition-colors">
-                    Update Profile Details
-                  </p>
-                  <p className="text-[11px] text-gray-500">Keep bio, GPA, and socials updated</p>
-                </div>
-              </div>
-              <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-[#1E3B2F] transition-colors" />
-            </button>
-
-            {/* Action Item 3: Explore Internships */}
-            <button
-              type="button"
-              onClick={() => navigate('/search')}
-              className="w-full text-left p-3.5 rounded-xl border border-gray-200/90 hover:border-[#1E3B2F]/40 hover:bg-[#F5F0E6]/30 flex items-center justify-between gap-3 transition-all group"
-            >
-              <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-xl bg-[#1E3B2F]/10 text-[#1E3B2F] flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform">
-                  <Search className="w-4 h-4" />
-                </div>
-                <div>
-                  <p className="text-xs font-bold text-gray-900 group-hover:text-[#1E3B2F] transition-colors">
-                    Search Internships
-                  </p>
-                  <p className="text-[11px] text-gray-500">Discover top algorithmic matches</p>
-                </div>
-              </div>
-              <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-[#1E3B2F] transition-colors" />
-            </button>
-
-            {/* Action Item 4: Real-time Messages */}
-            <button
-              type="button"
-              onClick={() => navigate('/chat')}
-              className="w-full text-left p-3.5 rounded-xl border border-gray-200/90 hover:border-[#1E3B2F]/40 hover:bg-[#F5F0E6]/30 flex items-center justify-between gap-3 transition-all group"
-            >
-              <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-xl bg-[#7F8C6A]/15 text-[#1E3B2F] flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform">
-                  <MessageSquare className="w-4 h-4" />
-                </div>
-                <div>
-                  <p className="text-xs font-bold text-gray-900 group-hover:text-[#1E3B2F] transition-colors">
-                    Direct Recruiter Chat
-                  </p>
-                  <p className="text-[11px] text-gray-500">Connect with hiring managers live</p>
-                </div>
-              </div>
-              <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-[#1E3B2F] transition-colors" />
-            </button>
-          </div>
-
-          {/* Profile Strength Card */}
-          <div className="bg-gradient-to-br from-[#F5F0E6] to-[#EAE2D2] border border-[#C8B48A]/40 rounded-2xl p-5 shadow-2xs space-y-3">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-extrabold uppercase tracking-wider text-[#1E3B2F]">
-                Portfolio Strength
-              </span>
-              <span className="text-xs font-bold text-[#1E3B2F] bg-white px-2 py-0.5 rounded-md border border-[#C8B48A]/40">
-                {profile?.cvUrl && skillsCount >= 5 && projectsCount >= 1 ? 'Strong (95%)' : 'Good (80%)'}
-              </span>
-            </div>
-
-            {/* Progress Bar */}
-            <div className="w-full bg-[#1E3B2F]/10 rounded-full h-2 overflow-hidden">
-              <div
-                className="bg-[#1E3B2F] h-2 rounded-full transition-all duration-500"
-                style={{
-                  width: `${profile?.cvUrl && skillsCount >= 5 && projectsCount >= 1 ? 95 : 80}%`,
-                }}
-              />
-            </div>
-
-            <p className="text-[11px] text-gray-600 leading-relaxed">
-              Your profile is verified and prioritized for algorithmic candidate matching by partner companies.
-            </p>
-          </div>
-        </div>
-      </div>
 
       {/* Edit Profile Modal */}
       <ProfileEditModal
