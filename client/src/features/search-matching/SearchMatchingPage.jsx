@@ -112,7 +112,17 @@ export const SearchMatchingPage = () => {
   const [studentProfileLoaded, setStudentProfileLoaded] = useState(false);
 
   // Navigation tab state
-  const [activeTab, setActiveTab] = useState('all_internships'); // 'all_internships' | 'top_matches' | 'candidates'
+  // Navigation tab state - recruiters default to 'candidates' so they immediately see the talent pool
+  const [activeTab, setActiveTab] = useState(() =>
+    user?.role === 'company' ? 'candidates' : 'all_internships'
+  );
+
+  // Auto-switch to candidates view if user role resolves as company
+  useEffect(() => {
+    if (user?.role === 'company' && activeTab === 'all_internships') {
+      setActiveTab('candidates');
+    }
+  }, [user?.role]);
 
   // View mode state: 'list' (default, stacked) or 'grid' (2 columns)
   const [viewMode, setViewMode] = useState('list');
@@ -258,7 +268,7 @@ export const SearchMatchingPage = () => {
     <div className="space-y-6">
       {/* Tab Switcher on Top */}
       <div className="flex items-center justify-between">
-        <div className="flex items-center bg-gray-100 p-1 rounded-none border border-gray-200">
+        <div className="flex items-center bg-gray-100 p-1 rounded-none border border-[#C8B48A]/40">
           <button
             type="button"
             onClick={() => {
@@ -267,7 +277,7 @@ export const SearchMatchingPage = () => {
             }}
             className={`flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-semibold rounded-none transition-all ${
               activeTab === 'all_internships'
-                ? 'bg-white text-blue-700 shadow-xs'
+                ? 'bg-white text-[#1E3B2F] font-bold shadow-xs'
                 : 'text-gray-600 hover:text-gray-900'
             }`}
           >
@@ -283,11 +293,11 @@ export const SearchMatchingPage = () => {
               }}
               className={`flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-semibold rounded-none transition-all ${
                 activeTab === 'top_matches'
-                  ? 'bg-white text-blue-700 shadow-xs'
+                  ? 'bg-white text-[#1E3B2F] font-bold shadow-xs'
                   : 'text-gray-600 hover:text-gray-900'
               }`}
             >
-              <Sparkles className="w-3.5 h-3.5 text-blue-600" /> Best Matches
+              <Sparkles className="w-3.5 h-3.5 text-[#1E3B2F]" /> Best Matches
             </button>
           )}
 
@@ -300,7 +310,7 @@ export const SearchMatchingPage = () => {
               }}
               className={`flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-semibold rounded-none transition-all ${
                 activeTab === 'candidates'
-                  ? 'bg-white text-blue-700 shadow-xs'
+                  ? 'bg-white text-[#1E3B2F] font-bold shadow-xs'
                   : 'text-gray-600 hover:text-gray-900'
               }`}
             >
@@ -313,7 +323,7 @@ export const SearchMatchingPage = () => {
         {!isAuthenticated && (
           <button
             onClick={() => navigate('/login')}
-            className="text-xs font-semibold text-blue-600 hover:text-blue-800"
+            className="text-xs font-semibold text-[#1E3B2F] hover:underline"
           >
             Sign In to view match scores →
           </button>
@@ -322,17 +332,17 @@ export const SearchMatchingPage = () => {
 
       {/* Student Profile Skills Quick-Match Banner */}
       {isStudent && studentSkills.length > 0 && (
-        <div className="bg-gradient-to-r from-indigo-50/90 via-blue-50/70 to-white rounded-none border border-indigo-200/80 p-4 sm:p-5 flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-2xs">
+        <div className="bg-gradient-to-r from-[#7F8C6A]/20 via-[#F5F0E6] to-white rounded-none border border-[#C8B48A]/40 p-4 sm:p-5 flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-2xs">
           <div className="flex items-start gap-3.5">
-            <div className="p-2.5 bg-indigo-600 text-white rounded-none shadow-xs flex-shrink-0 mt-0.5 md:mt-0">
-              <Sparkles className="w-5 h-5 text-indigo-100" />
+            <div className="p-2.5 bg-[#1E3B2F] text-white rounded-none shadow-xs flex-shrink-0 mt-0.5 md:mt-0">
+              <Sparkles className="w-5 h-5 text-[#C8B48A]" />
             </div>
             <div className="space-y-1">
               <div className="flex flex-wrap items-center gap-2">
                 <h4 className="text-sm font-bold text-gray-900">
                   Matched with Your Profile Skills
                 </h4>
-                <span className="text-[10px] font-semibold px-2 py-0.5 bg-indigo-100 text-indigo-700 rounded-none">
+                <span className="text-[10px] font-semibold px-2 py-0.5 bg-[#7F8C6A]/20 text-[#1E3B2F] rounded-none">
                   {studentSkills.length} Skills in Portfolio
                 </span>
               </div>
@@ -341,7 +351,7 @@ export const SearchMatchingPage = () => {
                 {studentSkills.map((skill) => (
                   <span
                     key={skill}
-                    className="inline-flex items-center px-2 py-0.5 rounded-none text-[11px] font-semibold bg-white border border-indigo-200 text-indigo-800 shadow-3xs"
+                    className="inline-flex items-center px-2 py-0.5 rounded-none text-[11px] font-semibold bg-white border border-[#C8B48A]/40 text-[#1E3B2F] shadow-3xs"
                   >
                     {formatSkillName(skill)}
                   </span>
@@ -374,8 +384,8 @@ export const SearchMatchingPage = () => {
                     .map((sk) => sk.trim())
                     .includes(s.toLowerCase().trim())
                 )
-                  ? 'bg-emerald-600 hover:bg-emerald-700 text-white'
-                  : 'bg-indigo-600 hover:bg-indigo-700 text-white'
+                  ? 'bg-[#1E3B2F] hover:bg-[#152A22] text-white'
+                  : 'bg-[#1E3B2F] hover:bg-[#152A22] text-white'
               }`}
             >
               <Sparkles className="w-3.5 h-3.5" />
@@ -396,7 +406,7 @@ export const SearchMatchingPage = () => {
                 setActiveTab('top_matches');
                 setPage(1);
               }}
-              className="px-3.5 py-2 text-xs font-semibold rounded-none bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 shadow-3xs transition-colors flex items-center gap-1"
+              className="px-3.5 py-2 text-xs font-semibold rounded-none bg-white border border-[#C8B48A]/40 text-gray-700 hover:bg-gray-50 shadow-3xs transition-colors flex items-center gap-1"
             >
               Ranked Matches
             </button>
@@ -428,7 +438,7 @@ export const SearchMatchingPage = () => {
         {/* RIGHT COLUMN: HERO BANNER + SEARCH ROW + OPPORTUNITY CARDS */}
         <div className="flex-1 w-full space-y-4">
           {/* 1. HERO SECTION WITH MOTIVATION GRAPHIC */}
-          <div className="bg-white rounded-none border border-gray-200/90 shadow-xs relative overflow-hidden flex flex-col md:flex-row md:items-stretch justify-between">
+          <div className="bg-white rounded-none border border-[#C8B48A]/35 shadow-xs relative overflow-hidden flex flex-col md:flex-row md:items-stretch justify-between">
             {/* Left Content */}
             <div className="p-6 md:py-6 md:pl-7 md:pr-4 flex-1 flex flex-col justify-center z-10 max-w-xl space-y-1.5">
               <span className="text-[11px] font-bold tracking-widest text-gray-400 uppercase">
@@ -464,7 +474,7 @@ export const SearchMatchingPage = () => {
           </div>
 
           {/* 2. SEARCH BAR & CONTROLS ROW */}
-          <div className="bg-white rounded-none border border-gray-200/90 shadow-xs p-2.5 flex flex-col sm:flex-row items-center gap-2">
+          <div className="bg-white rounded-none border border-[#C8B48A]/35 shadow-xs p-2.5 flex flex-col sm:flex-row items-center gap-2">
             {/* Keyword Input */}
             <div className="relative flex-1 w-full">
               <Search className="w-4 h-4 text-gray-400 absolute left-3.5 top-3" />
@@ -493,18 +503,18 @@ export const SearchMatchingPage = () => {
             <button
               type="button"
               onClick={() => setIsMobileFiltersOpen(true)}
-              className="md:hidden w-full sm:w-auto px-3 py-2 border border-gray-200 rounded-none text-xs font-semibold text-gray-700 flex items-center justify-center gap-1.5"
+              className="md:hidden w-full sm:w-auto px-3 py-2 border border-[#C8B48A]/40 rounded-none text-xs font-semibold text-gray-700 flex items-center justify-center gap-1.5"
             >
               <Filter className="w-4 h-4 text-gray-500" /> Filters
               {activeFiltersCount > 0 && (
-                <span className="w-4 h-4 rounded-none bg-blue-600 text-white text-[10px] flex items-center justify-center font-bold">
+                <span className="w-4 h-4 rounded-none bg-[#1E3B2F] text-[#F5F0E6] text-[10px] flex items-center justify-center font-bold">
                   {activeFiltersCount}
                 </span>
               )}
             </button>
 
             {/* Location Dropdown */}
-            <div className="relative w-full sm:w-44 border-t sm:border-t-0 sm:border-l border-gray-200 pt-2 sm:pt-0 sm:pl-2">
+            <div className="relative w-full sm:w-44 border-t sm:border-t-0 sm:border-l border-[#C8B48A]/40 pt-2 sm:pt-0 sm:pl-2">
               <div className="relative">
                 <select
                   value={filters.location || ''}
@@ -522,7 +532,7 @@ export const SearchMatchingPage = () => {
             </div>
 
             {/* Sort / Relevance Dropdown */}
-            <div className="relative w-full sm:w-40 border-t sm:border-t-0 sm:border-l border-gray-200 pt-2 sm:pt-0 sm:pl-2">
+            <div className="relative w-full sm:w-40 border-t sm:border-t-0 sm:border-l border-[#C8B48A]/40 pt-2 sm:pt-0 sm:pl-2">
               <div className="relative">
                 <select
                   value={sortOption}
@@ -549,13 +559,13 @@ export const SearchMatchingPage = () => {
             </span>
 
             {/* Grid vs List View Mode Toggle */}
-            <div className="flex items-center gap-1 bg-gray-100 p-0.5 rounded-none border border-gray-200">
+            <div className="flex items-center gap-1 bg-gray-100 p-0.5 rounded-none border border-[#C8B48A]/40">
               <button
                 type="button"
                 onClick={() => setViewMode('grid')}
                 className={`p-1.5 rounded-none transition-all ${
                   viewMode === 'grid'
-                    ? 'bg-blue-600 text-white shadow-xs'
+                    ? 'bg-[#1E3B2F] text-[#F5F0E6] shadow-xs'
                     : 'text-gray-500 hover:text-gray-900'
                 }`}
                 title="Grid View"
@@ -567,7 +577,7 @@ export const SearchMatchingPage = () => {
                 onClick={() => setViewMode('list')}
                 className={`p-1.5 rounded-none transition-all ${
                   viewMode === 'list'
-                    ? 'bg-blue-600 text-white shadow-xs'
+                    ? 'bg-[#1E3B2F] text-[#F5F0E6] shadow-xs'
                     : 'text-gray-500 hover:text-gray-900'
                 }`}
                 title="List View"
@@ -579,7 +589,7 @@ export const SearchMatchingPage = () => {
 
           {/* Loading State */}
           {isLoading && (
-            <div className="flex justify-center items-center py-24 bg-white rounded-none border border-gray-200">
+            <div className="flex justify-center items-center py-24 bg-white rounded-none border border-[#C8B48A]/40">
               <Spinner size="lg" />
             </div>
           )}
@@ -600,7 +610,7 @@ export const SearchMatchingPage = () => {
 
           {/* Empty State */}
           {!isLoading && !error && items.length === 0 && (
-            <div className="bg-white rounded-none border border-gray-200 p-10">
+            <div className="bg-white rounded-none border border-[#C8B48A]/40 p-10">
               <EmptyState
                 icon={<Briefcase className="w-12 h-12 text-gray-400" />}
                 title="No opportunities found"
@@ -625,6 +635,7 @@ export const SearchMatchingPage = () => {
                   key={internship._id || internship.id}
                   internship={internship}
                   isStudent={isStudent}
+                  isCompany={isCompany}
                   selectedSkills={filters.skills}
                   onViewDetails={(item) => setSelectedInternship(item)}
                   onApply={handleApply}
@@ -652,7 +663,7 @@ export const SearchMatchingPage = () => {
 
           {/* 5. BOTTOM PAGINATION & HANDWRITTEN CALLOUT */}
           {!isLoading && items.length > 0 && (
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-gray-200">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-[#C8B48A]/40">
               {/* Left: Showing count */}
               <span className="text-xs text-gray-500 font-medium">
                 Showing{' '}
@@ -671,7 +682,7 @@ export const SearchMatchingPage = () => {
                   type="button"
                   disabled={page <= 1}
                   onClick={() => setPage((p) => Math.max(1, p - 1))}
-                  className="w-8 h-8 rounded-none border border-gray-200 text-gray-600 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center transition-all text-xs"
+                  className="w-8 h-8 rounded-none border border-[#C8B48A]/40 text-gray-600 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center transition-all text-xs"
                 >
                   <ChevronLeft className="w-4 h-4" />
                 </button>
@@ -682,8 +693,8 @@ export const SearchMatchingPage = () => {
                     onClick={() => setPage(p)}
                     className={`w-8 h-8 rounded-none text-xs font-semibold transition-all ${
                       page === p
-                        ? 'bg-blue-600 text-white shadow-xs'
-                        : 'border border-gray-200 text-gray-700 hover:bg-gray-50'
+                        ? 'bg-[#1E3B2F] text-[#F5F0E6] shadow-xs'
+                        : 'border border-[#C8B48A]/40 text-gray-700 hover:bg-gray-50'
                     }`}
                   >
                     {p}
@@ -694,14 +705,14 @@ export const SearchMatchingPage = () => {
                   type="button"
                   disabled={page >= pagination.pages}
                   onClick={() => setPage((p) => Math.min(pagination.pages, p + 1))}
-                  className="w-8 h-8 rounded-none border border-gray-200 text-gray-600 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center transition-all text-xs"
+                  className="w-8 h-8 rounded-none border border-[#C8B48A]/40 text-gray-600 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center transition-all text-xs"
                 >
                   <ChevronRight className="w-4 h-4" />
                 </button>
               </div>
 
               {/* Right: Handwritten Motivation Callout */}
-              <div className="hidden sm:flex items-center gap-1 text-xs text-blue-600 font-bold select-none">
+              <div className="hidden sm:flex items-center gap-1 text-xs text-[#1E3B2F] font-bold select-none">
                 <span
                   style={{
                     fontFamily: "cursive, 'Brush Script MT', sans-serif",
@@ -723,6 +734,7 @@ export const SearchMatchingPage = () => {
         internship={selectedInternship}
         onApply={handleApply}
         isStudent={isStudent}
+        isCompany={isCompany}
       />
     </div>
   );
