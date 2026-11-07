@@ -29,7 +29,6 @@ import {
   Sparkles,
   FileCheck2,
   RotateCcw,
-  Info,
   Filter,
   BarChart3,
   Briefcase,
@@ -296,18 +295,7 @@ export const VerificationRatingPage = () => {
         </div>
       </div>
 
-      {/* 3. Dual-Engine Architecture / System Status Banner (Luxury Forest Green Theme) */}
-      <div className="bg-[#7F8C6A]/15 border border-[#C8B48A]/40 border-l-4 border-l-[#1E3B2F] rounded-xl p-3.5 flex items-center justify-between text-xs text-[#1E3B2F] shadow-xs">
-        <div className="flex items-center gap-2">
-          <Info className="w-4 h-4 text-[#1E3B2F] flex-shrink-0" />
-          <span>
-            <strong>Dual-Engine Architecture:</strong> Currently running in resilient instant-preview mode. Any verification requests or multi-criteria reputation evaluations persist in real-time and synchronize seamlessly with MongoDB endpoints.
-          </span>
-        </div>
-        <span className="hidden sm:inline-flex text-[11px] font-bold uppercase tracking-wider text-[#F5F0E6] bg-[#1E3B2F] px-2.5 py-0.5 rounded-full border border-[#152A22]">
-          Ready to Run
-        </span>
-      </div>
+
 
       {/* Instant Notification Banner */}
       {successBanner && (
