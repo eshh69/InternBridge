@@ -56,8 +56,10 @@ const SKILL_DISPLAY_NAMES = {
 };
 
 const formatSkillName = (s = '') => {
-  const lower = s.toLowerCase().trim();
-  return SKILL_DISPLAY_NAMES[lower] || s;
+  const str = typeof s === 'string' ? s : s?.name || s?.skill || '';
+  if (!str) return '';
+  const lower = str.toLowerCase().trim();
+  return SKILL_DISPLAY_NAMES[lower] || str;
 };
 
 export const InternshipCard = ({
@@ -166,12 +168,16 @@ export const InternshipCard = ({
     : [];
 
   const matchedSet = new Set([
-    ...(matchedSkills || []).map((s) => s.toLowerCase().trim()),
+    ...(matchedSkills || [])
+      .map((s) => (typeof s === 'string' ? s : s?.name || s?.skill || '').toLowerCase().trim())
+      .filter(Boolean),
     ...filterSkillsList,
   ]);
 
   const isSkillSelectedOrMatched = (skill) => {
-    const s = skill.toLowerCase().trim();
+    const skillName = typeof skill === 'string' ? skill : skill?.name || skill?.skill || '';
+    const s = skillName.toLowerCase().trim();
+    if (!s) return false;
     if (matchedSet.has(s)) return true;
     for (const item of matchedSet) {
       if (

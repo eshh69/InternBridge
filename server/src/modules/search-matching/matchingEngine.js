@@ -63,8 +63,10 @@ for (const [canonical, aliases] of Object.entries(SKILL_SYNONYMS)) {
  * @returns {string}
  */
 export const normalizeSkill = (skill) => {
-  if (!skill || typeof skill !== 'string') return '';
-  const cleaned = skill
+  if (!skill) return '';
+  const skillStr = typeof skill === 'string' ? skill : skill?.name || skill?.skill || '';
+  if (!skillStr || typeof skillStr !== 'string') return '';
+  const cleaned = skillStr
     .toLowerCase()
     .trim()
     .replace(/[^\w\s#+./-]/g, '')
@@ -116,10 +118,12 @@ const checkSkillMatch = (reqSkill, studentSkillsSet, rawStudentSkills = []) => {
   }
 
   // 3. Substring / partial match (e.g. 'react' matching 'react native', or 'api' matching 'rest api')
-  const reqLower = reqSkill.toLowerCase();
-  for (const skill of rawStudentSkills) {
-    if (!skill) continue;
-    const sLower = skill.toLowerCase().trim();
+  const reqLower = (typeof reqSkill === 'string' ? reqSkill : reqSkill?.name || '').toLowerCase();
+  for (const raw of rawStudentSkills) {
+    if (!raw) continue;
+    const skillName = typeof raw === 'string' ? raw : raw?.name || raw?.skill || '';
+    if (!skillName || typeof skillName !== 'string') continue;
+    const sLower = skillName.toLowerCase().trim();
     if (sLower.length >= 3 && (sLower.includes(reqLower) || reqLower.includes(sLower))) {
       return { matched: true, weight: 0.75 };
     }
@@ -213,7 +217,10 @@ export const calculateInternshipMatch = (studentProfile, internship) => {
     const score = Math.round(75 + domainBonus * 25);
     return {
       matchScore: score,
-      matchedSkills: rawStudentSkills.slice(0, 5),
+      matchedSkills: rawStudentSkills
+        .slice(0, 5)
+        .map((s) => (typeof s === 'string' ? s : s?.name || s?.skill || ''))
+        .filter(Boolean),
       missingSkills: [],
       matchLevel: score >= 75 ? 'High' : 'Medium',
       breakdown: { skillScore: 80, domainScore: Math.round(domainBonus * 100), projectScore: 50 },
@@ -294,7 +301,9 @@ export const calculateCandidateMatch = (studentProfile, targetSkills = [], targe
     const score = Math.min(100, Math.round(gpaFactor + repFactor + skillsFactor));
     return {
       matchScore: score,
-      matchedSkills: studentProfile.skills || [],
+      matchedSkills: (studentProfile.skills || [])
+        .map((s) => (typeof s === 'string' ? s : s?.name || s?.skill || ''))
+        .filter(Boolean),
       missingSkills: [],
     };
   }

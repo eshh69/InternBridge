@@ -237,7 +237,10 @@ export const SearchMatchingPage = () => {
         .then((res) => {
           const profile = res.data?.data || res.data;
           if (profile && Array.isArray(profile.skills)) {
-            setStudentSkills(profile.skills);
+            const cleanSkills = profile.skills
+              .map((s) => (typeof s === 'string' ? s : s?.name || s?.skill || ''))
+              .filter(Boolean);
+            setStudentSkills(cleanSkills);
           }
           setStudentProfileLoaded(true);
         })

@@ -32,7 +32,9 @@ export const CandidateCard = ({ candidate, queriedSkills = [] }) => {
   } = candidate;
 
   const matchedSet = new Set(
-    (matchedSkills || []).map((s) => s.toLowerCase().trim())
+    (matchedSkills || [])
+      .map((s) => (typeof s === 'string' ? s : s?.name || s?.skill || '').toLowerCase().trim())
+      .filter(Boolean)
   );
 
   return (
@@ -105,7 +107,9 @@ export const CandidateCard = ({ candidate, queriedSkills = [] }) => {
         <div className="flex flex-wrap items-center gap-1.5">
           <span className="text-xs text-gray-400 mr-1 font-medium">Skills:</span>
           {skills.slice(0, 8).map((skill, idx) => {
-            const isMatched = matchedSet.has(skill.toLowerCase().trim());
+            const skillName = typeof skill === 'string' ? skill : skill?.name || skill?.skill || '';
+            const s = skillName.toLowerCase().trim();
+            const isMatched = matchedSet.has(s);
             return (
               <span
                 key={idx}
@@ -116,7 +120,7 @@ export const CandidateCard = ({ candidate, queriedSkills = [] }) => {
                 }`}
               >
                 {isMatched && <Check className="w-3 h-3 text-emerald-600" />}
-                {skill}
+                {skillName}
               </span>
             );
           })}

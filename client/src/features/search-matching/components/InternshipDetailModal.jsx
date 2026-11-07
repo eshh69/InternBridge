@@ -16,6 +16,12 @@ import {
   Users,
 } from 'lucide-react';
 
+const formatSkillName = (s = '') => {
+  const str = typeof s === 'string' ? s : s?.name || s?.skill || '';
+  if (!str) return '';
+  return str.charAt(0).toUpperCase() + str.slice(1);
+};
+
 export const InternshipDetailModal = ({
   isOpen,
   onClose,
@@ -69,7 +75,9 @@ export const InternshipDetailModal = ({
   };
 
   const matchedSet = new Set(
-    (matchedSkills || []).map((s) => s.toLowerCase().trim())
+    (matchedSkills || [])
+      .map((s) => (typeof s === 'string' ? s : s?.name || s?.skill || '').toLowerCase().trim())
+      .filter(Boolean)
   );
 
   return (
