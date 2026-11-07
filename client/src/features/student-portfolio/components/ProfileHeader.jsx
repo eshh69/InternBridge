@@ -124,31 +124,32 @@ export const ProfileHeader = ({
         {/* Top Header Row */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
           {/* Avatar & Profile Identity */}
-          <div className="flex items-start sm:items-center gap-5">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5 sm:gap-7 flex-1 min-w-0">
             {/* Avatar Container with hover camera action */}
-            <div className="relative group w-16 h-16 sm:w-20 sm:h-20 rounded-2xl flex-shrink-0 border-2 border-[#C8B48A]/50 shadow-md overflow-hidden bg-white/10 backdrop-blur-sm">
+            <div className="relative group w-28 h-28 sm:w-36 sm:h-36 lg:w-40 lg:h-40 rounded-2xl sm:rounded-3xl flex-shrink-0 border-2 sm:border-3 border-[#C8B48A]/60 shadow-xl overflow-hidden bg-white/10 backdrop-blur-sm">
               {avatarUrl ? (
                 <img
                   src={avatarUrl}
                   alt={name}
-                  className="w-full h-full object-cover rounded-2xl"
+                  className="w-full h-full object-cover rounded-2xl sm:rounded-3xl"
                 />
               ) : (
-                <div className="w-full h-full bg-[#1E3B2F] text-[#F5F0E6] font-black text-2xl sm:text-3xl flex items-center justify-center select-none">
+                <div className="w-full h-full bg-[#1E3B2F] text-[#F5F0E6] font-black text-3xl sm:text-5xl flex items-center justify-center select-none">
                   {name?.charAt(0).toUpperCase() || 'S'}
                 </div>
               )}
 
               {/* Hover Overlay */}
-              <div className="absolute inset-0 bg-[#12261E]/75 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-1 p-1">
+              <div className="absolute inset-0 bg-[#12261E]/80 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-2 p-2">
                 <button
                   type="button"
                   disabled={isUploadingAvatar}
                   onClick={() => avatarInputRef.current?.click()}
-                  className="p-1.5 bg-[#F5F0E6] text-[#1E3B2F] rounded-lg shadow-xs hover:bg-white transition-transform hover:scale-105"
+                  className="px-3 py-1.5 bg-[#F5F0E6] text-[#1E3B2F] rounded-xl shadow-xs hover:bg-white text-xs font-bold flex items-center gap-1.5 transition-transform hover:scale-105 cursor-pointer"
                   title="Change photo"
                 >
-                  <Camera className="w-3.5 h-3.5" />
+                  <Camera className="w-4 h-4 text-[#1E3B2F]" />
+                  <span>{isUploadingAvatar ? 'Saving...' : 'Change Photo'}</span>
                 </button>
 
                 {avatarUrl && onDeleteAvatar && (
@@ -161,18 +162,20 @@ export const ProfileHeader = ({
                         onDeleteAvatar();
                       }
                     }}
-                    className="p-1 bg-rose-600 text-white rounded-lg hover:bg-rose-700 transition-transform hover:scale-105"
+                    className="px-2.5 py-1 bg-rose-600/90 hover:bg-rose-600 text-white rounded-lg text-[11px] font-semibold flex items-center gap-1 transition-transform hover:scale-105 cursor-pointer"
                     title="Remove photo"
                   >
-                    <Trash2 className="w-3 h-3" />
+                    <Trash2 className="w-3.5 h-3.5" />
+                    <span>Remove</span>
                   </button>
                 )}
               </div>
 
               {/* Uploading indicator */}
               {isUploadingAvatar && (
-                <div className="absolute inset-0 bg-[#12261E]/90 flex flex-col items-center justify-center text-[10px] text-[#F5F0E6]">
-                  <Spinner size="sm" />
+                <div className="absolute inset-0 bg-[#12261E]/90 flex flex-col items-center justify-center text-xs text-[#F5F0E6] gap-1.5 font-medium">
+                  <Spinner size="md" />
+                  <span>Uploading...</span>
                 </div>
               )}
             </div>
