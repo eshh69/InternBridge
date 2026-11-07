@@ -8,17 +8,13 @@ import { EmptyState } from '../../components/ui/EmptyState';
 import {
   Users,
   Search,
-  Filter,
   CheckCircle2,
   XCircle,
   Clock,
   Sparkles,
   FileText,
   ExternalLink,
-  MessageSquare,
   GraduationCap,
-  Briefcase,
-  ChevronDown,
 } from 'lucide-react';
 import applicationsApi from './applicationsApi';
 import apiClient from '../../services/apiClient';
@@ -119,36 +115,36 @@ export const CompanyApplicantReview = ({ onStatusChange }) => {
     switch (status) {
       case 'applied':
         return (
-          <Badge variant="info" size="sm" className="gap-1 font-bold !rounded-none uppercase tracking-wider text-[11px] !border-blue-300 !bg-blue-50 !text-blue-800">
-            <Clock className="w-3 h-3 text-blue-600" /> Submitted
+          <Badge size="sm" className="gap-1 font-bold rounded-lg uppercase tracking-wider text-[11px] bg-[#7F8C6A]/15 text-[#1E3B2F] border border-[#7F8C6A]/40">
+            <Clock className="w-3 h-3 text-[#1E3B2F]" /> Submitted
           </Badge>
         );
       case 'under_review':
         return (
-          <Badge variant="warning" size="sm" className="gap-1 font-bold !rounded-none uppercase tracking-wider text-[11px] !border-amber-300 !bg-amber-50 !text-amber-900">
+          <Badge size="sm" className="gap-1 font-bold rounded-lg uppercase tracking-wider text-[11px] bg-amber-50 text-amber-900 border border-amber-300">
             <Clock className="w-3 h-3 text-amber-600" /> Under Review
           </Badge>
         );
       case 'shortlisted':
         return (
-          <Badge variant="info" size="sm" className="gap-1 font-bold !rounded-none uppercase tracking-wider text-[11px] !border-sky-300 !bg-sky-50 !text-sky-800">
-            <Sparkles className="w-3 h-3 text-sky-600" /> Shortlisted
+          <Badge size="sm" className="gap-1 font-bold rounded-lg uppercase tracking-wider text-[11px] bg-[#C8B48A]/25 text-[#1E3B2F] border border-[#C8B48A]/50">
+            <Sparkles className="w-3 h-3 text-[#1E3B2F]" /> Shortlisted
           </Badge>
         );
       case 'hired':
         return (
-          <Badge variant="success" size="sm" className="gap-1 font-bold !rounded-none uppercase tracking-wider text-[11px] !border-emerald-300 !bg-emerald-50 !text-emerald-900">
+          <Badge size="sm" className="gap-1 font-bold rounded-lg uppercase tracking-wider text-[11px] bg-emerald-50 text-emerald-900 border border-emerald-300">
             <CheckCircle2 className="w-3 h-3 text-emerald-600" /> Hired
           </Badge>
         );
       case 'rejected':
         return (
-          <Badge variant="danger" size="sm" className="gap-1 font-bold !rounded-none uppercase tracking-wider text-[11px] !border-rose-300 !bg-rose-50 !text-rose-900">
+          <Badge size="sm" className="gap-1 font-bold rounded-lg uppercase tracking-wider text-[11px] bg-rose-50 text-rose-900 border border-rose-300">
             <XCircle className="w-3 h-3 text-rose-600" /> Rejected
           </Badge>
         );
       default:
-        return <Badge variant="neutral" size="sm" className="!rounded-none uppercase tracking-wider text-[11px]">{status}</Badge>;
+        return <Badge variant="neutral" size="sm" className="rounded-lg uppercase tracking-wider text-[11px]">{status}</Badge>;
     }
   };
 
@@ -164,28 +160,28 @@ export const CompanyApplicantReview = ({ onStatusChange }) => {
 
   return (
     <div className="space-y-6">
-      {/* 1. Header & Quick Metrics - Sharp Corners & Blue Accent Theme */}
+      {/* 1. Header & Quick Metrics - Luxury Forest Theme */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-        <div className="bg-white p-4 !rounded-none border border-slate-200 border-t-4 border-t-blue-600 shadow-2xs">
+        <div className="bg-white p-4 rounded-xl border border-slate-200 border-t-4 border-t-[#1E3B2F] shadow-2xs">
           <span className="text-xs text-slate-500 font-bold uppercase tracking-wider block">Total Candidates</span>
-          <div className="text-2xl font-extrabold text-slate-900 mt-1">{applicants.length}</div>
+          <div className="text-2xl font-extrabold text-[#1E3B2F] mt-1">{applicants.length}</div>
         </div>
 
-        <div className="bg-white p-4 !rounded-none border border-slate-200 border-t-4 border-t-amber-500 shadow-2xs">
+        <div className="bg-white p-4 rounded-xl border border-slate-200 border-t-4 border-t-amber-500 shadow-2xs">
           <span className="text-xs text-amber-800 font-bold uppercase tracking-wider block">Pending Review</span>
           <div className="text-2xl font-extrabold text-amber-950 mt-1">
             {applicants.filter((a) => a.status === 'applied' || a.status === 'under_review').length}
           </div>
         </div>
 
-        <div className="bg-white p-4 !rounded-none border border-slate-200 border-t-4 border-t-sky-500 shadow-2xs">
-          <span className="text-xs text-sky-800 font-bold uppercase tracking-wider block">Shortlisted</span>
-          <div className="text-2xl font-extrabold text-sky-950 mt-1">
+        <div className="bg-white p-4 rounded-xl border border-slate-200 border-t-4 border-t-[#C8B48A] shadow-2xs">
+          <span className="text-xs text-[#1E3B2F] font-bold uppercase tracking-wider block">Shortlisted</span>
+          <div className="text-2xl font-extrabold text-[#1E3B2F] mt-1">
             {applicants.filter((a) => a.status === 'shortlisted').length}
           </div>
         </div>
 
-        <div className="bg-white p-4 !rounded-none border border-slate-200 border-t-4 border-t-emerald-600 shadow-2xs">
+        <div className="bg-white p-4 rounded-xl border border-slate-200 border-t-4 border-t-emerald-600 shadow-2xs">
           <span className="text-xs text-emerald-800 font-bold uppercase tracking-wider block">Hired</span>
           <div className="text-2xl font-extrabold text-emerald-950 mt-1">
             {applicants.filter((a) => a.status === 'hired').length}
@@ -193,27 +189,27 @@ export const CompanyApplicantReview = ({ onStatusChange }) => {
         </div>
       </div>
 
-      {/* 2. Search & Filter Bar - Sharp Corners */}
-      <div className="bg-white p-3.5 !rounded-none border border-slate-200 flex flex-col md:flex-row items-center justify-between gap-3 shadow-2xs">
+      {/* 2. Search & Filter Bar */}
+      <div className="bg-white p-3.5 rounded-xl border border-slate-200 flex flex-col md:flex-row items-center justify-between gap-3 shadow-2xs">
         <div className="relative w-full md:w-72">
-          <Search className="w-4 h-4 text-blue-500 absolute left-3 top-2.5" />
+          <Search className="w-4 h-4 text-[#1E3B2F]/60 absolute left-3 top-2.5" />
           <input
             type="text"
             placeholder="Search candidate name or email..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-9 pr-3 py-1.5 text-xs !rounded-none border border-slate-300 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+            className="w-full pl-9 pr-3 py-1.5 text-xs rounded-lg border border-slate-300 focus:outline-none focus:ring-1 focus:ring-[#1E3B2F] focus:border-[#1E3B2F]"
           />
         </div>
 
         <div className="flex flex-wrap items-center gap-2.5 w-full md:w-auto">
           {/* Position Selector */}
           <div className="flex items-center gap-1.5 text-xs text-slate-700 w-full sm:w-auto">
-            <span className="font-bold whitespace-nowrap">Position:</span>
+            <span className="font-bold whitespace-nowrap text-[#1E3B2F]">Position:</span>
             <select
               value={selectedInternshipId}
               onChange={(e) => setSelectedInternshipId(e.target.value)}
-              className="text-xs border border-slate-300 !rounded-none px-2.5 py-1.5 bg-white text-slate-800 focus:outline-none focus:ring-1 focus:ring-blue-500 font-medium max-w-[200px]"
+              className="text-xs border border-slate-300 rounded-lg px-2.5 py-1.5 bg-white text-slate-800 focus:outline-none focus:ring-1 focus:ring-[#1E3B2F] font-medium max-w-[200px]"
             >
               <option value="all">All Positions</option>
               {internships.map((int) => (
@@ -226,11 +222,11 @@ export const CompanyApplicantReview = ({ onStatusChange }) => {
 
           {/* Status Filter */}
           <div className="flex items-center gap-1.5 text-xs text-slate-700 w-full sm:w-auto">
-            <span className="font-bold whitespace-nowrap">Status:</span>
+            <span className="font-bold whitespace-nowrap text-[#1E3B2F]">Status:</span>
             <select
               value={selectedStatus}
               onChange={(e) => setSelectedStatus(e.target.value)}
-              className="text-xs border border-slate-300 !rounded-none px-2.5 py-1.5 bg-white text-slate-800 focus:outline-none focus:ring-1 focus:ring-blue-500 font-medium"
+              className="text-xs border border-slate-300 rounded-lg px-2.5 py-1.5 bg-white text-slate-800 focus:outline-none focus:ring-1 focus:ring-[#1E3B2F] font-medium"
             >
               <option value="all">All Stages</option>
               <option value="applied">Submitted</option>
@@ -243,8 +239,8 @@ export const CompanyApplicantReview = ({ onStatusChange }) => {
         </div>
       </div>
 
-      {/* 3. Candidates List Table - Sharp Corners */}
-      <Card className="overflow-hidden p-0 !rounded-none border border-slate-200 shadow-xs">
+      {/* 3. Candidates List Table */}
+      <Card className="overflow-hidden p-0 rounded-xl border border-slate-200 shadow-xs">
         {isLoading ? (
           <div className="py-16 flex items-center justify-center">
             <Spinner size="lg" />
@@ -261,7 +257,7 @@ export const CompanyApplicantReview = ({ onStatusChange }) => {
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs sm:text-sm text-gray-600">
-              <thead className="text-[11px] uppercase bg-slate-50 text-gray-500 font-bold border-b border-gray-200">
+              <thead className="text-[11px] uppercase bg-[#F5F0E6]/50 text-slate-700 font-bold border-b border-[#C8B48A]/30">
                 <tr>
                   <th className="px-5 py-3.5">Candidate Details</th>
                   <th className="px-5 py-3.5">Position Applied</th>
@@ -279,12 +275,12 @@ export const CompanyApplicantReview = ({ onStatusChange }) => {
                   const degree = app.studentProfile?.degree || 'ICT Undergraduate';
 
                   return (
-                    <tr key={app._id} className="hover:bg-slate-50/80 transition-colors">
+                    <tr key={app._id} className="hover:bg-[#F5F0E6]/30 transition-colors">
                       <td className="px-5 py-4">
                         <div className="font-semibold text-gray-900">{studentName}</div>
                         <div className="text-xs text-gray-500">{studentEmail}</div>
                         <div className="flex items-center gap-1 mt-1 text-[11px] text-gray-500">
-                          <GraduationCap className="w-3 h-3 text-blue-600" />
+                          <GraduationCap className="w-3.5 h-3.5 text-[#1E3B2F]" />
                           <span>{degree} • {university}</span>
                         </div>
                       </td>
@@ -296,8 +292,8 @@ export const CompanyApplicantReview = ({ onStatusChange }) => {
 
                       <td className="px-5 py-4">
                         {app.matchScore !== undefined ? (
-                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 !rounded-none text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200">
-                            <Sparkles className="w-3 h-3 text-blue-600" /> {app.matchScore}%
+                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-lg text-xs font-bold bg-[#7F8C6A]/15 text-[#1E3B2F] border border-[#7F8C6A]/30">
+                            <Sparkles className="w-3 h-3 text-[#1E3B2F]" /> {app.matchScore}%
                           </span>
                         ) : (
                           <span className="text-gray-400">—</span>
@@ -310,11 +306,11 @@ export const CompanyApplicantReview = ({ onStatusChange }) => {
                             href={app.resumeUrl}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="inline-flex items-center gap-1 text-xs font-semibold text-blue-600 hover:text-blue-800 hover:underline"
+                            className="inline-flex items-center gap-1 text-xs font-semibold text-[#1E3B2F] hover:text-[#152A22] hover:underline"
                           >
-                            <FileText className="w-3.5 h-3.5 text-blue-600" />
+                            <FileText className="w-3.5 h-3.5 text-[#1E3B2F]" />
                             <span>View CV</span>
-                            <ExternalLink className="w-3 h-3 text-blue-400" />
+                            <ExternalLink className="w-3 h-3 text-[#C8B48A]" />
                           </a>
                         ) : (
                           <span className="text-gray-400 text-xs">No attachment</span>
@@ -330,7 +326,7 @@ export const CompanyApplicantReview = ({ onStatusChange }) => {
                           variant="primary"
                           size="sm"
                           onClick={() => handleOpenStatusModal(app)}
-                          className="text-xs gap-1 !rounded-none !bg-blue-600 hover:!bg-blue-700 text-white !border-blue-600 font-semibold shadow-xs"
+                          className="text-xs gap-1 bg-[#1E3B2F] hover:bg-[#152A22] text-[#F5F0E6] border border-[#1E3B2F] font-semibold shadow-xs"
                         >
                           Review & Update
                         </Button>
@@ -344,13 +340,13 @@ export const CompanyApplicantReview = ({ onStatusChange }) => {
         )}
       </Card>
 
-      {/* 4. Recruiter Decision & Notes Modal - Sharp Corners & Blue Theme */}
+      {/* 4. Recruiter Decision & Notes Modal - Luxury Forest Theme */}
       {selectedApplicant && (
         <Modal
           isOpen={isStatusModalOpen}
           onClose={() => setIsStatusModalOpen(false)}
           title={`Review Candidate: ${selectedApplicant.student?.name || 'Applicant'}`}
-          maxWidth="max-w-lg !rounded-none"
+          maxWidth="max-w-lg rounded-2xl"
           footer={
             <div className="flex justify-end gap-3 w-full">
               <Button
@@ -358,7 +354,7 @@ export const CompanyApplicantReview = ({ onStatusChange }) => {
                 size="sm"
                 onClick={() => setIsStatusModalOpen(false)}
                 disabled={isUpdating}
-                className="!rounded-none border-slate-300 font-semibold"
+                className="rounded-xl border-[#C8B48A]/60 font-semibold"
               >
                 Cancel
               </Button>
@@ -367,7 +363,7 @@ export const CompanyApplicantReview = ({ onStatusChange }) => {
                 size="sm"
                 onClick={handleSaveStatus}
                 isLoading={isUpdating}
-                className="!rounded-none !bg-blue-600 hover:!bg-blue-700 text-white !border-blue-600 font-semibold shadow-xs"
+                className="bg-[#1E3B2F] hover:bg-[#152A22] text-[#F5F0E6] border border-[#1E3B2F] font-semibold shadow-xs"
               >
                 Save Decision
               </Button>
@@ -376,26 +372,26 @@ export const CompanyApplicantReview = ({ onStatusChange }) => {
         >
           <form onSubmit={handleSaveStatus} className="space-y-4">
             {updateError && (
-              <div className="p-3 bg-red-50 border border-red-200 !rounded-none text-xs text-red-700">
+              <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-xs text-red-700">
                 {updateError}
               </div>
             )}
 
             {/* Candidate Summary */}
-            <div className="p-3.5 bg-slate-50 !rounded-none border border-slate-200 border-l-4 border-l-blue-600 space-y-1.5">
+            <div className="p-3.5 bg-[#F5F0E6]/80 rounded-xl border border-[#C8B48A]/40 border-l-4 border-l-[#1E3B2F] space-y-1.5">
               <div className="flex justify-between items-start">
                 <div>
-                  <h4 className="font-bold text-gray-900">{selectedApplicant.student?.name}</h4>
-                  <p className="text-xs text-gray-600">{selectedApplicant.student?.email}</p>
+                  <h4 className="font-bold text-[#1E3B2F]">{selectedApplicant.student?.name}</h4>
+                  <p className="text-xs text-slate-600">{selectedApplicant.student?.email}</p>
                 </div>
                 {selectedApplicant.matchScore !== undefined && (
-                  <Badge variant="info" size="sm" className="!rounded-none font-bold !bg-blue-600 text-white !border-blue-700">
+                  <Badge size="sm" className="font-bold bg-[#1E3B2F] text-[#F5F0E6] border border-[#152A22] rounded-lg">
                     {selectedApplicant.matchScore}% Fit
                   </Badge>
                 )}
               </div>
-              <div className="text-xs text-gray-600 pt-1 border-t border-gray-200/60">
-                Applied for: <strong className="text-gray-800">{selectedApplicant.internship?.title}</strong>
+              <div className="text-xs text-slate-600 pt-1 border-t border-[#C8B48A]/30">
+                Applied for: <strong className="text-[#1E3B2F]">{selectedApplicant.internship?.title}</strong>
               </div>
             </div>
 
@@ -405,7 +401,7 @@ export const CompanyApplicantReview = ({ onStatusChange }) => {
                 <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">
                   Candidate Statement / Cover Letter:
                 </label>
-                <div className="p-3 bg-gray-50 !rounded-none border border-gray-200 text-xs text-gray-700 whitespace-pre-line leading-relaxed max-h-36 overflow-y-auto">
+                <div className="p-3 bg-gray-50 rounded-xl border border-gray-200 text-xs text-gray-700 whitespace-pre-line leading-relaxed max-h-36 overflow-y-auto">
                   {selectedApplicant.coverLetter}
                 </div>
               </div>
@@ -419,7 +415,7 @@ export const CompanyApplicantReview = ({ onStatusChange }) => {
               <select
                 value={newStatus}
                 onChange={(e) => setNewStatus(e.target.value)}
-                className="w-full px-3 py-2 border border-slate-300 !rounded-none text-sm bg-white font-medium focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm bg-white font-medium focus:outline-none focus:ring-1 focus:ring-[#1E3B2F] focus:border-[#1E3B2F]"
               >
                 <option value="applied">Submitted (Initial Stage)</option>
                 <option value="under_review">Under Review (Screening in Progress)</option>
@@ -439,7 +435,7 @@ export const CompanyApplicantReview = ({ onStatusChange }) => {
                 value={recruiterNotes}
                 onChange={(e) => setRecruiterNotes(e.target.value)}
                 placeholder="Add interview scheduling instructions, technical evaluation notes, or reason for status update..."
-                className="w-full px-3 py-2 border border-slate-300 !rounded-none text-xs focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 resize-none"
+                className="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs focus:outline-none focus:ring-1 focus:ring-[#1E3B2F] focus:border-[#1E3B2F] resize-none"
               />
               <p className="text-[11px] text-gray-500 mt-1">
                 Visible to candidate as instructions / evaluation status.

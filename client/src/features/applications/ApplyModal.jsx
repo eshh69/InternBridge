@@ -152,13 +152,13 @@ export const ApplyModal = ({
       isOpen={isOpen}
       onClose={handleClose}
       title="Submit Internship Application"
-      maxWidth="max-w-xl !rounded-none"
+      maxWidth="max-w-xl rounded-2xl"
       footer={
         isSuccess ? (
           <Button
             variant="primary"
             onClick={handleClose}
-            className="!rounded-none !bg-blue-600 hover:!bg-blue-700 !border-blue-600 text-white font-semibold"
+            className="rounded-xl bg-[#1E3B2F] hover:bg-[#152A22] text-[#F5F0E6] border border-[#1E3B2F] font-semibold"
           >
             Done
           </Button>
@@ -168,7 +168,7 @@ export const ApplyModal = ({
               variant="secondary"
               onClick={handleClose}
               disabled={isSubmitting}
-              className="!rounded-none border-slate-300 font-semibold"
+              className="rounded-xl border-[#C8B48A]/60 font-semibold"
             >
               Cancel
             </Button>
@@ -176,7 +176,7 @@ export const ApplyModal = ({
               variant="primary"
               onClick={handleSubmit}
               isLoading={isSubmitting}
-              className="!rounded-none !bg-blue-600 hover:!bg-blue-700 !border-blue-600 text-white font-semibold shadow-xs"
+              className="rounded-xl bg-[#1E3B2F] hover:bg-[#152A22] text-[#F5F0E6] border border-[#1E3B2F] font-semibold shadow-xs"
             >
               Submit Application
             </Button>
@@ -186,16 +186,16 @@ export const ApplyModal = ({
     >
       {isSuccess ? (
         <div className="text-center py-6 space-y-4">
-          <div className="w-14 h-14 !rounded-none bg-blue-50 border border-blue-200 flex items-center justify-center mx-auto text-blue-600">
+          <div className="w-14 h-14 rounded-2xl bg-[#7F8C6A]/15 border border-[#7F8C6A]/40 flex items-center justify-center mx-auto text-[#1E3B2F]">
             <CheckCircle2 className="w-8 h-8" />
           </div>
           <div>
-            <h3 className="text-lg font-bold text-gray-900">Application Submitted Successfully!</h3>
-            <p className="text-sm text-gray-600 mt-1">
-              Your application for <strong className="text-gray-900">{currentInternship.title}</strong> at <strong className="text-gray-900">{currentInternship.company?.name || currentInternship.companyName}</strong> has been transmitted.
+            <h3 className="text-lg font-bold text-[#1E3B2F]">Application Submitted Successfully!</h3>
+            <p className="text-sm text-slate-600 mt-1">
+              Your application for <strong className="text-[#1E3B2F]">{currentInternship.title}</strong> at <strong className="text-[#1E3B2F]">{currentInternship.company?.name || currentInternship.companyName}</strong> has been transmitted.
             </p>
           </div>
-          <Alert type="success" className="text-left mt-3 !rounded-none border-l-4 border-l-blue-600">
+          <Alert type="success" className="text-left mt-3 rounded-xl border-l-4 border-l-[#1E3B2F]">
             Your application is now visible in the Application & Recruitment Tracker. Both you and the company recruiter can track progress.
           </Alert>
         </div>
@@ -213,7 +213,7 @@ export const ApplyModal = ({
                   const found = DEFAULT_SAMPLE_INTERNSHIPS.find((i) => i._id === e.target.value);
                   if (found) setSelectedInternship(found);
                 }}
-                className="w-full px-3 py-2 border border-slate-300 !rounded-none text-xs bg-white font-medium text-gray-800 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs bg-white font-medium text-gray-800 focus:outline-none focus:ring-1 focus:ring-[#1E3B2F]"
               >
                 {DEFAULT_SAMPLE_INTERNSHIPS.map((item) => (
                   <option key={item._id} value={item._id}>
@@ -224,14 +224,14 @@ export const ApplyModal = ({
             </div>
           )}
 
-          {/* Internship Target Summary - Sharp Corners & Blue Theme */}
-          <div className="bg-slate-50 !rounded-none p-3.5 border border-slate-200 border-l-4 border-l-blue-600 space-y-2">
+          {/* Internship Target Summary - Luxury Forest Theme */}
+          <div className="bg-[#F5F0E6]/80 rounded-xl p-3.5 border border-[#C8B48A]/40 border-l-4 border-l-[#1E3B2F] space-y-2">
             <div className="flex items-start justify-between gap-3">
               <div>
-                <h4 className="text-sm sm:text-base font-bold text-gray-900">{currentInternship.title}</h4>
-                <div className="flex items-center gap-3 mt-1 text-xs text-gray-600">
-                  <span className="flex items-center gap-1 font-semibold text-gray-800">
-                    <Building2 className="w-3.5 h-3.5 text-blue-600" />
+                <h4 className="text-sm sm:text-base font-bold text-[#1E3B2F]">{currentInternship.title}</h4>
+                <div className="flex items-center gap-3 mt-1 text-xs text-slate-600">
+                  <span className="flex items-center gap-1 font-semibold text-[#1E3B2F]">
+                    <Building2 className="w-3.5 h-3.5 text-[#1E3B2F]" />
                     {currentInternship.company?.name || currentInternship.companyName || 'Company Partner'}
                   </span>
                   <span>•</span>
@@ -242,7 +242,7 @@ export const ApplyModal = ({
                 </div>
               </div>
               {currentInternship.matchScore !== undefined && (
-                <Badge variant="info" size="sm" className="font-bold flex-shrink-0 !rounded-none !bg-blue-600 text-white !border-blue-700">
+                <Badge size="sm" className="font-bold flex-shrink-0 rounded-lg bg-[#1E3B2F] text-[#F5F0E6] border border-[#152A22]">
                   <Sparkles className="w-3 h-3 mr-1" />
                   {currentInternship.matchScore}% Match
                 </Badge>
@@ -251,7 +251,7 @@ export const ApplyModal = ({
           </div>
 
           {errorMessage && (
-            <Alert type="danger" title="Application Notice" className="!rounded-none">
+            <Alert type="danger" title="Application Notice" className="rounded-xl">
               {errorMessage}
             </Alert>
           )}
@@ -262,7 +262,7 @@ export const ApplyModal = ({
               Resume / CV Attachment <span className="text-red-500">*</span>
             </label>
 
-            <div className="border-2 border-dashed border-slate-300 hover:border-blue-500 !rounded-none p-4 text-center bg-slate-50/50 transition-colors">
+            <div className="border-2 border-dashed border-[#C8B48A]/60 hover:border-[#1E3B2F] rounded-xl p-4 text-center bg-[#F5F0E6]/30 transition-colors">
               <input
                 type="file"
                 id="resume-file-input"
@@ -274,18 +274,18 @@ export const ApplyModal = ({
                 htmlFor="resume-file-input"
                 className="cursor-pointer flex flex-col items-center justify-center gap-1"
               >
-                <div className="w-8 h-8 !rounded-none bg-blue-50 text-blue-600 flex items-center justify-center">
+                <div className="w-8 h-8 rounded-lg bg-[#7F8C6A]/15 text-[#1E3B2F] flex items-center justify-center">
                   <UploadCloud className="w-4 h-4" />
                 </div>
-                <span className="text-xs font-semibold text-blue-600 hover:underline">
+                <span className="text-xs font-semibold text-[#1E3B2F] hover:underline">
                   Click to attach CV from computer
                 </span>
                 <span className="text-[11px] text-gray-400">PDF, DOC, DOCX up to 5MB</span>
               </label>
 
               {fileName && (
-                <div className="mt-2 inline-flex items-center gap-1.5 px-3 py-1 bg-white border border-blue-200 !rounded-none text-xs font-medium text-gray-800">
-                  <FileText className="w-3.5 h-3.5 text-blue-600" />
+                <div className="mt-2 inline-flex items-center gap-1.5 px-3 py-1 bg-white border border-[#C8B48A]/40 rounded-lg text-xs font-medium text-gray-800">
+                  <FileText className="w-3.5 h-3.5 text-[#1E3B2F]" />
                   <span>Selected: {fileName}</span>
                 </div>
               )}
@@ -298,7 +298,7 @@ export const ApplyModal = ({
                 onChange={(e) => setResumeUrl(e.target.value)}
                 placeholder="https://internbridge.storage/resumes/..."
                 helperText="Link to your hosted CV or portfolio document"
-                className="!rounded-none"
+                className="rounded-xl"
                 required
               />
             </div>
@@ -319,7 +319,7 @@ export const ApplyModal = ({
               value={coverLetter}
               onChange={(e) => setCoverLetter(e.target.value)}
               placeholder="Briefly state your passion, key projects, or why you are excited to join this internship..."
-              className="w-full px-3 py-2 border border-slate-300 !rounded-none text-xs sm:text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 resize-none transition-colors"
+              className="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs sm:text-sm focus:outline-none focus:ring-1 focus:ring-[#1E3B2F] focus:border-[#1E3B2F] resize-none transition-colors"
             />
           </div>
         </form>
