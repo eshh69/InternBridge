@@ -192,6 +192,8 @@ export const RegisterPage = () => {
         email: email.trim().toLowerCase(),
         role,
         authProvider: authMode === 'google' ? 'supabase' : 'local',
+        supabaseId: googleProfile?.supabaseId || googleProfile?.id || undefined,
+        avatarUrl: googleProfile?.avatarUrl || undefined,
         age: age ? parseInt(age, 10) : undefined,
         phone: phone.trim() || undefined,
       };
@@ -231,7 +233,13 @@ export const RegisterPage = () => {
         payload.reviewerDetails = reviewerInfo;
       }
 
-      const registeredUser = await register(payload);
+      const registeredUser = authMode === 'google'
+        ? await loginWithSupabase({
+            ...payload,
+            supabaseId: googleProfile?.supabaseId || googleProfile?.id,
+            avatarUrl: googleProfile?.avatarUrl,
+          })
+        : await register(payload);
       sessionStorage.removeItem('pending_google_reg');
 
       if (registeredUser.role === 'student') {

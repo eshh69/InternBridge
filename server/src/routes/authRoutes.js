@@ -68,31 +68,51 @@ router.post('/register', async (req, res, next) => {
     const effectiveCompanyDetails = companyDetails || companyData || {};
     const effectiveReviewerDetails = reviewerDetails || reviewerData || {};
 
-    if (!name || !email || !password) {
-      return sendError(res, 400, 'Please provide name, email, and password');
+    const isOAuth = authProvider === 'supabase' || authProvider === 'google';
+
+    if (!name || !email || (!isOAuth && !password)) {
+      return sendError(res, 400, isOAuth ? 'Please provide name and email' : 'Please provide name, email, and password');
     }
 
     const normalizedEmail = email.toLowerCase().trim();
 
-    const existingUser = await User.findOne({ email: normalizedEmail });
-    if (existingUser) {
+    let user = await User.findOne({
+      $or: [
+        { email: normalizedEmail },
+        ...(supabaseId ? [{ supabaseId }] : []),
+      ],
+    });
+
+    if (user && !isOAuth) {
       return sendError(res, 400, 'User already exists with this email address');
     }
 
-    const passwordHash = await User.hashPassword(password);
+    const passwordHash = password ? await User.hashPassword(password) : undefined;
     const userRole = ['student', 'company', 'reviewer'].includes(role) ? role : 'student';
-
     const parsedAge = age ? parseInt(age, 10) : null;
 
-    const user = await User.create({
-      name: name.trim(),
-      email: normalizedEmail,
-      passwordHash,
-      role: userRole,
-      age: isNaN(parsedAge) ? null : parsedAge,
-      phone: phone ? phone.trim() : '',
-      authProvider: 'local',
-    });
+    if (!user) {
+      user = await User.create({
+        name: name.trim(),
+        email: normalizedEmail,
+        ...(passwordHash ? { passwordHash } : {}),
+        role: userRole,
+        age: isNaN(parsedAge) ? null : parsedAge,
+        phone: phone ? phone.trim() : '',
+        authProvider: isOAuth ? 'supabase' : 'local',
+        supabaseId: supabaseId || null,
+        avatarUrl: avatarUrl || null,
+      });
+    } else {
+      user.role = userRole;
+      if (name) user.name = name.trim();
+      if (!isNaN(parsedAge) && parsedAge) user.age = parsedAge;
+      if (phone) user.phone = phone.trim();
+      if (isOAuth) user.authProvider = 'supabase';
+      if (supabaseId) user.supabaseId = supabaseId;
+      if (avatarUrl) user.avatarUrl = avatarUrl;
+      await user.save();
+    }
 
     // Auto-create role-specific profile document
     if (userRole === 'student') {
@@ -127,23 +147,34 @@ router.post('/register', async (req, res, next) => {
       const compCountry =
         effectiveCompanyDetails?.location?.country || effectiveCompanyDetails?.country || 'Sri Lanka';
 
-      await Company.create({
-        user: user._id,
-        name: effectiveCompanyDetails?.name?.trim() || name.trim(),
-        description:
-          effectiveCompanyDetails?.description?.trim() ||
-          'Innovative technology and business organization offering professional internships.',
-        industry: effectiveCompanyDetails?.industry?.trim() || 'Software Engineering',
-        location: {
-          address: compAddress,
-          city: compCity,
-          country: compCountry,
-        },
-        website: effectiveCompanyDetails?.website?.trim() || '',
-        contactEmail: effectiveCompanyDetails?.contactEmail?.trim() || normalizedEmail,
-        contactPhone: phone?.trim() || effectiveCompanyDetails?.contactPhone?.trim() || '',
-        verificationStatus: 'unverified',
-      });
+      let comp = await Company.findOne({ user: user._id });
+      if (!comp) {
+        await Company.create({
+          user: user._id,
+          name: effectiveCompanyDetails?.name?.trim() || name.trim(),
+          description:
+            effectiveCompanyDetails?.description?.trim() ||
+            'Innovative technology and business organization offering professional internships.',
+          industry: effectiveCompanyDetails?.industry?.trim() || 'Software Engineering',
+          location: {
+            address: compAddress,
+            city: compCity,
+            country: compCountry,
+          },
+          website: effectiveCompanyDetails?.website?.trim() || '',
+          contactEmail: effectiveCompanyDetails?.contactEmail?.trim() || normalizedEmail,
+          contactPhone: phone?.trim() || effectiveCompanyDetails?.contactPhone?.trim() || '',
+          verificationStatus: 'unverified',
+        });
+      } else {
+        if (effectiveCompanyDetails?.name) comp.name = effectiveCompanyDetails.name.trim();
+        if (effectiveCompanyDetails?.industry) comp.industry = effectiveCompanyDetails.industry.trim();
+        if (effectiveCompanyDetails?.city || effectiveCompanyDetails?.location?.city) {
+          comp.location = comp.location || {};
+          comp.location.city = effectiveCompanyDetails.city || effectiveCompanyDetails.location?.city;
+        }
+        await comp.save();
+      }
     }
 
     const token = generateToken(user._id);
@@ -271,6 +302,33 @@ router.post('/supabase-login', async (req, res, next) => {
       }
       if (modified) {
         await user.save();
+      }
+
+      if (user.role === 'company') {
+        let existingComp = await Company.findOne({ user: user._id });
+        const effComp = companyDetails || companyData || {};
+        if (!existingComp) {
+          const compAddress = effComp?.location?.address || effComp?.address || 'Colombo, Sri Lanka';
+          const compCity = effComp?.location?.city || effComp?.city || 'Colombo';
+          const compCountry = effComp?.location?.country || effComp?.country || 'Sri Lanka';
+          await Company.create({
+            user: user._id,
+            name: effComp?.name?.trim() || user.name || normalizedEmail.split('@')[0],
+            description:
+              effComp?.description?.trim() ||
+              'Leading business organization offering impactful internship and recruitment opportunities.',
+            industry: effComp?.industry?.trim() || 'Technology & Innovation',
+            location: {
+              address: compAddress,
+              city: compCity,
+              country: compCountry,
+            },
+            website: effComp?.website?.trim() || '',
+            contactEmail: effComp?.contactEmail?.trim() || normalizedEmail,
+            contactPhone: phone?.trim() || effComp?.contactPhone?.trim() || '',
+            verificationStatus: 'unverified',
+          });
+        }
       }
     } else {
       // Create new user in MongoDB
