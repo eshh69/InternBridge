@@ -98,7 +98,7 @@ export const CompanyProfileSection = ({
         );
       default:
         return (
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-slate-100 text-slate-700 border border-slate-300 rounded-full text-xs font-medium">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-slate-100 text-slate-700 border border-[#C8B48A]/35 rounded-full text-xs font-medium">
             Unverified Account
           </span>
         );
@@ -187,13 +187,13 @@ export const CompanyProfileSection = ({
                   <img
                     src={company.logoUrl}
                     alt={company.name}
-                    className="w-20 h-20 rounded-2xl object-cover border border-slate-200 shadow-sm"
+                    className="w-20 h-20 rounded-2xl object-cover border border-[#C8B48A]/35 shadow-sm"
                     onError={(e) => {
                       e.target.style.display = 'none';
                     }}
                   />
                 ) : (
-                  <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-indigo-600 to-purple-700 text-white flex items-center justify-center font-extrabold text-3xl shadow-sm select-none">
+                  <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-[#1E3B2F] to-[#152A22] text-white flex items-center justify-center font-extrabold text-3xl shadow-sm select-none">
                     {company.name ? company.name.charAt(0).toUpperCase() : 'C'}
                   </div>
                 )}
@@ -231,9 +231,9 @@ export const CompanyProfileSection = ({
 
             {/* Reputation & Trust Stats */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              <div className="p-4 bg-indigo-50/70 rounded-xl border border-indigo-100/90 flex items-center gap-3.5">
-                <div className="p-2.5 bg-indigo-100 text-indigo-700 rounded-xl">
-                  <Star className="w-5 h-5 fill-indigo-600 text-indigo-600" />
+              <div className="p-4 bg-[#7F8C6A]/15 rounded-xl border border-[#7F8C6A]/30 flex items-center gap-3.5">
+                <div className="p-2.5 bg-[#7F8C6A]/15 text-[#1E3B2F] rounded-xl">
+                  <Star className="w-5 h-5 fill-[#1E3B2F] text-[#1E3B2F]" />
                 </div>
                 <div>
                   <span className="text-xs text-slate-500 uppercase tracking-wider block font-semibold">
@@ -245,9 +245,9 @@ export const CompanyProfileSection = ({
                 </div>
               </div>
 
-              <div className="p-4 bg-purple-50/70 rounded-xl border border-purple-100/90 flex items-center gap-3.5">
-                <div className="p-2.5 bg-purple-100 text-purple-700 rounded-xl">
-                  <CheckCircle2 className="w-5 h-5 text-purple-600" />
+              <div className="p-4 bg-[#C8B48A]/20 rounded-xl border border-[#C8B48A]/35 flex items-center gap-3.5">
+                <div className="p-2.5 bg-[#C8B48A]/20 text-[#1E3B2F] rounded-xl">
+                  <CheckCircle2 className="w-5 h-5 text-[#1E3B2F]" />
                 </div>
                 <div>
                   <span className="text-xs text-slate-500 uppercase tracking-wider block font-semibold">
@@ -279,7 +279,7 @@ export const CompanyProfileSection = ({
               <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wider">
                 About the Company
               </h4>
-              <p className="text-sm text-slate-700 leading-relaxed whitespace-pre-line bg-slate-50 p-4 rounded-xl border border-slate-200/80">
+              <p className="text-sm text-slate-700 leading-relaxed whitespace-pre-line bg-[#F5F0E6] p-4 rounded-xl border border-[#C8B48A]/35">
                 {company.description || 'No description provided yet.'}
               </p>
             </div>
@@ -290,25 +290,25 @@ export const CompanyProfileSection = ({
                 Contact & Headquarters Information
               </h4>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="p-4 border border-slate-200 rounded-xl space-y-1 bg-white">
+                <div className="p-4 border border-[#C8B48A]/35 rounded-xl space-y-1 bg-white">
                   <span className="text-xs text-slate-500 font-medium flex items-center gap-1.5">
-                    <Mail className="w-4 h-4 text-indigo-600" /> Recruitment Contact Email
+                    <Mail className="w-4 h-4 text-[#1E3B2F]" /> Recruitment Contact Email
                   </span>
                   <p className="text-sm font-semibold text-slate-900">{company.contactEmail}</p>
                 </div>
 
-                <div className="p-4 border border-slate-200 rounded-xl space-y-1 bg-white">
+                <div className="p-4 border border-[#C8B48A]/35 rounded-xl space-y-1 bg-white">
                   <span className="text-xs text-slate-500 font-medium flex items-center gap-1.5">
-                    <Phone className="w-4 h-4 text-indigo-600" /> Telephone / Hot-line
+                    <Phone className="w-4 h-4 text-[#1E3B2F]" /> Telephone / Hot-line
                   </span>
                   <p className="text-sm font-semibold text-slate-900">
                     {company.contactPhone || 'Not provided'}
                   </p>
                 </div>
 
-                <div className="p-4 border border-slate-200 rounded-xl space-y-1 bg-white">
+                <div className="p-4 border border-[#C8B48A]/35 rounded-xl space-y-1 bg-white">
                   <span className="text-xs text-slate-500 font-medium flex items-center gap-1.5">
-                    <Globe className="w-4 h-4 text-indigo-600" /> Official Website
+                    <Globe className="w-4 h-4 text-[#1E3B2F]" /> Official Website
                   </span>
                   {company.website ? (
                     <a
@@ -319,7 +319,7 @@ export const CompanyProfileSection = ({
                       }
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-sm font-semibold text-indigo-600 hover:text-indigo-800 hover:underline flex items-center gap-1 transition-colors"
+                      className="text-sm font-semibold text-[#1E3B2F] hover:text-[#1E3B2F] hover:underline flex items-center gap-1 transition-colors"
                     >
                       {company.website} <ExternalLink className="w-3.5 h-3.5" />
                     </a>
@@ -328,9 +328,9 @@ export const CompanyProfileSection = ({
                   )}
                 </div>
 
-                <div className="p-4 border border-slate-200 rounded-xl space-y-1 bg-white">
+                <div className="p-4 border border-[#C8B48A]/35 rounded-xl space-y-1 bg-white">
                   <span className="text-xs text-slate-500 font-medium flex items-center gap-1.5">
-                    <MapPin className="w-4 h-4 text-indigo-600" /> Office Address
+                    <MapPin className="w-4 h-4 text-[#1E3B2F]" /> Office Address
                   </span>
                   <p className="text-sm font-semibold text-slate-900">
                     {company.location?.address || 'Headquarters'}, {company.location?.city || 'Colombo'}
@@ -372,7 +372,7 @@ export const CompanyProfileSection = ({
                   <select
                     value={formData.industry}
                     onChange={(e) => setFormData({ ...formData, industry: e.target.value })}
-                    className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white"
+                    className="w-full px-3 py-2 border border-[#C8B48A]/35 rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#1E3B2F]/20 focus:border-[#1E3B2F] bg-white"
                   >
                     {PREDEFINED_INDUSTRIES.map((ind) => (
                       <option key={ind} value={ind}>
@@ -400,7 +400,7 @@ export const CompanyProfileSection = ({
                   placeholder="Describe your organization, engineering culture, technologies used, and what interns will learn..."
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
+                  className="w-full px-3 py-2 border border-[#C8B48A]/35 rounded-lg text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#1E3B2F]/20 focus:border-[#1E3B2F] transition-colors"
                 />
               </div>
 
@@ -423,7 +423,7 @@ export const CompanyProfileSection = ({
               </div>
 
               {/* Location Fields */}
-              <div className="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-3">
+              <div className="p-4 bg-[#F5F0E6] rounded-xl border border-[#C8B48A]/35 space-y-3">
                 <span className="text-sm font-bold text-slate-900 block">
                   Headquarters & Office Location
                 </span>

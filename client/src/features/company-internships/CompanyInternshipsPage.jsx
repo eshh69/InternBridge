@@ -296,7 +296,7 @@ export const CompanyInternshipsPage = () => {
       {/* ── Page Header ── */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <p className="text-[11px] font-bold text-indigo-500 uppercase tracking-widest mb-1">
+          <p className="text-[11px] font-bold text-[#1E3B2F] uppercase tracking-widest mb-1">
             Company Dashboard
           </p>
           <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight leading-tight">
@@ -331,7 +331,7 @@ export const CompanyInternshipsPage = () => {
       )}
 
       {/* ── Tab Navigation ── */}
-      <div className="bg-white p-1.5 rounded-xl border border-slate-200/90 shadow-sm w-fit max-w-full overflow-x-auto">
+      <div className="bg-white p-1.5 rounded-xl border border-[#C8B48A]/35 shadow-sm w-fit max-w-full overflow-x-auto">
         <nav className="flex space-x-1" aria-label="Portal Navigation Tabs">
           {tabsConfig.map((tab) => {
             const Icon = tab.icon;
@@ -340,9 +340,9 @@ export const CompanyInternshipsPage = () => {
               <button
                 key={tab.id}
                 onClick={() => handleTabChange(tab.id)}
-                className={`py-2 px-3 sm:px-4 text-sm font-semibold rounded-lg flex items-center gap-2 transition-all duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-1 select-none whitespace-nowrap ${
+                className={`py-2 px-3 sm:px-4 text-sm font-semibold rounded-lg flex items-center gap-2 transition-all duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#1E3B2F]/20 focus-visible:ring-offset-1 select-none whitespace-nowrap ${
                   isActive
-                    ? 'bg-indigo-600 text-white shadow-sm'
+                    ? 'bg-[#1E3B2F] hover:bg-[#152A22] text-[#F5F0E6] font-semibold shadow-xs'
                     : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/80'
                 }`}
               >
@@ -351,7 +351,7 @@ export const CompanyInternshipsPage = () => {
                 {tab.count !== undefined && (
                   <span
                     className={`text-[11px] px-1.5 py-0.5 rounded-full font-bold leading-none ${
-                      isActive ? 'bg-indigo-700/80 text-white' : 'bg-slate-200 text-slate-700'
+                      isActive ? 'bg-[#1E3B2F]/80 text-white' : 'bg-slate-200 text-slate-700'
                     }`}
                   >
                     {tab.count}
@@ -399,7 +399,7 @@ export const CompanyInternshipsPage = () => {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Search listings by title, skill, discipline, or location..."
-                  className="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors shadow-xs"
+                  className="w-full pl-10 pr-4 py-2 border border-[#C8B48A]/35 rounded-lg text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#1E3B2F]/20 focus:border-[#1E3B2F] transition-colors shadow-xs"
                 />
               </div>
 
@@ -414,17 +414,17 @@ export const CompanyInternshipsPage = () => {
                   <button
                     key={f.id}
                     onClick={() => setStatusFilter(f.id)}
-                    className={`px-3 py-1.5 text-xs font-semibold rounded-lg border whitespace-nowrap transition-colors flex items-center gap-1.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 ${
+                    className={`px-3 py-1.5 text-xs font-semibold rounded-lg border whitespace-nowrap transition-colors flex items-center gap-1.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#1E3B2F]/20 ${
                       statusFilter === f.id
-                        ? 'bg-indigo-50 border-indigo-400 text-indigo-700 shadow-xs'
-                        : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50'
+                        ? 'bg-[#7F8C6A]/15 border-[#7F8C6A]/30 text-[#1E3B2F] shadow-xs'
+                        : 'bg-white border-[#C8B48A]/35 text-slate-600 hover:bg-[#F5F0E6]'
                     }`}
                   >
                     {f.label}
                     <span
                       className={`text-[10px] px-1.5 py-0.5 rounded-full font-bold ${
                         statusFilter === f.id
-                          ? 'bg-indigo-200 text-indigo-800'
+                          ? 'bg-[#7F8C6A]/15 text-[#1E3B2F]'
                           : 'bg-slate-100 text-slate-500'
                       }`}
                     >
@@ -485,7 +485,7 @@ export const CompanyInternshipsPage = () => {
                 return (
                   <Card
                     key={internship._id}
-                    className="p-5 flex flex-col justify-between hover:border-indigo-300 hover:shadow-md transition-all duration-200 group"
+                    className="p-5 flex flex-col justify-between hover:border-[#7F8C6A]/30 hover:shadow-md transition-all duration-200 group"
                   >
                     <div className="space-y-3">
                       {/* Top Row: Title & Status */}
@@ -493,7 +493,7 @@ export const CompanyInternshipsPage = () => {
                         <div className="flex-1">
                           <h3
                             onClick={() => handleOpenViewModal(internship)}
-                            className="font-bold text-slate-900 text-lg leading-snug group-hover:text-indigo-600 cursor-pointer transition-colors"
+                            className="font-bold text-slate-900 text-lg leading-snug group-hover:text-[#1E3B2F] cursor-pointer transition-colors"
                           >
                             {internship.title}
                           </h3>
@@ -534,7 +534,7 @@ export const CompanyInternshipsPage = () => {
                       </div>
 
                       {/* Metrics Bar */}
-                      <div className="grid grid-cols-3 gap-2 py-2.5 px-3 bg-slate-50 rounded-xl text-center text-xs border border-slate-100">
+                      <div className="grid grid-cols-3 gap-2 py-2.5 px-3 bg-[#F5F0E6] rounded-xl text-center text-xs border border-slate-100">
                         <div>
                           <span className="text-[10px] text-slate-400 block uppercase font-medium">
                             Duration
@@ -557,7 +557,7 @@ export const CompanyInternshipsPage = () => {
                           <span className="text-[10px] text-slate-400 block uppercase font-medium">
                             Applicants
                           </span>
-                          <span className="font-bold text-indigo-700">
+                          <span className="font-bold text-[#1E3B2F]">
                             {internship.applicantCount || 0}
                           </span>
                         </div>
@@ -598,7 +598,7 @@ export const CompanyInternshipsPage = () => {
                         {internship.status === 'closed' && (
                           <button
                             onClick={() => handleStatusToggle(internship._id, 'published')}
-                            className="p-1.5 text-slate-500 hover:text-indigo-700 hover:bg-indigo-50 rounded-lg transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+                            className="p-1.5 text-slate-500 hover:text-[#1E3B2F] hover:bg-[#7F8C6A]/15 rounded-lg transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#1E3B2F]/20"
                             title="Reopen Listing"
                             aria-label="Reopen Listing"
                           >
@@ -609,7 +609,7 @@ export const CompanyInternshipsPage = () => {
                         {/* View Details */}
                         <button
                           onClick={() => handleOpenViewModal(internship)}
-                          className="p-1.5 text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+                          className="p-1.5 text-slate-500 hover:text-[#1E3B2F] hover:bg-[#7F8C6A]/15 rounded-lg transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#1E3B2F]/20"
                           title="View Details"
                           aria-label="View Details"
                         >
@@ -619,7 +619,7 @@ export const CompanyInternshipsPage = () => {
                         {/* Edit */}
                         <button
                           onClick={() => handleOpenEditModal(internship)}
-                          className="p-1.5 text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+                          className="p-1.5 text-slate-500 hover:text-[#1E3B2F] hover:bg-[#7F8C6A]/15 rounded-lg transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#1E3B2F]/20"
                           title="Edit Listing"
                           aria-label="Edit Listing"
                         >

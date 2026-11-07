@@ -142,27 +142,27 @@ export const InternshipDetailsModal = ({
 
         {/* Quick KPI Spec Highlights */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          <div className="p-3 bg-slate-50 rounded-xl border border-slate-200/90 shadow-2xs">
+          <div className="p-3 bg-[#F5F0E6] rounded-xl border border-[#C8B48A]/35 shadow-2xs">
             <span className="text-[11px] text-slate-500 font-semibold uppercase tracking-wider block">
               Duration
             </span>
             <span className="text-sm font-bold text-slate-900 mt-0.5 flex items-center gap-1">
-              <Clock className="w-3.5 h-3.5 text-indigo-600" />
+              <Clock className="w-3.5 h-3.5 text-[#1E3B2F]" />
               {internship.durationMonths} Months
             </span>
           </div>
 
-          <div className="p-3 bg-slate-50 rounded-xl border border-slate-200/90 shadow-2xs">
+          <div className="p-3 bg-[#F5F0E6] rounded-xl border border-[#C8B48A]/35 shadow-2xs">
             <span className="text-[11px] text-slate-500 font-semibold uppercase tracking-wider block">
               Positions
             </span>
             <span className="text-sm font-bold text-slate-900 mt-0.5 flex items-center gap-1">
-              <Users className="w-3.5 h-3.5 text-indigo-600" />
+              <Users className="w-3.5 h-3.5 text-[#1E3B2F]" />
               {internship.openPositions} {internship.openPositions === 1 ? 'Slot' : 'Slots'}
             </span>
           </div>
 
-          <div className="p-3 bg-slate-50 rounded-xl border border-slate-200/90 shadow-2xs">
+          <div className="p-3 bg-[#F5F0E6] rounded-xl border border-[#C8B48A]/35 shadow-2xs">
             <span className="text-[11px] text-slate-500 font-semibold uppercase tracking-wider block">
               Compensation
             </span>
@@ -173,11 +173,11 @@ export const InternshipDetailsModal = ({
             </span>
           </div>
 
-          <div className="p-3 bg-slate-50 rounded-xl border border-slate-200/90 shadow-2xs">
+          <div className="p-3 bg-[#F5F0E6] rounded-xl border border-[#C8B48A]/35 shadow-2xs">
             <span className="text-[11px] text-slate-500 font-semibold uppercase tracking-wider block">
               Applications
             </span>
-            <span className="text-sm font-bold text-indigo-700 mt-0.5 flex items-center gap-1">
+            <span className="text-sm font-bold text-[#1E3B2F] mt-0.5 flex items-center gap-1">
               <Users className="w-3.5 h-3.5" />
               {internship.applicantCount || 0} Received
             </span>
@@ -185,10 +185,10 @@ export const InternshipDetailsModal = ({
         </div>
 
         {/* Deadline Notice */}
-        <div className="flex items-center gap-2.5 p-3.5 bg-indigo-50/80 border border-indigo-200/80 rounded-xl text-xs text-indigo-950 font-medium">
-          <Calendar className="w-4 h-4 text-indigo-600 shrink-0" />
+        <div className="flex items-center gap-2.5 p-3.5 bg-[#7F8C6A]/15 border border-[#7F8C6A]/30 rounded-xl text-xs text-[#1E3B2F] font-medium">
+          <Calendar className="w-4 h-4 text-[#1E3B2F] shrink-0" />
           <span>
-            <strong className="font-bold text-indigo-950">Application Deadline:</strong> {formatDeadline(internship.deadline)}
+            <strong className="font-bold text-[#1E3B2F]">Application Deadline:</strong> {formatDeadline(internship.deadline)}
           </span>
         </div>
 
