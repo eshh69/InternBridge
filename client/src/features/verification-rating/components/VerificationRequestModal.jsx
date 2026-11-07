@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Modal } from '../../../components/ui/Modal';
 import { Button } from '../../../components/ui/Button';
 import { Input } from '../../../components/ui/Input';
@@ -24,9 +24,11 @@ export const VerificationRequestModal = ({
     isCompany ? 'PV-12489' : 'Senior Lecturer (Staff ID: ICT-L-042)'
   );
   const [file, setFile] = useState(null);
+  const [isDragging, setIsDragging] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
+  const fileInputRef = useRef(null);
 
   const handleTypeChange = (type) => {
     setVerificationType(type);
@@ -40,7 +42,7 @@ export const VerificationRequestModal = ({
   };
 
   const handleFileChange = (e) => {
-    const selectedFile = e.target.files[0];
+    const selectedFile = e.target.files?.[0];
     if (!selectedFile) return;
 
     if (selectedFile.size > 10 * 1024 * 1024) {
@@ -50,6 +52,40 @@ export const VerificationRequestModal = ({
 
     setError('');
     setFile(selectedFile);
+  };
+
+  const handleBoxClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+    const droppedFile = e.dataTransfer.files?.[0];
+    if (!droppedFile) return;
+
+    if (droppedFile.size > 10 * 1024 * 1024) {
+      setError('File size exceeds the 10MB limit.');
+      return;
+    }
+
+    setError('');
+    setFile(droppedFile);
   };
 
   const handleSubmit = async (e) => {
@@ -178,50 +214,82 @@ export const VerificationRequestModal = ({
           <label className="block text-xs font-semibold text-gray-700 mb-1">
             Proof Document (Certificate of Incorporation, Faculty ID, or Appointment Letter)
           </label>
-          <div className="mt-1 flex justify-center px-6 pt-4 pb-5 border-2 border-gray-300 border-dashed rounded-xl hover:border-[#1E3B2F] transition-colors bg-gray-50/50">
-            <div className="space-y-1.5 text-center">
-              {file ? (
-                <div className="flex items-center justify-center gap-2 text-[#1E3B2F]">
-                  <FileText className="w-7 h-7" />
-                  <div className="text-left">
-                    <p className="text-xs font-bold text-gray-900">{file.name}</p>
-                    <p className="text-[11px] text-gray-500">{(file.size / (1024 * 1024)).toFixed(2)} MB</p>
+
+          {/* Hidden File Input always ready to trigger */}
+          <input
+            ref={fileInputRef}
+            id="proof-upload"
+            name="proofDocument"
+            type="file"
+            accept=".pdf,.png,.jpg,.jpeg,.doc,.docx"
+            className="hidden"
+            onChange={handleFileChange}
+          />
+
+          <div
+            onClick={handleBoxClick}
+            onDragOver={handleDragOver}
+            onDragLeave={handleDragLeave}
+            onDrop={handleDrop}
+            className={`mt-1 flex flex-col items-center justify-center px-6 pt-5 pb-5 border-2 border-dashed rounded-xl cursor-pointer transition-all ${
+              isDragging
+                ? 'border-[#1E3B2F] bg-[#7F8C6A]/20 scale-[1.01]'
+                : file
+                ? 'border-emerald-500 bg-emerald-50/50 hover:bg-emerald-50'
+                : 'border-[#C8B48A]/70 hover:border-[#1E3B2F] bg-[#F5F0E6]/30 hover:bg-[#F5F0E6]/60'
+            }`}
+          >
+            {file ? (
+              <div className="flex items-center gap-3 w-full justify-between">
+                <div className="flex items-center gap-2.5 text-[#1E3B2F]">
+                  <div className="p-2 bg-emerald-100 text-emerald-700 rounded-lg">
+                    <FileText className="w-6 h-6" />
+                  </div>
+                  <div>
+                    <p className="text-xs font-bold text-gray-900 truncate max-w-[220px]">{file.name}</p>
+                    <p className="text-[11px] text-gray-500">{(file.size / (1024 * 1024)).toFixed(2)} MB • Ready to submit</p>
                   </div>
                 </div>
-              ) : (
-                <>
-                  <UploadCloud className="mx-auto h-8 w-8 text-[#1E3B2F]" />
-                  <div className="flex text-xs text-gray-600 justify-center">
-                    <label
-                      htmlFor="proof-upload"
-                      className="relative cursor-pointer font-bold text-[#1E3B2F] hover:text-[#152A22] focus-within:outline-none"
-                    >
-                      <span>Upload Proof Document</span>
-                      <input
-                        id="proof-upload"
-                        name="proofDocument"
-                        type="file"
-                        accept=".pdf,.png,.jpg,.jpeg,.doc,.docx"
-                        className="sr-only"
-                        onChange={handleFileChange}
-                      />
-                    </label>
-                    <p className="pl-1">or drag & drop</p>
-                  </div>
-                  <p className="text-[11px] text-gray-400">PDF, PNG, JPG up to 10MB (Simulated cloud upload)</p>
-                </>
-              )}
-            </div>
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleBoxClick();
+                    }}
+                    className="text-xs font-bold text-[#1E3B2F] hover:underline px-2 py-1"
+                  >
+                    Change
+                  </button>
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setFile(null);
+                      if (fileInputRef.current) fileInputRef.current.value = '';
+                    }}
+                    className="text-xs font-bold text-rose-600 hover:text-rose-800 hover:underline px-2 py-1"
+                  >
+                    Remove
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div className="space-y-2 text-center select-none">
+                <div className="w-10 h-10 mx-auto rounded-full bg-[#7F8C6A]/15 text-[#1E3B2F] flex items-center justify-center">
+                  <UploadCloud className="w-5 h-5 text-[#1E3B2F]" />
+                </div>
+                <div>
+                  <p className="text-xs font-bold text-[#1E3B2F]">
+                    Click to browse file <span className="font-normal text-gray-500">or drag & drop</span>
+                  </p>
+                  <p className="text-[11px] text-gray-400 mt-0.5">
+                    Supports PDF, PNG, JPG, DOCX (Max 10MB)
+                  </p>
+                </div>
+              </div>
+            )}
           </div>
-          {file && (
-            <button
-              type="button"
-              onClick={() => setFile(null)}
-              className="mt-1 text-xs text-rose-600 hover:underline"
-            >
-              Remove selected file
-            </button>
-          )}
         </div>
 
         <div className="flex items-center justify-end gap-2.5 pt-4 border-t border-gray-200">

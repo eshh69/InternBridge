@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Card } from '../../../components/ui/Card';
 import { Button } from '../../../components/ui/Button';
 import { Input } from '../../../components/ui/Input';
@@ -30,6 +30,7 @@ export const VerificationRequestForm = ({ onSuccess, onCancel, standalone = fals
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
+  const fileInputRef = useRef(null);
 
   const handleFileSelect = (e) => {
     const selectedFile = e.target.files?.[0];
@@ -210,10 +211,21 @@ export const VerificationRequestForm = ({ onSuccess, onCancel, standalone = fals
         <label className="block text-sm font-medium text-gray-700 mb-1">
           Or Upload Proof Document (PDF, PNG, JPG up to 10MB)
         </label>
-        <div className="flex justify-center px-6 pt-4 pb-4 border-2 border-dashed border-gray-300 rounded-xl hover:border-indigo-500 transition-colors bg-gray-50/50">
+        <input
+          ref={fileInputRef}
+          id="file-upload-input"
+          type="file"
+          accept=".pdf,.png,.jpg,.jpeg,.doc,.docx"
+          className="hidden"
+          onChange={handleFileSelect}
+        />
+        <div
+          onClick={() => fileInputRef.current?.click()}
+          className="flex justify-center px-6 pt-4 pb-4 border-2 border-dashed border-[#C8B48A]/70 hover:border-[#1E3B2F] rounded-xl cursor-pointer transition-colors bg-[#F5F0E6]/30 hover:bg-[#F5F0E6]/60"
+        >
           <div className="space-y-1 text-center">
             {file ? (
-              <div className="flex items-center justify-center gap-2 text-indigo-600">
+              <div className="flex items-center justify-center gap-2 text-[#1E3B2F]">
                 <FileText className="w-6 h-6" />
                 <span className="text-sm font-semibold">{file.name}</span>
                 <span className="text-xs text-gray-400">
@@ -221,9 +233,11 @@ export const VerificationRequestForm = ({ onSuccess, onCancel, standalone = fals
                 </span>
                 <button
                   type="button"
-                  onClick={() => {
+                  onClick={(e) => {
+                    e.stopPropagation();
                     setFile(null);
                     setDocumentUrl('');
+                    if (fileInputRef.current) fileInputRef.current.value = '';
                   }}
                   className="text-xs text-red-500 hover:underline ml-2"
                 >
@@ -232,20 +246,10 @@ export const VerificationRequestForm = ({ onSuccess, onCancel, standalone = fals
               </div>
             ) : (
               <div className="flex items-center justify-center gap-2 text-xs text-gray-600">
-                <UploadCloud className="w-5 h-5 text-gray-400" />
-                <label
-                  htmlFor="file-upload-input"
-                  className="cursor-pointer text-indigo-600 hover:underline font-semibold"
-                >
+                <UploadCloud className="w-5 h-5 text-[#1E3B2F]" />
+                <span className="text-[#1E3B2F] font-semibold">
                   Choose File
-                  <input
-                    id="file-upload-input"
-                    type="file"
-                    accept=".pdf,.png,.jpg,.jpeg,.doc,.docx"
-                    className="sr-only"
-                    onChange={handleFileSelect}
-                  />
-                </label>
+                </span>
                 <span>or drag & drop</span>
               </div>
             )}
