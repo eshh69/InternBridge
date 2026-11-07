@@ -98,7 +98,7 @@ export const Navbar = () => {
             <nav className="hidden md:flex items-center space-x-1.5 ml-8" aria-label="Main Navigation">
               <Link to="/search" className={getLinkClass('/search')}>
                 <Search className="w-3.5 h-3.5 text-[#7F8C6A]" />
-                Find Internships
+                Internships
               </Link>
 
               {/* Accessible directly in demo/preview mode */}
@@ -111,7 +111,7 @@ export const Navbar = () => {
               {isAuthenticated && user?.role === 'student' && (
                 <>
                   <Link to="/student/portfolio" className={getLinkClass('/student/portfolio')}>
-                    My Portfolio
+                    Portfolio
                   </Link>
                   <Link to="/applications" className={getLinkClass('/applications')}>
                     Applications
@@ -133,14 +133,14 @@ export const Navbar = () => {
                     className={getLinkClass('/company/internships?tab=internships')}
                   >
                     <Briefcase className="w-3.5 h-3.5 text-[#7F8C6A]" />
-                    Manage Internships
+                    Listings
                   </Link>
                   <Link
                     to="/company/internships?tab=profile"
                     className={getLinkClass('/company/internships?tab=profile')}
                   >
                     <Building2 className="w-3.5 h-3.5 text-[#7F8C6A]" />
-                    Company Profile
+                    Profile
                   </Link>
                   <Link to="/applications" className={getLinkClass('/applications')}>
                     <Users className="w-3.5 h-3.5 text-[#7F8C6A]" />
@@ -152,7 +152,7 @@ export const Navbar = () => {
               {isAuthenticated && (user?.role === 'reviewer' || user?.role === 'admin' || user?.role === 'company') && (
                 <Link to="/verifications" className={getLinkClass('/verifications')}>
                   <ShieldCheck className="w-3.5 h-3.5 text-[#7F8C6A]" />
-                  {user.role === 'admin' ? 'Admin Moderation' : user?.role === 'reviewer' ? 'Reviewer Portal' : 'Verification & Ratings'}
+                  {user.role === 'admin' ? 'Moderation' : user?.role === 'reviewer' ? 'Reviews' : 'Verification'}
                 </Link>
               )}
             </nav>
@@ -247,7 +247,7 @@ export const Navbar = () => {
               className={getMobileLinkClass('/search')}
             >
               <Search className="w-3.5 h-3.5 text-[#7F8C6A]" />
-              Find Internships
+              Internships
             </Link>
 
             {!isAuthenticated && (
@@ -267,7 +267,7 @@ export const Navbar = () => {
                   onClick={closeMobileMenu}
                   className={getMobileLinkClass('/student/portfolio')}
                 >
-                  My Portfolio
+                  Portfolio
                 </Link>
                 <Link
                   to="/applications"
@@ -295,7 +295,7 @@ export const Navbar = () => {
                   className={getMobileLinkClass('/company/internships?tab=internships')}
                 >
                   <Briefcase className="w-3.5 h-3.5 text-[#7F8C6A]" />
-                  Manage Internships
+                  Listings
                 </Link>
                 <Link
                   to="/company/internships?tab=profile"
@@ -303,7 +303,7 @@ export const Navbar = () => {
                   className={getMobileLinkClass('/company/internships?tab=profile')}
                 >
                   <Building2 className="w-3.5 h-3.5 text-[#7F8C6A]" />
-                  Company Profile
+                  Profile
                 </Link>
                 <Link
                   to="/applications"
@@ -323,7 +323,7 @@ export const Navbar = () => {
                 className={getMobileLinkClass('/verifications')}
               >
                 <ShieldCheck className="w-3.5 h-3.5 text-[#7F8C6A]" />
-                {user.role === 'admin' ? 'Admin Moderation' : user?.role === 'reviewer' ? 'Reviewer Portal' : 'Verification & Ratings'}
+                {user.role === 'admin' ? 'Moderation' : user?.role === 'reviewer' ? 'Reviews' : 'Verification'}
               </Link>
             )}
 
