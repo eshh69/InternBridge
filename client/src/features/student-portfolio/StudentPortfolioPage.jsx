@@ -270,6 +270,11 @@ export const StudentPortfolioPage = () => {
   const experienceCount = profile?.experience?.length || 0;
   const credentialsCount = (profile?.certificates?.length || 0) + (profile?.badges?.length || 0);
   const currentGpa = profile?.gpa ? Number(profile.gpa).toFixed(2) : '3.82';
+  const studentUserId =
+    user?.id ||
+    user?._id ||
+    profile?.user?._id ||
+    (typeof profile?.user === 'string' ? profile?.user : null);
 
   const kpiCards = [
     {
@@ -522,7 +527,7 @@ export const StudentPortfolioPage = () => {
           </section>
 
           {/* SECTION 06: FACULTY REPUTATION & REVIEWS */}
-          {user?._id && (
+          {studentUserId && (
             <section className="space-y-3 bg-white border border-[#C8B48A]/35 rounded-2xl p-5 sm:p-6 shadow-2xs">
               <div className="flex items-center justify-between border-b border-gray-100 pb-3">
                 <div className="flex items-center gap-2.5">
@@ -537,7 +542,7 @@ export const StudentPortfolioPage = () => {
               </div>
 
               <ReputationAndReviewsCard
-                targetId={user._id}
+                targetId={studentUserId}
                 targetType="student"
                 title="Verified Academic Reputation & Faculty Evaluations"
               />
