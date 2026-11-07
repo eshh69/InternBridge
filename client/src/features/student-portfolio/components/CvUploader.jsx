@@ -104,7 +104,7 @@ export const CvUploader = ({ cvUrl, onUploadCv, onDeleteCv, isLoading, isDeletin
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <FileText className="w-4 h-4 text-blue-600" />
+          <FileText className="w-4 h-4 text-[#1E3B2F]" />
           <h3 className="text-sm font-bold text-gray-900">Resume</h3>
         </div>
       </div>
@@ -190,7 +190,7 @@ export const CvUploader = ({ cvUrl, onUploadCv, onDeleteCv, isLoading, isDeletin
               title="Click to view full CV in new tab"
             >
               <span className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold bg-white text-gray-800 shadow-sm rounded-xl hover:bg-gray-50">
-                <ExternalLink className="w-3.5 h-3.5 text-blue-600" />
+                <ExternalLink className="w-3.5 h-3.5 text-[#1E3B2F]" />
                 Preview Full Document
               </span>
             </a>
@@ -199,7 +199,7 @@ export const CvUploader = ({ cvUrl, onUploadCv, onDeleteCv, isLoading, isDeletin
           {/* Action Row */}
           <div className="p-3.5 bg-gray-50/70 border border-gray-200/80 rounded-xl flex items-center justify-between gap-3">
             <div className="flex items-center gap-2.5 min-w-0">
-              <div className="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 border border-blue-100">
+              <div className="w-8 h-8 rounded-lg bg-[#7F8C6A]/15 text-[#1E3B2F] flex items-center justify-center shrink-0 border border-[#7F8C6A]/30">
                 <FileText className="w-4 h-4" />
               </div>
               <span className="text-xs font-semibold text-gray-800 truncate">Resume Document</span>
@@ -244,19 +244,19 @@ export const CvUploader = ({ cvUrl, onUploadCv, onDeleteCv, isLoading, isDeletin
 
       {/* Selected for replace/upload */}
       {selectedFile && (
-        <div className="p-3.5 border border-blue-200 bg-blue-50/30 rounded-xl space-y-2.5">
+        <div className="p-3.5 border border-[#C8B48A]/40 bg-[#7F8C6A]/10 rounded-xl space-y-2.5">
           <div className="flex items-center gap-2 min-w-0">
-            <FileCheck2 className="w-4 h-4 text-blue-600 shrink-0" />
+            <FileCheck2 className="w-4 h-4 text-[#1E3B2F] shrink-0" />
             <p className="text-xs font-semibold text-gray-900 truncate flex-1">{selectedFile.name}</p>
           </div>
 
-          <div className="flex items-center gap-2 pt-1 border-t border-blue-100">
+          <div className="flex items-center gap-2 pt-1 border-t border-[#7F8C6A]/30">
             <Button
               variant="primary"
               size="sm"
               onClick={handleUpload}
               isLoading={isLoading}
-              className="text-xs rounded-xl font-semibold px-4 bg-blue-600 hover:bg-blue-700 text-white shadow-xs"
+              className="text-xs rounded-xl font-semibold px-4 bg-[#1E3B2F] hover:bg-[#152A22] text-white shadow-xs"
             >
               Confirm
             </Button>
@@ -285,13 +285,13 @@ export const CvUploader = ({ cvUrl, onUploadCv, onDeleteCv, isLoading, isDeletin
           onClick={() => fileInputRef.current?.click()}
           className={`border-2 border-dashed rounded-xl p-8 text-center transition-all cursor-pointer ${
             dragOver
-              ? 'border-blue-500 bg-blue-50/50'
-              : 'border-gray-200 hover:border-blue-400 bg-gray-50/50 hover:bg-blue-50/20'
+              ? 'border-[#1E3B2F] bg-[#7F8C6A]/15/50'
+              : 'border-gray-200 hover:border-[#7F8C6A] bg-gray-50/50 hover:bg-[#7F8C6A]/15/20'
           }`}
         >
           <UploadCloud className="w-6 h-6 text-gray-400 mx-auto mb-1.5" />
           <p className="text-xs font-medium text-gray-700">
-            <span className="font-semibold text-blue-600">Click to upload</span> or drag and drop CV
+            <span className="font-semibold text-[#1E3B2F]">Click to upload</span> or drag and drop CV
           </p>
         </div>
       )}

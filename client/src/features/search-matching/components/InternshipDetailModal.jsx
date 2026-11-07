@@ -22,6 +22,7 @@ export const InternshipDetailModal = ({
   internship,
   onApply,
   isStudent = false,
+  isCompany = false,
 }) => {
   if (!internship) return null;
 
@@ -82,15 +83,18 @@ export const InternshipDetailModal = ({
           <Button variant="secondary" onClick={onClose}>
             Close
           </Button>
-          <Button
-            variant="primary"
-            onClick={() => {
-              onClose();
-              onApply(internship);
-            }}
-          >
-            Apply for this Internship
-          </Button>
+          {!isCompany && (
+            <Button
+              variant="primary"
+              className="!bg-[#1E3B2F] hover:!bg-[#152A22] !text-[#F5F0E6] rounded-lg shadow-xs"
+              onClick={() => {
+                onClose();
+                onApply(internship);
+              }}
+            >
+              Apply for this Internship
+            </Button>
+          )}
         </>
       }
     >
@@ -98,7 +102,7 @@ export const InternshipDetailModal = ({
         {/* Header Block */}
         <div className="flex items-start justify-between gap-4">
           <div className="flex items-start gap-3.5">
-            <div className="w-14 h-14 rounded-none bg-gradient-to-br from-indigo-50 to-indigo-100 border border-indigo-200/60 flex items-center justify-center flex-shrink-0 text-indigo-700 font-bold text-xl overflow-hidden shadow-xs">
+            <div className="w-14 h-14 rounded-xl bg-[#F5F0E6] border border-[#C8B48A]/40 flex items-center justify-center flex-shrink-0 text-[#1E3B2F] font-bold text-xl overflow-hidden shadow-xs">
               {company?.logoUrl ? (
                 <img
                   src={company.logoUrl}
@@ -122,7 +126,7 @@ export const InternshipDetailModal = ({
                   )}
                 </span>
                 <span>•</span>
-                <span className="text-xs text-indigo-600 font-medium">{area}</span>
+                <span className="text-xs text-[#1E3B2F] font-medium">{area}</span>
               </div>
             </div>
           </div>
@@ -131,9 +135,9 @@ export const InternshipDetailModal = ({
           {matchScore !== undefined && matchScore !== null && (
             <div className="text-right">
               <Badge
-                variant={matchScore >= 80 ? 'success' : matchScore >= 50 ? 'purple' : 'neutral'}
+                variant={matchScore >= 80 ? 'success' : matchScore >= 50 ? 'forest' : 'neutral'}
                 size="lg"
-                className="gap-1 font-bold shadow-xs !rounded-none"
+                className="gap-1 font-bold shadow-xs "
               >
                 <Sparkles className="w-4 h-4" />
                 {matchScore}% Match
@@ -145,17 +149,17 @@ export const InternshipDetailModal = ({
 
         {/* Quick Facts Grid */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          <div className="bg-gray-50 p-3 rounded-none border border-gray-100">
+          <div className="bg-gray-50 p-3 rounded-xl border border-gray-100">
             <span className="text-[11px] font-medium text-gray-400 uppercase tracking-wider block mb-1">
               Location
             </span>
             <p className="text-xs font-semibold text-gray-800 flex items-center gap-1">
-              <MapPin className="w-3.5 h-3.5 text-indigo-500" />
+              <MapPin className="w-3.5 h-3.5 text-[#1E3B2F]" />
               {location} ({locationType})
             </p>
           </div>
 
-          <div className="bg-gray-50 p-3 rounded-none border border-gray-100">
+          <div className="bg-gray-50 p-3 rounded-xl border border-gray-100">
             <span className="text-[11px] font-medium text-gray-400 uppercase tracking-wider block mb-1">
               Stipend
             </span>
@@ -165,7 +169,7 @@ export const InternshipDetailModal = ({
             </p>
           </div>
 
-          <div className="bg-gray-50 p-3 rounded-none border border-gray-100">
+          <div className="bg-gray-50 p-3 rounded-xl border border-gray-100">
             <span className="text-[11px] font-medium text-gray-400 uppercase tracking-wider block mb-1">
               Duration
             </span>
@@ -175,7 +179,7 @@ export const InternshipDetailModal = ({
             </p>
           </div>
 
-          <div className="bg-gray-50 p-3 rounded-none border border-gray-100">
+          <div className="bg-gray-50 p-3 rounded-xl border border-gray-100">
             <span className="text-[11px] font-medium text-gray-400 uppercase tracking-wider block mb-1">
               Deadline
             </span>
@@ -188,12 +192,12 @@ export const InternshipDetailModal = ({
 
         {/* Skill Gap Analysis (for student) */}
         {isStudent && matchScore !== undefined && (
-          <div className="bg-gradient-to-br from-indigo-50/70 to-purple-50/50 p-4 rounded-none border border-indigo-100 space-y-3">
+          <div className="bg-gradient-to-br from-[#7F8C6A]/15 to-[#F5F0E6]/60 p-4 rounded-xl border border-[#C8B48A]/40 space-y-3">
             <div className="flex items-center justify-between">
-              <h4 className="text-xs font-bold uppercase tracking-wider text-indigo-900 flex items-center gap-1.5">
-                <Sparkles className="w-4 h-4 text-indigo-600" /> Skills Fit & Gap Breakdown
+              <h4 className="text-xs font-bold uppercase tracking-wider text-[#1E3B2F] flex items-center gap-1.5">
+                <Sparkles className="w-4 h-4 text-[#1E3B2F]" /> Skills Fit & Gap Breakdown
               </h4>
-              <span className="text-xs font-semibold text-indigo-700">
+              <span className="text-xs font-semibold text-[#1E3B2F]">
                 {matchedSkills.length} of {requiredSkills.length} skills matched
               </span>
             </div>
@@ -208,7 +212,7 @@ export const InternshipDetailModal = ({
                   {matchedSkills.map((s, idx) => (
                     <span
                       key={idx}
-                      className="inline-flex items-center px-2.5 py-0.5 rounded-none text-xs font-medium bg-gray-100 text-gray-700 border border-gray-200"
+                      className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-700 border border-gray-200"
                     >
                       {formatSkillName(s)}
                     </span>
@@ -227,7 +231,7 @@ export const InternshipDetailModal = ({
                   {missingSkills.map((s, idx) => (
                     <span
                       key={idx}
-                      className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-none text-xs font-medium bg-amber-50 text-amber-800 border border-amber-200"
+                      className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-50 text-amber-800 border border-amber-200"
                     >
                       <AlertCircle className="w-3 h-3 text-amber-600" /> {s}
                     </span>
@@ -241,7 +245,7 @@ export const InternshipDetailModal = ({
         {/* Description */}
         <div className="space-y-2">
           <h4 className="text-sm font-bold text-gray-900 flex items-center gap-1.5">
-            <Briefcase className="w-4 h-4 text-indigo-600" /> Role Description
+            <Briefcase className="w-4 h-4 text-[#1E3B2F]" /> Role Description
           </h4>
           <p className="text-sm text-gray-600 whitespace-pre-line leading-relaxed">
             {description}
@@ -260,7 +264,7 @@ export const InternshipDetailModal = ({
                   key={idx}
                   className="text-xs text-gray-600 flex items-start gap-2"
                 >
-                  <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 mt-1.5 flex-shrink-0" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#1E3B2F] mt-1.5 flex-shrink-0" />
                   <span>{q}</span>
                 </li>
               ))}
@@ -270,7 +274,7 @@ export const InternshipDetailModal = ({
 
         {/* Company About */}
         {company?.description && (
-          <div className="p-3.5 bg-gray-50 rounded-none border border-gray-100 space-y-1">
+          <div className="p-3.5 bg-gray-50 rounded-xl border border-gray-100 space-y-1">
             <h4 className="text-xs font-bold text-gray-900 flex items-center gap-1.5">
               <Building2 className="w-3.5 h-3.5 text-gray-500" /> About {company.name}
             </h4>

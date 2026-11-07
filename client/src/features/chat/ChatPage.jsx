@@ -308,7 +308,7 @@ export const ChatPage = () => {
         {/* Sidebar Header */}
         <div className="flex items-center justify-between pb-3 border-b border-gray-150">
           <div className="flex items-center gap-2">
-            <MessageSquare className="w-5 h-5 text-indigo-600" />
+            <MessageSquare className="w-5 h-5 text-[#1E3B2F]" />
             <h2 className="font-bold text-gray-900 text-lg">Direct Messages</h2>
           </div>
           {isStudent && (
@@ -316,7 +316,7 @@ export const ChatPage = () => {
               variant="secondary"
               size="sm"
               onClick={() => setIsNewChatModalOpen(true)}
-              className="p-1.5 text-indigo-600 hover:text-indigo-800 hover:bg-indigo-50 !rounded-[8px]"
+              className="p-1.5 text-[#1E3B2F] hover:text-[#152A22] hover:bg-[#7F8C6A]/15 !rounded-[8px]"
               title="Start New Chat"
               aria-label="Start New Chat"
             >
@@ -334,7 +334,7 @@ export const ChatPage = () => {
               placeholder="Search conversations..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-9 pr-3 py-1.5 text-xs bg-gray-50 border border-gray-200 !rounded-[8px] focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all"
+              className="w-full pl-9 pr-3 py-1.5 text-xs bg-gray-50 border border-gray-200 !rounded-[8px] focus:outline-none focus:ring-2 focus:ring-[#1E3B2F]/20 focus:border-[#1E3B2F] transition-all"
             />
           </div>
         </div>
@@ -367,7 +367,7 @@ export const ChatPage = () => {
                   onClick={() => selectConversation(conv)}
                   className={`p-3 !rounded-[8px] cursor-pointer transition-all flex items-start gap-3 ${
                     isSelected
-                      ? 'bg-indigo-50/80 border border-indigo-200/80 shadow-2xs'
+                      ? 'bg-[#7F8C6A]/15 border border-[#C8B48A]/40 shadow-2xs'
                       : 'hover:bg-gray-50 border border-transparent'
                   }`}
                 >
@@ -408,7 +408,7 @@ export const ChatPage = () => {
 
                   {/* Unread Badge */}
                   {conv.unreadCount > 0 && (
-                    <span className="shrink-0 px-1.5 py-0.5 bg-indigo-600 text-white font-bold text-[10px] rounded-full">
+                    <span className="shrink-0 px-1.5 py-0.5 bg-[#1E3B2F] text-white font-bold text-[10px] rounded-full">
                       {conv.unreadCount}
                     </span>
                   )}
@@ -469,7 +469,7 @@ export const ChatPage = () => {
                 </div>
               ) : messages.length === 0 ? (
                 <div className="flex flex-col items-center justify-center h-full text-center py-12">
-                  <div className="p-3 bg-indigo-50 rounded-full text-indigo-600 mb-2">
+                  <div className="p-3 bg-[#7F8C6A]/15 rounded-full text-[#1E3B2F] mb-2">
                     <Sparkles className="w-6 h-6" />
                   </div>
                   <h4 className="text-sm font-bold text-gray-800">Start the conversation</h4>
@@ -490,7 +490,7 @@ export const ChatPage = () => {
                       <div
                         className={`max-w-md lg:max-w-lg px-4 py-2.5 !rounded-[10px] text-xs sm:text-sm shadow-2xs leading-relaxed ${
                           isOwn
-                            ? 'bg-gradient-to-r from-indigo-600 to-indigo-700 text-white rounded-tr-none'
+                            ? 'bg-gradient-to-r from-[#1E3B2F] to-[#152A22] text-white rounded-tr-none'
                             : 'bg-white border border-gray-200 text-gray-800 rounded-tl-none'
                         }`}
                       >
@@ -515,9 +515,9 @@ export const ChatPage = () => {
               {isOtherTyping && (
                 <div className="flex items-center gap-2 text-xs text-gray-500 italic bg-white px-3 py-1.5 rounded-full border border-gray-200 w-fit">
                   <span className="flex gap-1">
-                    <span className="w-1.5 h-1.5 bg-indigo-500 rounded-full animate-bounce" />
-                    <span className="w-1.5 h-1.5 bg-indigo-500 rounded-full animate-bounce [animation-delay:0.2s]" />
-                    <span className="w-1.5 h-1.5 bg-indigo-500 rounded-full animate-bounce [animation-delay:0.4s]" />
+                    <span className="w-1.5 h-1.5 bg-[#7F8C6A]/150 rounded-full animate-bounce" />
+                    <span className="w-1.5 h-1.5 bg-[#7F8C6A]/150 rounded-full animate-bounce [animation-delay:0.2s]" />
+                    <span className="w-1.5 h-1.5 bg-[#7F8C6A]/150 rounded-full animate-bounce [animation-delay:0.4s]" />
                   </span>
                   <span>{activeInfo.name} is typing...</span>
                 </div>
@@ -534,7 +534,7 @@ export const ChatPage = () => {
                 value={messageInput}
                 onChange={handleInputChange}
                 disabled={isSending}
-                className="flex-1 bg-gray-50 border border-gray-200 px-3.5 py-2.5 text-xs sm:text-sm !rounded-[8px] focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all"
+                className="flex-1 bg-gray-50 border border-gray-200 px-3.5 py-2.5 text-xs sm:text-sm !rounded-[8px] focus:outline-none focus:ring-2 focus:ring-[#1E3B2F]/20 focus:border-[#1E3B2F] transition-all"
               />
               <Button
                 type="submit"
@@ -551,7 +551,7 @@ export const ChatPage = () => {
         ) : (
           /* Empty State when no conversation is selected */
           <div className="flex flex-col items-center justify-center h-full text-center p-8 bg-slate-50/30">
-            <div className="p-4 bg-indigo-50 rounded-2xl text-indigo-600 mb-3">
+            <div className="p-4 bg-[#7F8C6A]/15 rounded-2xl text-[#1E3B2F] mb-3">
               <MessageSquare className="w-10 h-10" />
             </div>
             <h3 className="text-base font-bold text-gray-900">Your Messages</h3>
@@ -595,7 +595,7 @@ export const ChatPage = () => {
               companiesDirectory.map((comp) => (
                 <div
                   key={comp._id}
-                  className="p-3 border border-gray-200/80 !rounded-[8px] hover:border-indigo-300 hover:bg-indigo-50/40 transition-all flex items-center justify-between gap-3"
+                  className="p-3 border border-gray-200/80 !rounded-[8px] hover:border-[#C8B48A]/40 hover:bg-[#7F8C6A]/10 transition-all flex items-center justify-between gap-3"
                 >
                   <div className="flex items-center gap-3 min-w-0">
                     {comp.logoUrl ? (

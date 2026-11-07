@@ -158,7 +158,7 @@ const handleSearchInternships = async (req, res) => {
     // If sorting by highest match and student profile exists, score all matching docs in-memory
     if (sort === 'highest_match' && studentProfile) {
       const allInternships = await Internship.find(filter)
-        .populate('company', 'name logoUrl location industry verificationStatus reputationScore')
+        .populate('company', 'name logoUrl location industry description website verificationStatus reputationScore reviewCount')
         .lean();
 
       let scoredItems = allInternships.map((item) => {
@@ -204,7 +204,7 @@ const handleSearchInternships = async (req, res) => {
       .sort(sortOptions)
       .skip((pageNum - 1) * limitNum)
       .limit(limitNum)
-      .populate('company', 'name logoUrl location industry verificationStatus reputationScore')
+      .populate('company', 'name logoUrl location industry description website verificationStatus reputationScore reviewCount')
       .lean();
 
     // Augment with match score if student is authenticated
@@ -363,7 +363,7 @@ const handleStudentMatchRecommendations = async (req, res) => {
     }
 
     const internships = await Internship.find({ status: 'published' })
-      .populate('company', 'name logoUrl location industry verificationStatus reputationScore')
+      .populate('company', 'name logoUrl location industry description website verificationStatus reputationScore reviewCount')
       .lean();
 
     const scored = internships.map((item) => {

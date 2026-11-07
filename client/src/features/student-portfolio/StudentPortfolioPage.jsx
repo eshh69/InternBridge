@@ -219,7 +219,7 @@ export const StudentPortfolioPage = () => {
       <section className="space-y-3">
         <div className="flex items-center justify-between border-b border-gray-200 pb-2.5">
           <div className="flex items-center gap-2.5">
-            <span className="text-xs font-mono font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded-lg border border-blue-100">
+            <span className="text-xs font-mono font-bold text-[#1E3B2F] bg-[#7F8C6A]/15 px-2 py-0.5 rounded-lg border border-[#7F8C6A]/30">
               01
             </span>
             <h2 className="text-sm font-black text-gray-900 tracking-tight">
@@ -251,7 +251,7 @@ export const StudentPortfolioPage = () => {
       <section className="space-y-3">
         <div className="flex items-center justify-between border-b border-gray-200 pb-2.5">
           <div className="flex items-center gap-2.5">
-            <span className="text-xs font-mono font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded-lg border border-blue-100">
+            <span className="text-xs font-mono font-bold text-[#1E3B2F] bg-[#7F8C6A]/15 px-2 py-0.5 rounded-lg border border-[#7F8C6A]/30">
               02
             </span>
             <h2 className="text-sm font-black text-gray-900 tracking-tight">
@@ -272,7 +272,7 @@ export const StudentPortfolioPage = () => {
       <section className="space-y-3">
         <div className="flex items-center justify-between border-b border-gray-200 pb-2.5">
           <div className="flex items-center gap-2.5">
-            <span className="text-xs font-mono font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded-lg border border-blue-100">
+            <span className="text-xs font-mono font-bold text-[#1E3B2F] bg-[#7F8C6A]/15 px-2 py-0.5 rounded-lg border border-[#7F8C6A]/30">
               03
             </span>
             <h2 className="text-sm font-black text-gray-900 tracking-tight">
@@ -293,7 +293,7 @@ export const StudentPortfolioPage = () => {
       <section className="space-y-3">
         <div className="flex items-center justify-between border-b border-gray-200 pb-2.5">
           <div className="flex items-center gap-2.5">
-            <span className="text-xs font-mono font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded-lg border border-blue-100">
+            <span className="text-xs font-mono font-bold text-[#1E3B2F] bg-[#7F8C6A]/15 px-2 py-0.5 rounded-lg border border-[#7F8C6A]/30">
               04
             </span>
             <h2 className="text-sm font-black text-gray-900 tracking-tight">
@@ -316,7 +316,7 @@ export const StudentPortfolioPage = () => {
         <section className="space-y-3">
           <div className="flex items-center justify-between border-b border-gray-200 pb-2.5">
             <div className="flex items-center gap-2.5">
-              <span className="text-xs font-mono font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded-lg border border-blue-100">
+              <span className="text-xs font-mono font-bold text-[#1E3B2F] bg-[#7F8C6A]/15 px-2 py-0.5 rounded-lg border border-[#7F8C6A]/30">
                 05
               </span>
               <h2 className="text-sm font-black text-gray-900 tracking-tight">

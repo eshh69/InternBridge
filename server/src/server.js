@@ -1,3 +1,8 @@
+import dns from 'dns';
+try {
+  dns.setServers(['8.8.8.8', '8.8.4.4', '1.1.1.1']);
+} catch {}
+
 import path from 'path';
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';

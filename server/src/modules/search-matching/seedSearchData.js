@@ -1,3 +1,8 @@
+import dns from 'dns';
+try {
+  dns.setServers(['8.8.8.8', '8.8.4.4', '1.1.1.1']);
+} catch {}
+
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import { User } from '../../models/User.js';

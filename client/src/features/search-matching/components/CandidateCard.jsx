@@ -36,12 +36,12 @@ export const CandidateCard = ({ candidate, queriedSkills = [] }) => {
   );
 
   return (
-    <Card className="hover:border-indigo-300 hover:shadow-md transition-all duration-200">
+    <Card className="hover:border-[#1E3B2F] hover:shadow-md transition-all duration-200 border-[#C8B48A]/35 bg-white rounded-2xl">
       <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
         {/* Left: Avatar & Candidate Info */}
         <div className="flex items-start gap-3.5">
           {/* Avatar */}
-          <div className="w-12 h-12 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 text-white font-bold text-lg flex items-center justify-center flex-shrink-0 shadow-sm overflow-hidden">
+          <div className="w-12 h-12 rounded-full bg-[#1E3B2F] text-[#F5F0E6] font-bold text-lg flex items-center justify-center flex-shrink-0 shadow-sm overflow-hidden">
             {user?.avatarUrl ? (
               <img
                 src={user.avatarUrl}
@@ -82,7 +82,7 @@ export const CandidateCard = ({ candidate, queriedSkills = [] }) => {
         <div className="flex sm:flex-col items-center sm:items-end justify-between sm:justify-start gap-2">
           {matchScore !== undefined && matchScore !== null && (
             <Badge
-              variant={matchScore >= 80 ? 'success' : matchScore >= 50 ? 'purple' : 'neutral'}
+              variant={matchScore >= 80 ? 'success' : matchScore >= 50 ? 'forest' : 'neutral'}
               size="md"
               className="gap-1 font-semibold"
             >
@@ -133,7 +133,7 @@ export const CandidateCard = ({ candidate, queriedSkills = [] }) => {
         <div className="flex items-center gap-4 text-xs text-gray-600">
           {gpa && (
             <span className="flex items-center gap-1 font-semibold text-gray-800">
-              <Award className="w-3.5 h-3.5 text-indigo-500" />
+              <Award className="w-3.5 h-3.5 text-[#7F8C6A]" />
               GPA {gpa.toFixed(2)}
             </span>
           )}
@@ -146,10 +146,7 @@ export const CandidateCard = ({ candidate, queriedSkills = [] }) => {
         </div>
 
         <div className="flex items-center gap-2">
-          <Button
-            variant="primary"
-            size="sm"
-            className="gap-1.5"
+          <Button variant="primary" size="sm" className="gap-1.5 rounded-lg !bg-[#1E3B2F] hover:!bg-[#152A22] !text-[#F5F0E6] shadow-xs"
             onClick={() => navigate('/chat')}
           >
             <MessageSquare className="w-3.5 h-3.5" /> Message

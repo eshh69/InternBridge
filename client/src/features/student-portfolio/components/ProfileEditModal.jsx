@@ -202,7 +202,7 @@ export const ProfileEditModal = ({ isOpen, onClose, profile, user, onSave, isLoa
           <Button variant="secondary" onClick={onClose} disabled={isLoading} className="rounded-xl text-xs">
             Cancel
           </Button>
-          <Button variant="primary" onClick={handleSubmit} isLoading={isLoading} className="rounded-xl text-xs font-semibold px-4 bg-blue-600 hover:bg-blue-700 text-white shadow-xs">
+          <Button variant="primary" onClick={handleSubmit} isLoading={isLoading} className="rounded-xl text-xs font-semibold px-4 bg-[#1E3B2F] hover:bg-[#152A22] text-white shadow-xs">
             Save All Changes
           </Button>
         </>
@@ -216,7 +216,7 @@ export const ProfileEditModal = ({ isOpen, onClose, profile, user, onSave, isLoa
             onClick={() => setActiveTab('personal')}
             className={`flex-1 flex items-center justify-center gap-2 py-2 px-3 text-xs font-semibold rounded-lg transition-all ${
               activeTab === 'personal'
-                ? 'bg-white text-blue-700 shadow-xs border border-gray-200/80'
+                ? 'bg-white text-[#1E3B2F] shadow-xs border border-gray-200/80'
                 : 'text-gray-500 hover:text-gray-900'
             }`}
           >
@@ -229,7 +229,7 @@ export const ProfileEditModal = ({ isOpen, onClose, profile, user, onSave, isLoa
             onClick={() => setActiveTab('academic')}
             className={`flex-1 flex items-center justify-center gap-2 py-2 px-3 text-xs font-semibold rounded-lg transition-all ${
               activeTab === 'academic'
-                ? 'bg-white text-blue-700 shadow-xs border border-gray-200/80'
+                ? 'bg-white text-[#1E3B2F] shadow-xs border border-gray-200/80'
                 : 'text-gray-500 hover:text-gray-900'
             }`}
           >
@@ -242,7 +242,7 @@ export const ProfileEditModal = ({ isOpen, onClose, profile, user, onSave, isLoa
             onClick={() => setActiveTab('links')}
             className={`flex-1 flex items-center justify-center gap-2 py-2 px-3 text-xs font-semibold rounded-lg transition-all ${
               activeTab === 'links'
-                ? 'bg-white text-blue-700 shadow-xs border border-gray-200/80'
+                ? 'bg-white text-[#1E3B2F] shadow-xs border border-gray-200/80'
                 : 'text-gray-500 hover:text-gray-900'
             }`}
           >
@@ -306,13 +306,13 @@ export const ProfileEditModal = ({ isOpen, onClose, profile, user, onSave, isLoa
                     <label htmlFor="whatsapp-input" className="block text-xs font-semibold text-gray-700">
                       WhatsApp Number
                     </label>
-                    <label className="inline-flex items-center gap-1.5 text-xs text-blue-600 font-medium cursor-pointer select-none hover:text-blue-700">
+                    <label className="inline-flex items-center gap-1.5 text-xs text-[#1E3B2F] font-medium cursor-pointer select-none hover:text-[#1E3B2F]">
                       <input
                         type="checkbox"
                         id="same-as-phone-checkbox"
                         checked={sameAsPhone}
                         onChange={handleSameAsPhoneToggle}
-                        className="w-3.5 h-3.5 rounded border-gray-300 text-blue-600 focus:ring-blue-500 cursor-pointer"
+                        className="w-3.5 h-3.5 rounded border-gray-300 text-[#1E3B2F] focus:ring-[#1E3B2F]/20 cursor-pointer"
                       />
                       <span>Same as phone</span>
                     </label>
@@ -324,7 +324,7 @@ export const ProfileEditModal = ({ isOpen, onClose, profile, user, onSave, isLoa
                     value={formData.whatsapp}
                     onChange={handleWhatsappChange}
                     placeholder="e.g. +94 77 123 4567"
-                    className="w-full px-3 py-2 border border-gray-200 rounded-xl text-xs focus:outline-none focus:border-blue-500 transition-colors"
+                    className="w-full px-3 py-2 border border-gray-200 rounded-xl text-xs focus:outline-none focus:border-[#1E3B2F] transition-colors"
                   />
                   {errors.whatsapp && (
                     <p className="mt-1 text-xs text-red-600">{errors.whatsapp}</p>
@@ -379,7 +379,7 @@ export const ProfileEditModal = ({ isOpen, onClose, profile, user, onSave, isLoa
                     name="academicYear"
                     value={formData.academicYear}
                     onChange={handleChange}
-                    className="w-full px-3 py-2 border border-gray-200 rounded-xl text-xs focus:outline-none focus:border-blue-500 transition-colors cursor-pointer"
+                    className="w-full px-3 py-2 border border-gray-200 rounded-xl text-xs focus:outline-none focus:border-[#1E3B2F] transition-colors cursor-pointer"
                   >
                     {ACADEMIC_YEARS.map((year) => (
                       <option key={year} value={year}>
@@ -414,7 +414,7 @@ export const ProfileEditModal = ({ isOpen, onClose, profile, user, onSave, isLoa
                   value={formData.bio}
                   onChange={handleChange}
                   placeholder="Describe your technical background, areas of passion, and internship aspirations..."
-                  className={`w-full px-3 py-2.5 border rounded-xl text-xs focus:outline-none focus:border-blue-500 transition-colors ${
+                  className={`w-full px-3 py-2.5 border rounded-xl text-xs focus:outline-none focus:border-[#1E3B2F] transition-colors ${
                     errors.bio ? 'border-red-500' : 'border-gray-200'
                   }`}
                 />
@@ -482,7 +482,7 @@ export const ProfileEditModal = ({ isOpen, onClose, profile, user, onSave, isLoa
                   <button
                     type="button"
                     onClick={handleAddCustomLink}
-                    className="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors focus:outline-none"
+                    className="p-1.5 text-gray-400 hover:text-[#1E3B2F] hover:bg-[#7F8C6A]/15 rounded-lg transition-colors focus:outline-none"
                     title="Add Link Row"
                     aria-label="Add Link Row"
                   >
@@ -494,7 +494,7 @@ export const ProfileEditModal = ({ isOpen, onClose, profile, user, onSave, isLoa
                   <div className="p-4 rounded-xl border border-dashed border-gray-200 bg-gray-50/50 text-center">
                     <p className="text-xs text-gray-400">
                       No additional platform links added. Click{' '}
-                      <span className="font-semibold text-blue-600">&quot;+ Add Link Row&quot;</span>{' '}
+                      <span className="font-semibold text-[#1E3B2F]">&quot;+ Add Link Row&quot;</span>{' '}
                       above to add custom platforms.
                     </p>
                   </div>
@@ -503,7 +503,7 @@ export const ProfileEditModal = ({ isOpen, onClose, profile, user, onSave, isLoa
                     {customLinks.map((link, idx) => (
                       <div
                         key={idx}
-                        className="flex items-center gap-2 bg-gray-50/80 p-2 rounded-xl border border-gray-200/80 transition-all hover:border-blue-300"
+                        className="flex items-center gap-2 bg-gray-50/80 p-2 rounded-xl border border-gray-200/80 transition-all hover:border-[#C8B48A]/40"
                       >
                         <div className="w-1/3">
                           <input
@@ -511,7 +511,7 @@ export const ProfileEditModal = ({ isOpen, onClose, profile, user, onSave, isLoa
                             placeholder="Platform (e.g. Kaggle)"
                             value={link.label}
                             onChange={(e) => handleCustomLinkChange(idx, 'label', e.target.value)}
-                            className="w-full px-3 py-1.5 border border-gray-200 rounded-lg text-xs focus:outline-none focus:border-blue-500 bg-white"
+                            className="w-full px-3 py-1.5 border border-gray-200 rounded-lg text-xs focus:outline-none focus:border-[#1E3B2F] bg-white"
                           />
                         </div>
                         <div className="flex-1">
@@ -520,7 +520,7 @@ export const ProfileEditModal = ({ isOpen, onClose, profile, user, onSave, isLoa
                             placeholder="https://..."
                             value={link.url}
                             onChange={(e) => handleCustomLinkChange(idx, 'url', e.target.value)}
-                            className="w-full px-3 py-1.5 border border-gray-200 rounded-lg text-xs focus:outline-none focus:border-blue-500 bg-white"
+                            className="w-full px-3 py-1.5 border border-gray-200 rounded-lg text-xs focus:outline-none focus:border-[#1E3B2F] bg-white"
                           />
                         </div>
                         <button
