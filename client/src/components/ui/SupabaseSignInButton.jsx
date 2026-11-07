@@ -67,10 +67,10 @@ export const SupabaseSignInButton = ({
       type="button"
       onClick={handleSupabaseClick}
       disabled={isLoading}
-      className="w-full flex items-center justify-center gap-3 px-4 py-2.5 border border-gray-300 rounded-[10px] shadow-2xs bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors disabled:opacity-50"
+      className="w-full flex items-center justify-center gap-3 px-4 py-3 border border-gray-200/90 rounded-xl shadow-xs bg-white text-xs sm:text-sm font-semibold text-slate-800 hover:bg-slate-50 hover:border-slate-300 focus:outline-none focus:ring-1 focus:ring-slate-900 transition-all disabled:opacity-50"
     >
       {isLoading ? (
-        <svg className="animate-spin h-4 w-4 text-indigo-600" fill="none" viewBox="0 0 24 24">
+        <svg className="animate-spin h-4 w-4 text-slate-900" fill="none" viewBox="0 0 24 24">
           <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
           <path
             className="opacity-75"
@@ -80,7 +80,7 @@ export const SupabaseSignInButton = ({
         </svg>
       ) : (
         /* Official Google SVG Logo */
-        <svg className="w-4 h-4" viewBox="0 0 24 24">
+        <svg className="w-4 h-4 flex-shrink-0" viewBox="0 0 24 24">
           <path
             fill="#4285F4"
             d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
@@ -99,7 +99,7 @@ export const SupabaseSignInButton = ({
           />
         </svg>
       )}
-      <span>{isLoading ? 'Connecting to Google...' : buttonText}</span>
+      <span>{buttonText}</span>
     </button>
   );
 };
