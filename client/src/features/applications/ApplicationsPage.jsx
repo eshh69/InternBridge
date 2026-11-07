@@ -9,10 +9,8 @@ import applicationsApi from './applicationsApi';
 import {
   User,
   Building2,
-  Briefcase,
   PlusCircle,
   RotateCcw,
-  Sparkles,
   Info,
 } from 'lucide-react';
 
@@ -21,23 +19,41 @@ export const ApplicationsPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  // Active view: Defaults to user's real role if logged in ('student' | 'company'), else 'student'
-  const [activeTab, setActiveTab] = useState(
-    user?.role === 'company' ? 'company' : 'student'
-  );
+  const isCompany = user?.role === 'company';
+  const isStudent = user?.role === 'student';
+  const isAdmin = user?.role === 'admin';
+  const canSwitchPortal = !user || isAdmin;
+
+  // Active view: Strictly role-adaptive
+  const [activeTab, setActiveTab] = useState(() => {
+    if (isCompany) return 'company';
+    return 'student';
+  });
 
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [applyModalInternship, setApplyModalInternship] = useState(null);
   const [isApplyModalOpen, setIsApplyModalOpen] = useState(false);
 
-  // Auto-detect preselected internship passed from Search & Matching (/search)
+  // Keep activeTab strictly locked to role when authenticated
   useEffect(() => {
-    if (location.state?.preselectedInternship) {
-      setApplyModalInternship(location.state.preselectedInternship);
-      setIsApplyModalOpen(true);
+    if (isCompany) {
+      setActiveTab('company');
+    } else if (isStudent) {
       setActiveTab('student');
     }
-  }, [location.state]);
+  }, [isCompany, isStudent]);
+
+  // Auto-detect preselected internship passed from Search & Matching (/search)
+  // Strictly prevent company recruiter from opening student apply modal
+  useEffect(() => {
+    if (location.state?.preselectedInternship) {
+      if (user?.role === 'student' || (!user && !isCompany)) {
+        setApplyModalInternship(location.state.preselectedInternship);
+        setIsApplyModalOpen(true);
+        setActiveTab('student');
+      }
+    }
+  }, [location.state, user, isCompany]);
 
   const handleApplicationSuccess = () => {
     setRefreshTrigger((prev) => prev + 1);
@@ -53,59 +69,60 @@ export const ApplicationsPage = () => {
   return (
     <div className="space-y-6 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
       {/* 1. Header Banner */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-2 border-b border-gray-200">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-2 border-b border-[#C8B48A]/30">
         <div>
           <div className="flex items-center gap-2 flex-wrap">
-            <h1 className="text-2xl font-extrabold text-gray-900 tracking-tight">
+            <h1 className="text-2xl font-extrabold text-[#1E3B2F] tracking-tight">
               Application & Recruitment Tracker
             </h1>
-            <span className="text-xs font-bold px-2.5 py-0.5 !rounded-none bg-blue-50 text-blue-700 border border-blue-200 uppercase tracking-wider">
-              Module 4 (SEU/IS/22/ICT/030)
-            </span>
           </div>
-          <p className="text-xs sm:text-sm text-gray-500 mt-1">
-            Complete student application management and company recruiter evaluation portal
+          <p className="text-xs sm:text-sm text-slate-600 mt-1">
+            {isCompany
+              ? 'Review candidate applications and manage recruitment stages for your posted internships'
+              : 'Track submitted internship applications, review statuses, and discover new placements'}
           </p>
         </div>
 
         {/* Action Controls & Tab Switcher */}
         <div className="flex flex-wrap items-center gap-2.5">
-          {/* Tab Switcher allowing testing of both Student and Recruiter views with sharp corners & blue theme */}
-          <div className="inline-flex p-1 bg-slate-100 !rounded-none border border-slate-300 text-xs font-semibold">
-            <button
-              type="button"
-              onClick={() => setActiveTab('student')}
-              className={`flex items-center gap-1.5 px-3.5 py-1.5 !rounded-none transition-all ${
-                activeTab === 'student'
-                  ? 'bg-blue-600 text-white shadow-xs font-bold'
-                  : 'text-slate-700 hover:text-slate-900 hover:bg-slate-200/70'
-              }`}
-            >
-              <User className="w-3.5 h-3.5" />
-              <span>Student Portal</span>
-            </button>
+          {/* Tab Switcher: Only visible for unauthenticated guests or admins */}
+          {canSwitchPortal && (
+            <div className="inline-flex p-1 bg-[#F5F0E6] rounded-xl border border-[#C8B48A]/40 text-xs font-semibold">
+              <button
+                type="button"
+                onClick={() => setActiveTab('student')}
+                className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg transition-all ${
+                  activeTab === 'student'
+                    ? 'bg-[#1E3B2F] text-[#F5F0E6] shadow-xs font-bold'
+                    : 'text-[#1E3B2F] hover:bg-[#EBE2D1]/60'
+                }`}
+              >
+                <User className="w-3.5 h-3.5" />
+                <span>Student Portal</span>
+              </button>
 
-            <button
-              type="button"
-              onClick={() => setActiveTab('company')}
-              className={`flex items-center gap-1.5 px-3.5 py-1.5 !rounded-none transition-all ${
-                activeTab === 'company'
-                  ? 'bg-blue-600 text-white shadow-xs font-bold'
-                  : 'text-slate-700 hover:text-slate-900 hover:bg-slate-200/70'
-              }`}
-            >
-              <Building2 className="w-3.5 h-3.5" />
-              <span>Recruiter Portal</span>
-            </button>
-          </div>
+              <button
+                type="button"
+                onClick={() => setActiveTab('company')}
+                className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg transition-all ${
+                  activeTab === 'company'
+                    ? 'bg-[#1E3B2F] text-[#F5F0E6] shadow-xs font-bold'
+                    : 'text-[#1E3B2F] hover:bg-[#EBE2D1]/60'
+                }`}
+              >
+                <Building2 className="w-3.5 h-3.5" />
+                <span>Recruiter Portal</span>
+              </button>
+            </div>
+          )}
 
-          {activeTab === 'student' && (
+          {activeTab === 'student' && !isCompany && (
             <div className="flex items-center gap-2">
               <Button
                 variant="primary"
                 size="sm"
                 onClick={() => setIsApplyModalOpen(true)}
-                className="gap-1.5 text-xs !rounded-none !bg-blue-600 hover:!bg-blue-700 !border-blue-600 text-white shadow-xs font-semibold"
+                className="gap-1.5 text-xs bg-[#1E3B2F] hover:bg-[#152A22] text-[#F5F0E6] border border-[#1E3B2F] shadow-xs font-semibold"
               >
                 <PlusCircle className="w-3.5 h-3.5" /> Apply for Internship
               </Button>
@@ -114,7 +131,7 @@ export const ApplicationsPage = () => {
                 type="button"
                 onClick={handleResetDemoData}
                 title="Reset local demo data"
-                className="p-1.5 text-slate-500 hover:text-slate-800 hover:bg-slate-100 !rounded-none border border-slate-300 transition-colors"
+                className="p-1.5 text-slate-500 hover:text-[#1E3B2F] hover:bg-[#F5F0E6] rounded-lg border border-[#C8B48A]/40 transition-colors"
               >
                 <RotateCcw className="w-4 h-4" />
               </button>
@@ -123,39 +140,41 @@ export const ApplicationsPage = () => {
         </div>
       </div>
 
-      {/* 2. Seamless Backend / Demo Status Hint Banner (Sharp Blue Theme) */}
-      <div className="bg-blue-50/90 border border-blue-200 border-l-4 border-l-blue-600 !rounded-none p-3.5 flex items-center justify-between text-xs text-blue-950 shadow-2xs">
+      {/* 2. Seamless Backend / Demo Status Hint Banner (Luxury Forest Theme) */}
+      <div className="bg-[#F5F0E6]/90 border border-[#C8B48A]/50 border-l-4 border-l-[#1E3B2F] rounded-xl p-3.5 flex items-center justify-between text-xs text-[#1E3B2F] shadow-2xs">
         <div className="flex items-center gap-2">
-          <Info className="w-4 h-4 text-blue-600 flex-shrink-0" />
+          <Info className="w-4 h-4 text-[#1E3B2F] flex-shrink-0" />
           <span>
-            <strong>Dual-Engine Architecture:</strong> Currently running in resilient instant-preview mode. Any application submissions or recruiter evaluations persist in real-time. When the backend server is booted, it automatically connects to MongoDB endpoints.
+            <strong>Dual-Engine Architecture:</strong> Real-time recruitment pipeline synchronized with backend REST APIs and resilient local-preview store.
           </span>
         </div>
-        <span className="hidden sm:inline-flex text-[11px] font-bold uppercase tracking-wider text-white bg-blue-600 px-2.5 py-0.5 !rounded-none border border-blue-700">
+        <span className="hidden sm:inline-flex text-[11px] font-bold uppercase tracking-wider text-[#F5F0E6] bg-[#1E3B2F] px-2.5 py-0.5 rounded-lg border border-[#152A22]">
           Ready to Run
         </span>
       </div>
 
       {/* 3. Main Tab View */}
-      {activeTab === 'student' ? (
+      {activeTab === 'company' ? (
+        <CompanyApplicantReview onStatusChange={handleApplicationSuccess} />
+      ) : (
         <StudentApplicationHistory
           refreshTrigger={refreshTrigger}
           onBrowseInternships={() => navigate('/search')}
         />
-      ) : (
-        <CompanyApplicantReview onStatusChange={handleApplicationSuccess} />
       )}
 
-      {/* 4. Apply Modal */}
-      <ApplyModal
-        isOpen={isApplyModalOpen}
-        onClose={() => {
-          setIsApplyModalOpen(false);
-          setApplyModalInternship(null);
-        }}
-        internship={applyModalInternship}
-        onSuccess={handleApplicationSuccess}
-      />
+      {/* 4. Apply Modal (Only available for students or unauthenticated users) */}
+      {!isCompany && (
+        <ApplyModal
+          isOpen={isApplyModalOpen}
+          onClose={() => {
+            setIsApplyModalOpen(false);
+            setApplyModalInternship(null);
+          }}
+          internship={applyModalInternship}
+          onSuccess={handleApplicationSuccess}
+        />
+      )}
     </div>
   );
 };
