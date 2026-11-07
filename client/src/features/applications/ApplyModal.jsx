@@ -11,6 +11,7 @@ import {
   Building2,
   MapPin,
   Sparkles,
+  ExternalLink,
 } from 'lucide-react';
 import applicationsApi from './applicationsApi';
 import apiClient from '../../services/apiClient';
@@ -63,6 +64,9 @@ export const ApplyModal = ({
   const [selectedInternship, setSelectedInternship] = useState(propInternship || DEFAULT_SAMPLE_INTERNSHIPS[0]);
   const [coverLetter, setCoverLetter] = useState('');
   const [resumeUrl, setResumeUrl] = useState('');
+  const [portfolioCvUrl, setPortfolioCvUrl] = useState('');
+  const [portfolioCvAvailable, setPortfolioCvAvailable] = useState(false);
+  const [isCustomUpload, setIsCustomUpload] = useState(false);
   const [fileName, setFileName] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
@@ -73,21 +77,30 @@ export const ApplyModal = ({
       setSelectedInternship(propInternship || DEFAULT_SAMPLE_INTERNSHIPS[0]);
       setErrorMessage('');
       setIsSuccess(false);
+      setIsCustomUpload(false);
+      setFileName('');
 
-      // Pre-fill student profile CV if available
+      // Auto-load student profile CV from Member 1 portfolio if available
       apiClient
         .get('/students/me')
         .then((res) => {
-          if (res?.data?.cvUrl) {
-            setResumeUrl(res.data.cvUrl);
-          } else if (!resumeUrl) {
-            setResumeUrl('https://internbridge.storage/resumes/bandara_portfolio_cv.pdf');
+          const profileCv =
+            res?.data?.profile?.cvUrl ||
+            res?.data?.data?.profile?.cvUrl ||
+            res?.data?.cvUrl;
+
+          if (profileCv && profileCv.trim()) {
+            setPortfolioCvUrl(profileCv.trim());
+            setResumeUrl(profileCv.trim());
+            setPortfolioCvAvailable(true);
+          } else {
+            setPortfolioCvAvailable(false);
+            setPortfolioCvUrl('');
           }
         })
-        .catch(() => {
-          if (!resumeUrl) {
-            setResumeUrl('https://internbridge.storage/resumes/bandara_portfolio_cv.pdf');
-          }
+        .catch((err) => {
+          console.warn('Failed to load portfolio CV:', err);
+          setPortfolioCvAvailable(false);
         });
     }
   }, [isOpen, propInternship]);
@@ -144,6 +157,7 @@ export const ApplyModal = ({
     setFileName('');
     setErrorMessage('');
     setIsSuccess(false);
+    setIsCustomUpload(false);
     onClose();
   };
 
@@ -256,52 +270,113 @@ export const ApplyModal = ({
             </Alert>
           )}
 
-          {/* Resume Upload / Link */}
+          {/* Resume / CV Attachment Section */}
           <div className="space-y-2">
-            <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider">
-              Resume / CV Attachment <span className="text-red-500">*</span>
-            </label>
-
-            <div className="border-2 border-dashed border-[#C8B48A]/60 hover:border-[#1E3B2F] rounded-xl p-4 text-center bg-[#F5F0E6]/30 transition-colors">
-              <input
-                type="file"
-                id="resume-file-input"
-                accept=".pdf,.doc,.docx"
-                onChange={handleFileChange}
-                className="hidden"
-              />
-              <label
-                htmlFor="resume-file-input"
-                className="cursor-pointer flex flex-col items-center justify-center gap-1"
-              >
-                <div className="w-8 h-8 rounded-lg bg-[#7F8C6A]/15 text-[#1E3B2F] flex items-center justify-center">
-                  <UploadCloud className="w-4 h-4" />
-                </div>
-                <span className="text-xs font-semibold text-[#1E3B2F] hover:underline">
-                  Click to attach CV from computer
-                </span>
-                <span className="text-[11px] text-gray-400">PDF, DOC, DOCX up to 5MB</span>
+            <div className="flex items-center justify-between">
+              <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider">
+                Resume / CV Attachment <span className="text-red-500">*</span>
               </label>
-
-              {fileName && (
-                <div className="mt-2 inline-flex items-center gap-1.5 px-3 py-1 bg-white border border-[#C8B48A]/40 rounded-lg text-xs font-medium text-gray-800">
-                  <FileText className="w-3.5 h-3.5 text-[#1E3B2F]" />
-                  <span>Selected: {fileName}</span>
-                </div>
+              {portfolioCvAvailable && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (isCustomUpload) {
+                      setIsCustomUpload(false);
+                      setResumeUrl(portfolioCvUrl);
+                      setFileName('');
+                    } else {
+                      setIsCustomUpload(true);
+                      setResumeUrl('');
+                    }
+                  }}
+                  className="text-xs font-semibold text-[#1E3B2F] hover:underline transition-colors"
+                >
+                  {isCustomUpload ? '← Use Saved Portfolio CV' : 'Upload a Different CV'}
+                </button>
               )}
             </div>
 
-            <div className="relative mt-2">
-              <Input
-                label="Or Direct Resume URL"
-                value={resumeUrl}
-                onChange={(e) => setResumeUrl(e.target.value)}
-                placeholder="https://internbridge.storage/resumes/..."
-                helperText="Link to your hosted CV or portfolio document"
-                className="rounded-xl"
-                required
-              />
-            </div>
+            {portfolioCvAvailable && !isCustomUpload ? (
+              /* Verified Portfolio CV Card */
+              <div className="p-4 rounded-xl bg-[#F5F0E6]/80 border border-[#C8B48A]/50 space-y-3 shadow-3xs transition-all">
+                <div className="flex items-start justify-between gap-3">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-[#7F8C6A]/20 text-[#1E3B2F] flex items-center justify-center flex-shrink-0">
+                      <FileText className="w-5 h-5 text-[#1E3B2F]" />
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs font-bold text-[#1E3B2F]">Attached from Student Portfolio</span>
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#7F8C6A]/20 text-[#1E3B2F]">
+                          <CheckCircle2 className="w-3 h-3 text-[#1E3B2F]" /> Ready
+                        </span>
+                      </div>
+                      <p className="text-xs text-slate-600 mt-0.5 truncate max-w-xs sm:max-w-sm">
+                        {portfolioCvUrl.split('/').pop() || 'Student_Portfolio_CV.pdf'}
+                      </p>
+                    </div>
+                  </div>
+
+                  <a
+                    href={portfolioCvUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 text-xs font-semibold text-[#1E3B2F] hover:text-[#152A22] hover:underline flex-shrink-0 pt-1"
+                  >
+                    <span>Preview CV</span>
+                    <ExternalLink className="w-3.5 h-3.5 text-[#C8B48A]" />
+                  </a>
+                </div>
+
+                <div className="pt-2 border-t border-[#C8B48A]/30 flex justify-between items-center text-[11px] text-slate-500">
+                  <span>Your verified portfolio CV will be transmitted with this application.</span>
+                </div>
+              </div>
+            ) : (
+              /* Custom File Upload or Direct Link */
+              <div className="space-y-2">
+                <div className="border-2 border-dashed border-[#C8B48A]/60 hover:border-[#1E3B2F] rounded-xl p-4 text-center bg-[#F5F0E6]/30 transition-colors">
+                  <input
+                    type="file"
+                    id="resume-file-input"
+                    accept=".pdf,.doc,.docx"
+                    onChange={handleFileChange}
+                    className="hidden"
+                  />
+                  <label
+                    htmlFor="resume-file-input"
+                    className="cursor-pointer flex flex-col items-center justify-center gap-1"
+                  >
+                    <div className="w-8 h-8 rounded-lg bg-[#7F8C6A]/15 text-[#1E3B2F] flex items-center justify-center">
+                      <UploadCloud className="w-4 h-4" />
+                    </div>
+                    <span className="text-xs font-semibold text-[#1E3B2F] hover:underline">
+                      Click to attach custom CV from computer
+                    </span>
+                    <span className="text-[11px] text-gray-400">PDF, DOC, DOCX up to 5MB</span>
+                  </label>
+
+                  {fileName && (
+                    <div className="mt-2 inline-flex items-center gap-1.5 px-3 py-1 bg-white border border-[#C8B48A]/40 rounded-lg text-xs font-medium text-gray-800">
+                      <FileText className="w-3.5 h-3.5 text-[#1E3B2F]" />
+                      <span>Selected: {fileName}</span>
+                    </div>
+                  )}
+                </div>
+
+                <div className="relative mt-2">
+                  <Input
+                    label="Or Direct Resume URL"
+                    value={resumeUrl}
+                    onChange={(e) => setResumeUrl(e.target.value)}
+                    placeholder="https://internbridge.storage/resumes/..."
+                    helperText="Link to your hosted CV or portfolio document"
+                    className="rounded-xl"
+                    required
+                  />
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Cover Letter */}

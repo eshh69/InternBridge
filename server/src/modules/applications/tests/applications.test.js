@@ -13,6 +13,7 @@ import { User } from '../../../models/User.js';
 import { Company } from '../../../models/Company.js';
 import { Internship } from '../../../models/Internship.js';
 import { Application } from '../../../models/Application.js';
+import { StudentProfile } from '../../../models/StudentProfile.js';
 import { connectDB } from '../../../config/db.js';
 
 let server;
@@ -96,6 +97,7 @@ const runTests = async () => {
     });
     assert(regStudent2.status === 201 && regStudent2.body.data.token, 'Register Student 2');
     const tokenStudent2 = regStudent2.body.data.token;
+    const student2Id = regStudent2.body.data.user.id || regStudent2.body.data.user._id;
 
     // Register Company User A
     const regCompanyA = await makeRequest('/api/v1/auth/register', 'POST', {
@@ -119,28 +121,34 @@ const runTests = async () => {
     const tokenCompanyB = regCompanyB.body.data.token;
     const companyBUserId = regCompanyB.body.data.user.id || regCompanyB.body.data.user._id;
 
-    // Create Company A profile
-    const compProfileA = await Company.create({
-      user: companyAUserId,
-      name: 'IFS Sri Lanka (Test)',
-      description: 'Enterprise ERP software provider',
-      industry: 'Software Development',
-      location: { address: 'Orion City', city: 'Colombo 09', country: 'Sri Lanka' },
-      contactEmail: companyAEmail,
-      verificationStatus: 'verified',
-    });
+    // Create or update Company A profile
+    const compProfileA = await Company.findOneAndUpdate(
+      { user: companyAUserId },
+      {
+        name: 'IFS Sri Lanka (Test)',
+        description: 'Enterprise ERP software provider',
+        industry: 'Software Development',
+        location: { address: 'Orion City', city: 'Colombo 09', country: 'Sri Lanka' },
+        contactEmail: companyAEmail,
+        verificationStatus: 'verified',
+      },
+      { upsert: true, new: true }
+    );
     createdCompanyIds.push(compProfileA._id);
 
-    // Create Company B profile
-    const compProfileB = await Company.create({
-      user: companyBUserId,
-      name: 'Sysco LABS (Test)',
-      description: 'Enterprise foodservice cloud engineering',
-      industry: 'Cloud Infrastructure',
-      location: { address: 'Cinnamon Gardens', city: 'Colombo 07', country: 'Sri Lanka' },
-      contactEmail: companyBEmail,
-      verificationStatus: 'verified',
-    });
+    // Create or update Company B profile
+    const compProfileB = await Company.findOneAndUpdate(
+      { user: companyBUserId },
+      {
+        name: 'Sysco LABS (Test)',
+        description: 'Enterprise foodservice cloud engineering',
+        industry: 'Cloud Infrastructure',
+        location: { address: 'Cinnamon Gardens', city: 'Colombo 07', country: 'Sri Lanka' },
+        contactEmail: companyBEmail,
+        verificationStatus: 'verified',
+      },
+      { upsert: true, new: true }
+    );
     createdCompanyIds.push(compProfileB._id);
 
     // Create Published Internship for Company A
@@ -352,6 +360,35 @@ const runTests = async () => {
       detailRes.status === 200 && detailRes.body.data.status === 'shortlisted',
       'GET /applications/:id retrieves complete application details for applicant'
     );
+
+    // --- TEST 16: Auto-load portfolio CV fallback when resumeUrl is omitted ---
+    await StudentProfile.findOneAndUpdate(
+      { user: student2Id },
+      {
+        university: 'South Eastern University of Sri Lanka',
+        degree: 'BSc in Information and Communication Technology',
+        cvUrl: 'https://internbridge.storage/resumes/student2_portfolio.pdf',
+      },
+      { upsert: true, new: true }
+    );
+
+    const autoCvAppRes = await makeRequest(
+      '/api/v1/applications',
+      'POST',
+      {
+        internshipId: publishedInternship._id,
+        coverLetter: 'Applying using my saved portfolio resume.',
+      },
+      tokenStudent2
+    );
+    assert(
+      autoCvAppRes.status === 201 &&
+        autoCvAppRes.body?.data?.resumeUrl === 'https://internbridge.storage/resumes/student2_portfolio.pdf',
+      'Auto-fallback: Submitting application without resumeUrl automatically uses StudentProfile cvUrl'
+    );
+    if (autoCvAppRes.body?.data?._id) {
+      createdAppIds.push(autoCvAppRes.body.data._id);
+    }
   } catch (err) {
     console.error('Test execution error:', err);
     failed++;
