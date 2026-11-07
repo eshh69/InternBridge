@@ -110,26 +110,26 @@ export const AdminVerificationQueue = ({ onStatsUpdate, refreshTrigger = 0 }) =>
     <div className="space-y-6">
       {/* 4 Metrics Header Cards */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
-        <div className="p-4 bg-white !rounded-none border border-slate-200 shadow-2xs">
+        <div className="p-4 bg-white rounded-xl border border-slate-200 shadow-xs">
           <p className="text-xs font-bold text-slate-500 uppercase tracking-wider">Total Submissions</p>
           <p className="text-2xl font-black text-slate-900 mt-1">{stats.total}</p>
         </div>
 
-        <div className="p-4 bg-amber-50/70 !rounded-none border border-amber-200 border-l-4 border-l-amber-500 shadow-2xs">
+        <div className="p-4 bg-amber-50/70 rounded-xl border border-amber-200 border-l-4 border-l-amber-500 shadow-xs">
           <p className="text-xs font-bold text-amber-700 uppercase tracking-wider flex items-center gap-1">
             <Clock className="w-3.5 h-3.5" /> Pending Review
           </p>
           <p className="text-2xl font-black text-amber-900 mt-1">{stats.pending}</p>
         </div>
 
-        <div className="p-4 bg-emerald-50/70 !rounded-none border border-emerald-200 border-l-4 border-l-emerald-500 shadow-2xs">
+        <div className="p-4 bg-emerald-50/70 rounded-xl border border-emerald-200 border-l-4 border-l-emerald-500 shadow-xs">
           <p className="text-xs font-bold text-emerald-700 uppercase tracking-wider flex items-center gap-1">
             <ShieldCheck className="w-3.5 h-3.5" /> Approved
           </p>
           <p className="text-2xl font-black text-emerald-900 mt-1">{stats.approved}</p>
         </div>
 
-        <div className="p-4 bg-rose-50/70 !rounded-none border border-rose-200 border-l-4 border-l-rose-500 shadow-2xs">
+        <div className="p-4 bg-rose-50/70 rounded-xl border border-rose-200 border-l-4 border-l-rose-500 shadow-xs">
           <p className="text-xs font-bold text-rose-700 uppercase tracking-wider flex items-center gap-1">
             <XCircle className="w-3.5 h-3.5" /> Rejected
           </p>
@@ -151,7 +151,7 @@ export const AdminVerificationQueue = ({ onStatsUpdate, refreshTrigger = 0 }) =>
 
       {/* Filter Tabs & Refresh Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-gray-200 pb-3">
-        <div className="inline-flex p-1 bg-slate-100 !rounded-none border border-slate-300 text-xs font-semibold">
+        <div className="inline-flex p-1 bg-slate-100 rounded-xl border border-slate-300 text-xs font-semibold">
           {[
             { id: 'pending', label: 'Pending Review', count: stats.pending },
             { id: 'approved', label: 'Approved', count: stats.approved },
@@ -161,7 +161,7 @@ export const AdminVerificationQueue = ({ onStatsUpdate, refreshTrigger = 0 }) =>
             <button
               key={tab.id}
               onClick={() => setStatusFilter(tab.id)}
-              className={`flex items-center gap-1.5 px-3 py-1.5 !rounded-none transition-all ${
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all ${
                 statusFilter === tab.id
                   ? 'bg-[#1E3B2F] text-[#F5F0E6] shadow-xs font-bold'
                   : 'text-slate-700 hover:text-slate-900 hover:bg-slate-200/70'
@@ -169,7 +169,7 @@ export const AdminVerificationQueue = ({ onStatsUpdate, refreshTrigger = 0 }) =>
             >
               <span>{tab.label}</span>
               <span
-                className={`text-[10px] px-1.5 py-0.2 !rounded-none font-bold ${
+                className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ${
                   statusFilter === tab.id ? 'bg-[#152A22] text-[#F5F0E6]' : 'bg-slate-200 text-slate-800'
                 }`}
               >
@@ -183,7 +183,7 @@ export const AdminVerificationQueue = ({ onStatsUpdate, refreshTrigger = 0 }) =>
           type="button"
           onClick={() => fetchQueue(statusFilter)}
           disabled={loading}
-          className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-slate-700 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 !rounded-none border border-slate-300 transition-colors"
+          className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-slate-700 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 rounded-lg border border-slate-300 transition-colors"
         >
           <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
           Refresh Queue
@@ -228,12 +228,12 @@ export const AdminVerificationQueue = ({ onStatsUpdate, refreshTrigger = 0 }) =>
             return (
               <div
                 key={item._id}
-                className="bg-white border border-slate-200 hover:border-[#1E3B2F] !rounded-none p-4 shadow-2xs transition-all"
+                className="bg-white border border-slate-200 hover:border-[#1E3B2F] rounded-xl p-4 shadow-xs transition-all"
               >
                 <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
                   {/* Requester Info */}
                   <div className="flex items-start gap-3">
-                    <div className="w-10 h-10 !rounded-none bg-[#7F8C6A]/15 text-[#1E3B2F] border border-[#C8B48A]/40 flex items-center justify-center font-bold text-sm flex-shrink-0">
+                    <div className="w-10 h-10 rounded-xl bg-[#7F8C6A]/15 text-[#1E3B2F] border border-[#C8B48A]/40 flex items-center justify-center font-bold text-sm flex-shrink-0">
                       {item.requester?.name?.charAt(0) || 'U'}
                     </div>
 
@@ -242,7 +242,7 @@ export const AdminVerificationQueue = ({ onStatsUpdate, refreshTrigger = 0 }) =>
                         <h4 className="font-extrabold text-slate-900 text-sm">
                           {item.requester?.name || 'Applicant Entity'}
                         </h4>
-                        <span className="text-[10px] font-bold px-2 py-0.5 !rounded-none bg-slate-100 text-slate-700 border border-slate-200 uppercase tracking-wider flex items-center gap-1">
+                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-100 text-slate-700 border border-slate-200 uppercase tracking-wider flex items-center gap-1">
                           {item.verificationType === 'company' ? (
                             <Building2 className="w-3 h-3 text-[#1E3B2F]" />
                           ) : (
@@ -271,7 +271,7 @@ export const AdminVerificationQueue = ({ onStatsUpdate, refreshTrigger = 0 }) =>
                       </div>
 
                       {item.adminNotes && (
-                        <p className="text-xs text-slate-600 bg-slate-50 p-2 !rounded-none border border-slate-200 mt-2">
+                        <p className="text-xs text-slate-600 bg-slate-50 p-2 rounded-lg border border-slate-200 mt-2">
                           <strong className="text-slate-800">Admin Remarks:</strong> {item.adminNotes}
                         </p>
                       )}
@@ -285,7 +285,7 @@ export const AdminVerificationQueue = ({ onStatsUpdate, refreshTrigger = 0 }) =>
                         href={item.proofDocumentUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-[#1E3B2F] bg-[#7F8C6A]/15 hover:bg-[#7F8C6A]/25 !rounded-none border border-[#C8B48A]/40 transition-colors"
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-[#1E3B2F] bg-[#7F8C6A]/15 hover:bg-[#7F8C6A]/25 rounded-lg border border-[#C8B48A]/40 transition-colors"
                       >
                         <FileText className="w-3.5 h-3.5" />
                         View Proof Document
@@ -299,7 +299,7 @@ export const AdminVerificationQueue = ({ onStatsUpdate, refreshTrigger = 0 }) =>
                           variant="success"
                           size="sm"
                           onClick={() => handleOpenDecision(item, 'approved')}
-                          className="flex items-center gap-1 text-xs !rounded-none !bg-emerald-600 hover:!bg-emerald-700 text-white font-semibold shadow-xs"
+                          className="flex items-center gap-1 text-xs rounded-lg !bg-emerald-600 hover:!bg-emerald-700 text-white font-semibold shadow-xs"
                         >
                           <CheckCircle className="w-3.5 h-3.5" />
                           Approve
@@ -308,7 +308,7 @@ export const AdminVerificationQueue = ({ onStatsUpdate, refreshTrigger = 0 }) =>
                           variant="danger"
                           size="sm"
                           onClick={() => handleOpenDecision(item, 'rejected')}
-                          className="flex items-center gap-1 text-xs !rounded-none !bg-rose-600 hover:!bg-rose-700 text-white font-semibold shadow-xs"
+                          className="flex items-center gap-1 text-xs rounded-lg !bg-rose-600 hover:!bg-rose-700 text-white font-semibold shadow-xs"
                         >
                           <XCircle className="w-3.5 h-3.5" />
                           Reject
@@ -369,7 +369,7 @@ export const AdminVerificationQueue = ({ onStatsUpdate, refreshTrigger = 0 }) =>
               variant="secondary"
               onClick={() => setDecisionModal((prev) => ({ ...prev, isOpen: false }))}
               disabled={decisionModal.submitting}
-              className="text-xs !rounded-none"
+              className="text-xs rounded-lg"
             >
               Cancel
             </Button>
@@ -377,7 +377,7 @@ export const AdminVerificationQueue = ({ onStatsUpdate, refreshTrigger = 0 }) =>
               variant={decisionModal.status === 'approved' ? 'success' : 'danger'}
               onClick={handleConfirmDecision}
               isLoading={decisionModal.submitting}
-              className={`text-xs !rounded-none text-white font-semibold shadow-xs ${
+              className={`text-xs rounded-lg text-white font-semibold shadow-xs ${
                 decisionModal.status === 'approved'
                   ? '!bg-emerald-600 hover:!bg-emerald-700'
                   : '!bg-rose-600 hover:!bg-rose-700'

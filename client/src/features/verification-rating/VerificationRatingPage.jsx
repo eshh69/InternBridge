@@ -203,11 +203,11 @@ export const VerificationRatingPage = () => {
         <div className="flex flex-wrap items-center gap-2.5">
           {/* Strictly reserve Admin Portal option for admin role */}
           {isAdmin ? (
-            <div className="inline-flex p-1 bg-slate-100 !rounded-none border border-slate-300 text-xs font-semibold">
+            <div className="inline-flex p-1 bg-slate-100 rounded-xl border border-slate-300 text-xs font-semibold">
               <button
                 type="button"
                 onClick={() => setActivePortal('admin')}
-                className={`flex items-center gap-1.5 px-3 py-1.5 !rounded-none transition-all ${
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all ${
                   activePortal === 'admin'
                     ? 'bg-[#1E3B2F] text-[#F5F0E6] shadow-xs font-bold'
                     : 'text-slate-700 hover:text-slate-900 hover:bg-slate-200/70'
@@ -220,7 +220,7 @@ export const VerificationRatingPage = () => {
               <button
                 type="button"
                 onClick={() => setActivePortal('reviewer')}
-                className={`flex items-center gap-1.5 px-3 py-1.5 !rounded-none transition-all ${
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all ${
                   activePortal === 'reviewer'
                     ? 'bg-[#1E3B2F] text-[#F5F0E6] shadow-xs font-bold'
                     : 'text-slate-700 hover:text-slate-900 hover:bg-slate-200/70'
@@ -233,7 +233,7 @@ export const VerificationRatingPage = () => {
               <button
                 type="button"
                 onClick={() => setActivePortal('company')}
-                className={`flex items-center gap-1.5 px-3 py-1.5 !rounded-none transition-all ${
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all ${
                   activePortal === 'company'
                     ? 'bg-[#1E3B2F] text-[#F5F0E6] shadow-xs font-bold'
                     : 'text-slate-700 hover:text-slate-900 hover:bg-slate-200/70'
@@ -244,7 +244,7 @@ export const VerificationRatingPage = () => {
               </button>
             </div>
           ) : (
-            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 !rounded-none bg-[#7F8C6A]/15 text-[#1E3B2F] border border-[#C8B48A]/40 text-xs font-bold uppercase tracking-wider">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#7F8C6A]/15 text-[#1E3B2F] border border-[#C8B48A]/40 text-xs font-bold uppercase tracking-wider">
               {isCompany ? (
                 <>
                   <Building2 className="w-3.5 h-3.5 text-[#1E3B2F]" />
@@ -265,7 +265,7 @@ export const VerificationRatingPage = () => {
               variant="primary"
               size="sm"
               onClick={() => setIsRequestModalOpen(true)}
-              className="gap-1.5 text-xs !rounded-none !bg-[#1E3B2F] hover:!bg-[#152A22] !border-[#1E3B2F] text-[#F5F0E6] shadow-xs font-semibold"
+              className="gap-1.5 text-xs rounded-lg !bg-[#1E3B2F] hover:!bg-[#152A22] !border-[#1E3B2F] text-[#F5F0E6] shadow-xs font-semibold"
             >
               <PlusCircle className="w-3.5 h-3.5" />
               {isCompany ? 'Request Verification' : 'Submit Verification'}
@@ -276,7 +276,7 @@ export const VerificationRatingPage = () => {
                 variant="primary"
                 size="sm"
                 onClick={() => setIsReviewModalOpen(true)}
-                className="gap-1.5 text-xs !rounded-none !bg-[#1E3B2F] hover:!bg-[#152A22] !border-[#1E3B2F] text-[#F5F0E6] shadow-xs font-semibold"
+                className="gap-1.5 text-xs rounded-lg !bg-[#1E3B2F] hover:!bg-[#152A22] !border-[#1E3B2F] text-[#F5F0E6] shadow-xs font-semibold"
               >
                 <Sparkles className="w-3.5 h-3.5 text-[#C8B48A]" /> Write Review
               </Button>
@@ -287,7 +287,7 @@ export const VerificationRatingPage = () => {
                 type="button"
                 onClick={handleResetDemoData}
                 title="Reset local demo data"
-                className="p-1.5 text-slate-500 hover:text-slate-800 hover:bg-slate-100 !rounded-none border border-slate-300 transition-colors"
+                className="p-1.5 text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-lg border border-slate-300 transition-colors"
               >
                 <RotateCcw className="w-4 h-4" />
               </button>
@@ -297,14 +297,14 @@ export const VerificationRatingPage = () => {
       </div>
 
       {/* 3. Dual-Engine Architecture / System Status Banner (Luxury Forest Green Theme) */}
-      <div className="bg-[#7F8C6A]/15 border border-[#C8B48A]/40 border-l-4 border-l-[#1E3B2F] !rounded-none p-3.5 flex items-center justify-between text-xs text-[#1E3B2F] shadow-2xs">
+      <div className="bg-[#7F8C6A]/15 border border-[#C8B48A]/40 border-l-4 border-l-[#1E3B2F] rounded-xl p-3.5 flex items-center justify-between text-xs text-[#1E3B2F] shadow-xs">
         <div className="flex items-center gap-2">
           <Info className="w-4 h-4 text-[#1E3B2F] flex-shrink-0" />
           <span>
             <strong>Dual-Engine Architecture:</strong> Currently running in resilient instant-preview mode. Any verification requests or multi-criteria reputation evaluations persist in real-time and synchronize seamlessly with MongoDB endpoints.
           </span>
         </div>
-        <span className="hidden sm:inline-flex text-[11px] font-bold uppercase tracking-wider text-[#F5F0E6] bg-[#1E3B2F] px-2.5 py-0.5 !rounded-none border border-[#152A22]">
+        <span className="hidden sm:inline-flex text-[11px] font-bold uppercase tracking-wider text-[#F5F0E6] bg-[#1E3B2F] px-2.5 py-0.5 rounded-full border border-[#152A22]">
           Ready to Run
         </span>
       </div>
@@ -328,7 +328,7 @@ export const VerificationRatingPage = () => {
             <button
               type="button"
               onClick={() => setCompanySubTab('status')}
-              className={`px-4 py-2 text-xs font-bold !rounded-none transition-all flex items-center gap-2 whitespace-nowrap ${
+              className={`px-4 py-2 text-xs font-bold rounded-lg transition-all flex items-center gap-2 whitespace-nowrap ${
                 companySubTab === 'status'
                   ? 'bg-[#1E3B2F] text-[#F5F0E6] shadow-xs'
                   : 'text-slate-600 hover:bg-slate-100'
@@ -341,7 +341,7 @@ export const VerificationRatingPage = () => {
             <button
               type="button"
               onClick={() => setCompanySubTab('metrics')}
-              className={`px-4 py-2 text-xs font-bold !rounded-none transition-all flex items-center gap-2 whitespace-nowrap ${
+              className={`px-4 py-2 text-xs font-bold rounded-lg transition-all flex items-center gap-2 whitespace-nowrap ${
                 companySubTab === 'metrics'
                   ? 'bg-[#1E3B2F] text-[#F5F0E6] shadow-xs'
                   : 'text-slate-600 hover:bg-slate-100'
@@ -354,7 +354,7 @@ export const VerificationRatingPage = () => {
             <button
               type="button"
               onClick={() => setCompanySubTab('directory')}
-              className={`px-4 py-2 text-xs font-bold !rounded-none transition-all flex items-center gap-2 whitespace-nowrap ${
+              className={`px-4 py-2 text-xs font-bold rounded-lg transition-all flex items-center gap-2 whitespace-nowrap ${
                 companySubTab === 'directory'
                   ? 'bg-[#1E3B2F] text-[#F5F0E6] shadow-xs'
                   : 'text-slate-600 hover:bg-slate-100'
@@ -369,9 +369,9 @@ export const VerificationRatingPage = () => {
             <div className="space-y-6">
               {/* 4 Company Summary Stats Cards */}
               <div className="grid grid-cols-1 sm:grid-cols-4 gap-3 sm:gap-4">
-                <div className="p-4 bg-white !rounded-none border border-slate-200 shadow-2xs">
+                <div className="p-4 bg-white rounded-xl border border-[#C8B48A]/40 shadow-xs">
                   <div className="flex items-center gap-3">
-                    <div className="p-2.5 bg-[#7F8C6A]/15 text-[#1E3B2F] !rounded-none border border-[#C8B48A]/40">
+                    <div className="p-2.5 bg-[#7F8C6A]/15 text-[#1E3B2F] rounded-xl border border-[#C8B48A]/40">
                       <Building2 className="w-5 h-5" />
                     </div>
                     <div>
@@ -385,9 +385,9 @@ export const VerificationRatingPage = () => {
                   </div>
                 </div>
 
-                <div className="p-4 bg-white !rounded-none border border-slate-200 shadow-2xs">
+                <div className="p-4 bg-white rounded-xl border border-[#C8B48A]/40 shadow-xs">
                   <div className="flex items-center gap-3">
-                    <div className="p-2.5 bg-[#1E3B2F]/10 text-[#1E3B2F] !rounded-none border border-[#1E3B2F]/20">
+                    <div className="p-2.5 bg-[#1E3B2F]/10 text-[#1E3B2F] rounded-xl border border-[#1E3B2F]/20">
                       <ShieldCheck className="w-5 h-5" />
                     </div>
                     <div>
@@ -401,9 +401,9 @@ export const VerificationRatingPage = () => {
                   </div>
                 </div>
 
-                <div className="p-4 bg-white !rounded-none border border-slate-200 shadow-2xs">
+                <div className="p-4 bg-white rounded-xl border border-[#C8B48A]/40 shadow-xs">
                   <div className="flex items-center gap-3">
-                    <div className="p-2.5 bg-[#C8B48A]/20 text-[#1E3B2F] !rounded-none border border-[#C8B48A]/50">
+                    <div className="p-2.5 bg-[#C8B48A]/20 text-[#1E3B2F] rounded-xl border border-[#C8B48A]/50">
                       <Briefcase className="w-5 h-5 text-[#C8B48A]" />
                     </div>
                     <div>
@@ -417,9 +417,9 @@ export const VerificationRatingPage = () => {
                   </div>
                 </div>
 
-                <div className="p-4 bg-white !rounded-none border border-slate-200 shadow-2xs">
+                <div className="p-4 bg-white rounded-xl border border-[#C8B48A]/40 shadow-xs">
                   <div className="flex items-center gap-3">
-                    <div className="p-2.5 bg-[#1E3B2F]/15 text-[#1E3B2F] !rounded-none border border-[#1E3B2F]/30">
+                    <div className="p-2.5 bg-[#1E3B2F]/15 text-[#1E3B2F] rounded-xl border border-[#1E3B2F]/30">
                       <Sparkles className="w-5 h-5 text-[#C8B48A]" />
                     </div>
                     <div>
@@ -435,10 +435,10 @@ export const VerificationRatingPage = () => {
               </div>
 
               {/* Dedicated Company Verification Card */}
-              <div className="bg-white border border-slate-200 !rounded-none p-6 shadow-2xs space-y-5">
+              <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm space-y-5">
                 <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 border-b border-slate-100 pb-5">
                   <div className="flex items-start gap-4">
-                    <div className="p-3.5 bg-[#7F8C6A]/15 text-[#1E3B2F] border border-[#C8B48A]/40 !rounded-none flex-shrink-0">
+                    <div className="p-3.5 bg-[#7F8C6A]/15 text-[#1E3B2F] border border-[#C8B48A]/40 rounded-xl flex-shrink-0">
                       <Building2 className="w-8 h-8" />
                     </div>
                     <div className="space-y-1.5">
@@ -459,7 +459,7 @@ export const VerificationRatingPage = () => {
                       variant="primary"
                       size="sm"
                       onClick={() => setIsRequestModalOpen(true)}
-                      className="gap-1.5 text-xs !rounded-none !bg-[#1E3B2F] hover:!bg-[#152A22] !border-[#1E3B2F] text-[#F5F0E6] font-semibold shadow-xs"
+                      className="gap-1.5 text-xs rounded-lg !bg-[#1E3B2F] hover:!bg-[#152A22] !border-[#1E3B2F] text-[#F5F0E6] font-semibold shadow-xs"
                     >
                       <PlusCircle className="w-3.5 h-3.5" />
                       {myStatus === 'approved' ? 'Update Credentials' : 'Request Verification'}
@@ -468,7 +468,7 @@ export const VerificationRatingPage = () => {
                 </div>
 
                 {/* Company Accreditation Details Table */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs bg-slate-50/70 p-4 border border-slate-200 !rounded-none">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs bg-slate-50/70 p-4 border border-slate-200 rounded-xl">
                   <div>
                     <span className="text-slate-500 font-semibold block">Registered Organization Name:</span>
                     <strong className="text-slate-900 text-sm">
@@ -511,7 +511,7 @@ export const VerificationRatingPage = () => {
                 </div>
 
                 {myVerification?.adminNotes && (
-                  <div className="p-3 bg-[#7F8C6A]/15 border border-[#C8B48A]/40 !rounded-none text-xs text-[#1E3B2F]">
+                  <div className="p-3 bg-[#7F8C6A]/15 border border-[#C8B48A]/40 rounded-lg text-xs text-[#1E3B2F]">
                     <strong>Audit Remarks:</strong> {myVerification.adminNotes}
                   </div>
                 )}
@@ -536,7 +536,7 @@ export const VerificationRatingPage = () => {
             <button
               type="button"
               onClick={() => setAdminSubTab('queue')}
-              className={`px-4 py-2 text-xs font-bold !rounded-none transition-all flex items-center gap-2 whitespace-nowrap ${
+              className={`px-4 py-2 text-xs font-bold rounded-lg transition-all flex items-center gap-2 whitespace-nowrap ${
                 adminSubTab === 'queue'
                   ? 'bg-[#1E3B2F] text-[#F5F0E6] shadow-xs'
                   : 'text-slate-600 hover:bg-slate-100'
@@ -549,7 +549,7 @@ export const VerificationRatingPage = () => {
             <button
               type="button"
               onClick={() => setAdminSubTab('metrics')}
-              className={`px-4 py-2 text-xs font-bold !rounded-none transition-all flex items-center gap-2 whitespace-nowrap ${
+              className={`px-4 py-2 text-xs font-bold rounded-lg transition-all flex items-center gap-2 whitespace-nowrap ${
                 adminSubTab === 'metrics'
                   ? 'bg-[#1E3B2F] text-[#F5F0E6] shadow-xs'
                   : 'text-slate-600 hover:bg-slate-100'
@@ -562,7 +562,7 @@ export const VerificationRatingPage = () => {
             <button
               type="button"
               onClick={() => setAdminSubTab('directory')}
-              className={`px-4 py-2 text-xs font-bold !rounded-none transition-all flex items-center gap-2 whitespace-nowrap ${
+              className={`px-4 py-2 text-xs font-bold rounded-lg transition-all flex items-center gap-2 whitespace-nowrap ${
                 adminSubTab === 'directory'
                   ? 'bg-[#1E3B2F] text-[#F5F0E6] shadow-xs'
                   : 'text-slate-600 hover:bg-slate-100'
@@ -594,7 +594,7 @@ export const VerificationRatingPage = () => {
             <button
               type="button"
               onClick={() => setReviewerSubTab('workspace')}
-              className={`px-4 py-2 text-xs font-bold !rounded-none transition-all flex items-center gap-2 whitespace-nowrap ${
+              className={`px-4 py-2 text-xs font-bold rounded-lg transition-all flex items-center gap-2 whitespace-nowrap ${
                 reviewerSubTab === 'workspace'
                   ? 'bg-[#1E3B2F] text-[#F5F0E6] shadow-xs'
                   : 'text-slate-600 hover:bg-slate-100'
@@ -607,7 +607,7 @@ export const VerificationRatingPage = () => {
             <button
               type="button"
               onClick={() => setReviewerSubTab('metrics')}
-              className={`px-4 py-2 text-xs font-bold !rounded-none transition-all flex items-center gap-2 whitespace-nowrap ${
+              className={`px-4 py-2 text-xs font-bold rounded-lg transition-all flex items-center gap-2 whitespace-nowrap ${
                 reviewerSubTab === 'metrics'
                   ? 'bg-[#1E3B2F] text-[#F5F0E6] shadow-xs'
                   : 'text-slate-600 hover:bg-slate-100'
@@ -620,7 +620,7 @@ export const VerificationRatingPage = () => {
             <button
               type="button"
               onClick={() => setReviewerSubTab('directory')}
-              className={`px-4 py-2 text-xs font-bold !rounded-none transition-all flex items-center gap-2 whitespace-nowrap ${
+              className={`px-4 py-2 text-xs font-bold rounded-lg transition-all flex items-center gap-2 whitespace-nowrap ${
                 reviewerSubTab === 'directory'
                   ? 'bg-[#1E3B2F] text-[#F5F0E6] shadow-xs'
                   : 'text-slate-600 hover:bg-slate-100'
@@ -635,9 +635,9 @@ export const VerificationRatingPage = () => {
             <div className="space-y-6">
               {/* 4 Reviewer Stats Cards */}
               <div className="grid grid-cols-1 sm:grid-cols-4 gap-3 sm:gap-4">
-                <div className="p-4 bg-white !rounded-none border border-slate-200 shadow-2xs">
+                <div className="p-4 bg-white rounded-xl border border-[#C8B48A]/40 shadow-xs">
                   <div className="flex items-center gap-3">
-                    <div className="p-2.5 bg-[#7F8C6A]/15 text-[#1E3B2F] !rounded-none border border-[#C8B48A]/40">
+                    <div className="p-2.5 bg-[#7F8C6A]/15 text-[#1E3B2F] rounded-xl border border-[#C8B48A]/40">
                       <Award className="w-5 h-5" />
                     </div>
                     <div>
@@ -651,9 +651,9 @@ export const VerificationRatingPage = () => {
                   </div>
                 </div>
 
-                <div className="p-4 bg-white !rounded-none border border-slate-200 shadow-2xs">
+                <div className="p-4 bg-white rounded-xl border border-[#C8B48A]/40 shadow-xs">
                   <div className="flex items-center gap-3">
-                    <div className="p-2.5 bg-[#1E3B2F]/10 text-[#1E3B2F] !rounded-none border border-[#1E3B2F]/20">
+                    <div className="p-2.5 bg-[#1E3B2F]/10 text-[#1E3B2F] rounded-xl border border-[#1E3B2F]/20">
                       <ShieldCheck className="w-5 h-5" />
                     </div>
                     <div>
@@ -667,9 +667,9 @@ export const VerificationRatingPage = () => {
                   </div>
                 </div>
 
-                <div className="p-4 bg-white !rounded-none border border-slate-200 shadow-2xs">
+                <div className="p-4 bg-white rounded-xl border border-[#C8B48A]/40 shadow-xs">
                   <div className="flex items-center gap-3">
-                    <div className="p-2.5 bg-[#C8B48A]/20 text-[#1E3B2F] !rounded-none border border-[#C8B48A]/50">
+                    <div className="p-2.5 bg-[#C8B48A]/20 text-[#1E3B2F] rounded-xl border border-[#C8B48A]/50">
                       <Star className="w-5 h-5 fill-[#C8B48A] text-[#C8B48A]" />
                     </div>
                     <div>
@@ -683,9 +683,9 @@ export const VerificationRatingPage = () => {
                   </div>
                 </div>
 
-                <div className="p-4 bg-white !rounded-none border border-slate-200 shadow-2xs">
+                <div className="p-4 bg-white rounded-xl border border-[#C8B48A]/40 shadow-xs">
                   <div className="flex items-center gap-3">
-                    <div className="p-2.5 bg-[#1E3B2F]/15 text-[#1E3B2F] !rounded-none border border-[#1E3B2F]/30">
+                    <div className="p-2.5 bg-[#1E3B2F]/15 text-[#1E3B2F] rounded-xl border border-[#1E3B2F]/30">
                       <Sparkles className="w-5 h-5 text-[#C8B48A]" />
                     </div>
                     <div>
@@ -701,10 +701,10 @@ export const VerificationRatingPage = () => {
               </div>
 
               {/* Reviewer Credentials Card */}
-              <div className="bg-slate-50 border border-slate-200 !rounded-none p-4 shadow-2xs">
+              <div className="bg-slate-50 border border-slate-200 rounded-2xl p-4 shadow-xs">
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                   <div className="flex items-start gap-3">
-                    <div className="p-3 !rounded-none bg-[#7F8C6A]/20 text-[#1E3B2F] flex-shrink-0">
+                    <div className="p-3 rounded-xl bg-[#7F8C6A]/20 text-[#1E3B2F] flex-shrink-0">
                       <ShieldCheck className="w-6 h-6" />
                     </div>
                     <div className="space-y-1">
@@ -735,7 +735,7 @@ export const VerificationRatingPage = () => {
                     variant="secondary"
                     size="sm"
                     onClick={() => setIsRequestModalOpen(true)}
-                    className="text-xs !rounded-none"
+                    className="text-xs rounded-lg"
                   >
                     Update Credentials
                   </Button>
@@ -752,7 +752,7 @@ export const VerificationRatingPage = () => {
                     variant="primary"
                     size="sm"
                     onClick={() => setIsReviewModalOpen(true)}
-                    className="gap-1.5 text-xs !rounded-none !bg-[#1E3B2F] hover:!bg-[#152A22] !border-[#1E3B2F] text-[#F5F0E6] font-semibold shadow-xs"
+                    className="gap-1.5 text-xs rounded-lg !bg-[#1E3B2F] hover:!bg-[#152A22] !border-[#1E3B2F] text-[#F5F0E6] font-semibold shadow-xs"
                   >
                     <PlusCircle className="w-3.5 h-3.5" /> Write New Review
                   </Button>
@@ -802,7 +802,7 @@ export const VerificationRatingPage = () => {
   function renderReputationDirectory() {
     return (
       <div className="space-y-6">
-        <div className="bg-white border border-slate-200 !rounded-none p-4 space-y-4 shadow-2xs">
+        <div className="bg-white border border-slate-200 rounded-2xl p-4 space-y-4 shadow-sm">
           <div>
             <h3 className="text-base font-extrabold text-slate-900">
               Verified Reputation Directory
@@ -814,14 +814,14 @@ export const VerificationRatingPage = () => {
 
           {/* Filter & Search Bar */}
           <div className="flex flex-col sm:flex-row gap-3">
-            <div className="inline-flex p-1 bg-slate-100 !rounded-none border border-slate-300 text-xs font-semibold">
+            <div className="inline-flex p-1 bg-slate-100 rounded-xl border border-slate-300 text-xs font-semibold">
               <button
                 type="button"
                 onClick={() => {
                   setSearchTargetType('student');
                   setSelectedInspectTarget(null);
                 }}
-                className={`flex items-center gap-1.5 px-3 py-1.5 !rounded-none transition-all ${
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all ${
                   searchTargetType === 'student'
                     ? 'bg-[#1E3B2F] text-[#F5F0E6] shadow-xs font-bold'
                     : 'text-slate-700 hover:text-slate-900 hover:bg-slate-200/70'
@@ -836,7 +836,7 @@ export const VerificationRatingPage = () => {
                   setSearchTargetType('company');
                   setSelectedInspectTarget(null);
                 }}
-                className={`flex items-center gap-1.5 px-3 py-1.5 !rounded-none transition-all ${
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all ${
                   searchTargetType === 'company'
                     ? 'bg-[#1E3B2F] text-[#F5F0E6] shadow-xs font-bold'
                     : 'text-slate-700 hover:text-slate-900 hover:bg-slate-200/70'
@@ -854,7 +854,7 @@ export const VerificationRatingPage = () => {
                 placeholder={`Search ${searchTargetType === 'student' ? 'students by name or email...' : 'companies by name or industry...'}`}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-9 pr-3 py-1.5 text-xs border border-gray-300 !rounded-none focus:outline-none focus:ring-1 focus:ring-[#1E3B2F] font-medium"
+                className="w-full pl-9 pr-3 py-1.5 text-xs border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#1E3B2F] font-medium"
               />
             </div>
           </div>
@@ -866,10 +866,10 @@ export const VerificationRatingPage = () => {
                 <div
                   key={target._id}
                   onClick={() => handleInspectTarget(target)}
-                  className="p-3 border border-slate-200 hover:border-[#1E3B2F] !rounded-none cursor-pointer hover:shadow-xs transition-all bg-white flex items-center justify-between"
+                  className="p-3 border border-slate-200 hover:border-[#1E3B2F] rounded-xl cursor-pointer hover:shadow-xs transition-all bg-white flex items-center justify-between"
                 >
                   <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 !rounded-none bg-[#7F8C6A]/15 text-[#1E3B2F] border border-[#C8B48A]/40 flex items-center justify-center font-bold text-xs">
+                    <div className="w-9 h-9 rounded-xl bg-[#7F8C6A]/15 text-[#1E3B2F] border border-[#C8B48A]/40 flex items-center justify-center font-bold text-xs flex-shrink-0">
                       {target.name?.charAt(0)}
                     </div>
                     <div>
@@ -901,9 +901,9 @@ export const VerificationRatingPage = () => {
         {/* Inspected Target Multi-Criteria Details */}
         {selectedInspectTarget && (
           <div className="space-y-6">
-            <div className="flex items-center justify-between bg-[#7F8C6A]/15 p-4 border border-[#C8B48A]/40 !rounded-none">
+            <div className="flex items-center justify-between bg-[#7F8C6A]/15 p-4 border border-[#C8B48A]/40 rounded-xl">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 !rounded-none bg-[#1E3B2F] text-[#F5F0E6] flex items-center justify-center font-bold text-sm">
+                <div className="w-10 h-10 rounded-xl bg-[#1E3B2F] text-[#F5F0E6] flex items-center justify-center font-bold text-sm">
                   {selectedInspectTarget.name?.charAt(0)}
                 </div>
                 <div>
@@ -924,7 +924,7 @@ export const VerificationRatingPage = () => {
                     variant="primary"
                     size="sm"
                     onClick={() => setIsReviewModalOpen(true)}
-                    className="text-xs !rounded-none !bg-[#1E3B2F] hover:!bg-[#152A22] !border-[#1E3B2F] text-[#F5F0E6] font-semibold shadow-xs"
+                    className="text-xs rounded-lg !bg-[#1E3B2F] hover:!bg-[#152A22] !border-[#1E3B2F] text-[#F5F0E6] font-semibold shadow-xs"
                   >
                     <Sparkles className="w-3.5 h-3.5 mr-1 text-[#C8B48A]" />
                     Evaluate {selectedInspectTarget.name.split(' ')[0]}
@@ -935,7 +935,7 @@ export const VerificationRatingPage = () => {
                   variant="secondary"
                   size="sm"
                   onClick={() => setSelectedInspectTarget(null)}
-                  className="text-xs !rounded-none"
+                  className="text-xs rounded-lg"
                 >
                   Clear Selection
                 </Button>
