@@ -57,6 +57,22 @@ export const Navbar = () => {
   };
 
   const closeMobileMenu = () => setIsMobileMenuOpen(false);
+  const getDisplayName = () => {
+    if (!user) return '';
+    if (user.role === 'company' && user.company?.name) {
+      return user.company.name;
+    }
+    const rawName = (user.name || '').trim();
+    if (!rawName) return 'User';
+    const firstWord = rawName.split(' ')[0];
+    return firstWord.charAt(0).toUpperCase() + firstWord.slice(1).toLowerCase();
+  };
+
+  const getUserInitial = () => {
+    const name = getDisplayName();
+    return name.charAt(0).toUpperCase() || 'U';
+  };
+
 
   return (
     <header className="bg-[#F5F0E6]/95 backdrop-blur-md border-b border-[#C8B48A]/40 sticky top-0 z-50 text-[#1E3B2F] transition-shadow">
@@ -156,19 +172,42 @@ export const Navbar = () => {
                 </Link>
 
                 <div className="flex items-center gap-2.5 pl-2 sm:pl-3 border-l border-[#C8B48A]/40">
-                  <div className="text-right hidden sm:block">
-                    <p className="text-xs font-bold uppercase tracking-wider text-[#1E3B2F] leading-none" title={user.name}>{user.company?.name || user.name}</p>
-                    <span className="inline-block mt-1 text-[10px] uppercase tracking-widest font-bold px-1.5 py-0.5 rounded bg-[#7F8C6A]/20 text-[#1E3B2F] border border-[#7F8C6A]/35">
+                  {/* Small Circular Profile Avatar */}
+                  <div className="relative shrink-0">
+                    {user.avatarUrl ? (
+                      <img
+                        src={user.avatarUrl}
+                        alt={getDisplayName()}
+                        className="w-8 h-8 rounded-full object-cover border border-[#C8B48A]/50 shadow-2xs"
+                      />
+                    ) : (
+                      <div className="w-8 h-8 rounded-full bg-[#1E3B2F] text-[#F5F0E6] text-xs font-black flex items-center justify-center border border-[#C8B48A]/50 shadow-2xs select-none">
+                        {getUserInitial()}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Name & Role */}
+                  <div className="text-left hidden sm:block leading-tight">
+                    <p
+                      className="text-xs font-bold text-[#1E3B2F] tracking-tight truncate max-w-[130px]"
+                      title={user.name}
+                    >
+                      {getDisplayName()}
+                    </p>
+                    <span className="inline-block text-[9px] uppercase tracking-wider font-semibold text-[#7F8C6A]">
                       {user.role}
                     </span>
                   </div>
+
+                  {/* Compact Logout Icon Button */}
                   <button
                     onClick={handleLogout}
-                    className="text-[#1E3B2F]/70 hover:text-rose-600 hover:bg-rose-50 p-2 rounded-lg transition-colors focus:outline-none focus-visible:ring-1 focus-visible:ring-[#1E3B2F]"
+                    className="text-[#1E3B2F]/60 hover:text-rose-600 hover:bg-rose-50/70 p-1.5 rounded-lg transition-colors focus:outline-none focus-visible:ring-1 focus-visible:ring-[#1E3B2F]"
                     title="Sign Out"
                     aria-label="Sign Out"
                   >
-                    <LogOut className="w-4 h-4" />
+                    <LogOut className="w-3.5 h-3.5" />
                   </button>
                 </div>
               </div>
@@ -289,14 +328,27 @@ export const Navbar = () => {
             )}
 
             {isAuthenticated && (
-              <div className="pt-2 pb-1 px-3.5 border-t border-[#C8B48A]/40 mt-2 sm:hidden flex items-center justify-between">
-                <div>
-                  <p className="text-xs font-bold uppercase tracking-wider text-[#1E3B2F]">{user.company?.name || user.name}</p>
-                  <p className="text-[10px] text-[#7F8C6A] uppercase tracking-widest">{user.role}</p>
+              <div className="pt-2.5 pb-1 px-3 border-t border-[#C8B48A]/40 mt-2 sm:hidden flex items-center justify-between">
+                <div className="flex items-center gap-2.5">
+                  {user.avatarUrl ? (
+                    <img
+                      src={user.avatarUrl}
+                      alt={getDisplayName()}
+                      className="w-8 h-8 rounded-full object-cover border border-[#C8B48A]/50"
+                    />
+                  ) : (
+                    <div className="w-8 h-8 rounded-full bg-[#1E3B2F] text-[#F5F0E6] text-xs font-black flex items-center justify-center border border-[#C8B48A]/50">
+                      {getUserInitial()}
+                    </div>
+                  )}
+                  <div>
+                    <p className="text-xs font-bold text-[#1E3B2F]">{getDisplayName()}</p>
+                    <p className="text-[9px] text-[#7F8C6A] uppercase tracking-wider font-semibold">{user.role}</p>
+                  </div>
                 </div>
                 <button
                   onClick={handleLogout}
-                  className="text-xs uppercase tracking-wider text-rose-600 hover:text-rose-700 font-semibold"
+                  className="text-xs uppercase tracking-wider text-rose-600 hover:text-rose-700 font-bold px-2 py-1"
                 >
                   Sign Out
                 </button>

@@ -69,10 +69,10 @@ export const ExperienceSection = ({
     <Card className="space-y-4 rounded-2xl shadow-xs border border-gray-200/90 p-5 bg-white">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Briefcase className="w-4 h-4 text-blue-600" />
+          <Briefcase className="w-4 h-4 text-[#1E3B2F]" />
           <h3 className="text-base font-bold text-gray-900">Work & Internship Experience</h3>
           {experience.length > 0 && (
-            <span className="text-xs px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-700 font-semibold border border-blue-200/80">
+            <span className="text-xs px-2.5 py-0.5 rounded-full bg-[#7F8C6A]/15 text-[#1E3B2F] font-semibold border border-[#C8B48A]/40">
               {experience.length}
             </span>
           )}
@@ -82,7 +82,7 @@ export const ExperienceSection = ({
         <button
           type="button"
           onClick={() => setIsModalOpen(true)}
-          className="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-colors focus:outline-none"
+          className="p-1.5 text-gray-400 hover:text-[#1E3B2F] hover:bg-[#7F8C6A]/15 rounded-xl transition-colors focus:outline-none"
           title="Add Experience"
           aria-label="Add Experience"
         >
@@ -100,11 +100,11 @@ export const ExperienceSection = ({
             {experience.map((exp, idx) => (
               <div
                 key={idx}
-                className="p-4 rounded-xl border border-gray-200/80 bg-gray-50/60 flex items-start justify-between gap-3 hover:border-blue-400 hover:shadow-xs transition-all"
+                className="p-4 rounded-xl border border-gray-200/80 bg-gray-50/60 flex items-start justify-between gap-3 hover:border-[#7F8C6A] hover:shadow-xs transition-all"
               >
                 <div className="space-y-1 min-w-0">
                   <h4 className="text-xs font-bold text-gray-900 truncate">{exp.title}</h4>
-                  <p className="text-xs text-blue-600 font-medium truncate">
+                  <p className="text-xs text-[#1E3B2F] font-medium truncate">
                     {exp.company}
                     {exp.location && (
                       <span className="text-gray-400 font-normal"> • {exp.location}</span>
@@ -188,7 +188,7 @@ export const ExperienceSection = ({
               type="checkbox"
               checked={formData.isCurrent}
               onChange={(e) => setFormData({ ...formData, isCurrent: e.target.checked })}
-              className="rounded text-blue-600"
+              className="rounded text-[#1E3B2F]"
             />
             <span>Currently working here</span>
           </label>
@@ -201,7 +201,7 @@ export const ExperienceSection = ({
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
               placeholder="Highlight key responsibilities, technologies used, and achievements..."
-              className="w-full text-xs p-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-1 focus:ring-blue-500 bg-white"
+              className="w-full text-xs p-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-1 focus:ring-[#1E3B2F]/20 bg-white"
             />
           </div>
           <div className="flex justify-end gap-2 pt-2 border-t border-gray-100">
@@ -218,7 +218,7 @@ export const ExperienceSection = ({
               size="sm"
               type="submit"
               disabled={isLoading}
-              className="rounded-xl text-xs bg-blue-600 hover:bg-blue-700 text-white font-semibold shadow-xs"
+              className="rounded-xl text-xs bg-[#1E3B2F] hover:bg-[#152A22] text-white font-semibold shadow-xs"
             >
               {isLoading ? 'Saving...' : 'Save Experience'}
             </Button>

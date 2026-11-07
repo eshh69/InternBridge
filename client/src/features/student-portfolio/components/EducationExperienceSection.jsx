@@ -121,7 +121,7 @@ export const EducationExperienceSection = ({
             onClick={() => setActiveTab('education')}
             className={`flex items-center gap-1.5 pb-2 text-xs font-bold border-b-2 transition-colors ${
               activeTab === 'education'
-                ? 'border-indigo-600 text-indigo-600'
+                ? 'border-indigo-600 text-[#1E3B2F]'
                 : 'border-transparent text-slate-500 hover:text-slate-700'
             }`}
           >
@@ -133,7 +133,7 @@ export const EducationExperienceSection = ({
             onClick={() => setActiveTab('experience')}
             className={`flex items-center gap-1.5 pb-2 text-xs font-bold border-b-2 transition-colors ${
               activeTab === 'experience'
-                ? 'border-indigo-600 text-indigo-600'
+                ? 'border-indigo-600 text-[#1E3B2F]'
                 : 'border-transparent text-slate-500 hover:text-slate-700'
             }`}
           >
@@ -146,7 +146,7 @@ export const EducationExperienceSection = ({
           <button
             type="button"
             onClick={() => setIsEduModalOpen(true)}
-            className="p-1 text-slate-400 hover:text-indigo-600 transition-colors focus:outline-none"
+            className="p-1 text-slate-400 hover:text-[#1E3B2F] transition-colors focus:outline-none"
             title="Add Education"
             aria-label="Add Education"
           >
@@ -156,7 +156,7 @@ export const EducationExperienceSection = ({
           <button
             type="button"
             onClick={() => setIsExpModalOpen(true)}
-            className="p-1 text-slate-400 hover:text-indigo-600 transition-colors focus:outline-none"
+            className="p-1 text-slate-400 hover:text-[#1E3B2F] transition-colors focus:outline-none"
             title="Add Experience"
             aria-label="Add Experience"
           >
@@ -180,7 +180,7 @@ export const EducationExperienceSection = ({
               >
                 <div>
                   <h4 className="text-xs font-bold text-slate-900">{edu.degree}</h4>
-                  <p className="text-xs text-indigo-600 font-medium">{edu.institution}</p>
+                  <p className="text-xs text-[#1E3B2F] font-medium">{edu.institution}</p>
                   {(edu.startDate || edu.endDate) && (
                     <div className="flex items-center gap-1 text-[11px] text-slate-400 mt-1">
                       <Calendar className="w-3 h-3" />
@@ -221,7 +221,7 @@ export const EducationExperienceSection = ({
               >
                 <div>
                   <h4 className="text-xs font-bold text-slate-900">{exp.title}</h4>
-                  <p className="text-xs text-indigo-600 font-medium">
+                  <p className="text-xs text-[#1E3B2F] font-medium">
                     {exp.company} {exp.location && `• ${exp.location}`}
                   </p>
                   {(exp.startDate || exp.endDate || exp.isCurrent) && (
@@ -362,7 +362,7 @@ export const EducationExperienceSection = ({
               type="checkbox"
               checked={expFormData.isCurrent}
               onChange={(e) => setExpFormData({ ...expFormData, isCurrent: e.target.checked })}
-              className="rounded-xl text-indigo-600"
+              className="rounded-xl text-[#1E3B2F]"
             />
             Currently working here
           </label>
