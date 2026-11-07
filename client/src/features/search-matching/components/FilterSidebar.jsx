@@ -171,7 +171,7 @@ export const FilterSidebar = ({
           step="10"
           value={filters.minMatch || 0}
           onChange={(e) => onChange('minMatch', e.target.value === '0' ? '' : e.target.value)}
-          className="w-full accent-[#1E3B2F] cursor-pointer h-2 bg-gray-200 rounded-none appearance-none"
+          className="w-full accent-[#1E3B2F] cursor-pointer h-2 bg-gray-200 rounded-lg appearance-none"
         />
         <div className="flex justify-between text-[11px] text-gray-400 font-medium px-0.5">
           <span>0%</span>
@@ -208,7 +208,7 @@ export const FilterSidebar = ({
                       type="checkbox"
                       checked={isChecked}
                       onChange={() => onChange('locationType', isChecked ? 'All' : item.value)}
-                      className="rounded-none border-gray-300 text-[#1E3B2F] focus:ring-[#1E3B2F] h-4 w-4"
+                      className="rounded border-gray-300 text-[#1E3B2F] focus:ring-[#1E3B2F] h-4 w-4"
                     />
                     <span>{item.label}</span>
                   </div>
@@ -231,7 +231,7 @@ export const FilterSidebar = ({
           <select
             value={filters.location || ''}
             onChange={(e) => onChange('location', e.target.value)}
-            className="w-full pl-8 pr-8 py-2 text-xs border border-[#C8B48A]/40 rounded-none bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#1E3B2F] appearance-none font-medium"
+            className="w-full pl-8 pr-8 py-2 text-xs border border-[#C8B48A]/40 rounded-lg bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#1E3B2F] appearance-none font-medium"
           >
             <option value="">All Locations</option>
             <option value="Colombo">Colombo, Sri Lanka</option>
@@ -257,7 +257,7 @@ export const FilterSidebar = ({
         <select
           value={filters.isPaid || ''}
           onChange={(e) => onChange('isPaid', e.target.value)}
-          className="w-full px-3 py-2 text-xs border border-[#C8B48A]/40 rounded-none bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#1E3B2F] font-medium"
+          className="w-full px-3 py-2 text-xs border border-[#C8B48A]/40 rounded-lg bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#1E3B2F] font-medium"
         >
           <option value="">All (Paid & Unpaid)</option>
           <option value="true">Paid Internships Only</option>
@@ -282,7 +282,7 @@ export const FilterSidebar = ({
                 key={opt.label}
                 type="button"
                 onClick={() => onChange('durationMonths', opt.value)}
-                className={`py-2 px-3 text-xs font-semibold rounded-none border text-center transition-all ${
+                className={`py-2 px-3 text-xs font-semibold rounded-lg border text-center transition-all ${
                   isSelected
                     ? 'bg-[#1E3B2F] text-[#F5F0E6] border-[#1E3B2F] shadow-xs'
                     : 'bg-white text-gray-700 border-[#C8B48A]/40 hover:bg-gray-50 hover:border-gray-300'
@@ -297,13 +297,13 @@ export const FilterSidebar = ({
 
       {/* 6. STUDENT PORTFOLIO SKILLS (1-Click Personalized Matching) */}
       {isStudent && studentSkills && studentSkills.length > 0 && (
-        <div className="p-3 bg-gradient-to-br from-[#7F8C6A]/20 to-[#F5F0E6] rounded-none border border-[#C8B48A]/40 space-y-2.5">
+        <div className="p-3 bg-gradient-to-br from-[#7F8C6A]/20 to-[#F5F0E6] rounded-xl border border-[#C8B48A]/40 space-y-2.5">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-1.5">
               <Sparkles className="w-3.5 h-3.5 text-[#1E3B2F]" />
               <span className="text-xs font-bold text-[#1E3B2F]">My Portfolio Skills</span>
             </div>
-            <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded-none bg-[#7F8C6A]/20 text-[#1E3B2F]">
+            <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded-full bg-[#7F8C6A]/20 text-[#1E3B2F]">
               {studentSkills.length} saved
             </span>
           </div>
@@ -333,7 +333,7 @@ export const FilterSidebar = ({
                 onChange('skills', merged.join(','));
               }
             }}
-            className="w-full py-1.5 px-2.5 rounded-none text-xs font-semibold bg-[#1E3B2F] hover:bg-[#152A22] text-[#F5F0E6] shadow-2xs transition-all flex items-center justify-center gap-1.5 cursor-pointer"
+            className="w-full py-1.5 px-2.5 rounded-lg text-xs font-semibold bg-[#1E3B2F] hover:bg-[#152A22] text-[#F5F0E6] shadow-2xs transition-all flex items-center justify-center gap-1.5 cursor-pointer"
           >
             <Sparkles className="w-3 h-3 text-[#C8B48A]" />
             {studentSkills.every((s) => selectedSkillsList.includes(s.toLowerCase().trim()))
@@ -349,7 +349,7 @@ export const FilterSidebar = ({
                   key={skill}
                   type="button"
                   onClick={() => handleSkillToggle(skill)}
-                  className={`px-2 py-0.5 rounded-none text-xs font-medium border transition-colors flex items-center gap-1 cursor-pointer ${
+                  className={`px-2.5 py-0.5 rounded-full text-xs font-medium border transition-colors flex items-center gap-1 cursor-pointer ${
                     isSelected
                       ? 'bg-[#1E3B2F] text-[#F5F0E6] border-[#1E3B2F] shadow-2xs'
                       : 'bg-white text-[#1E3B2F] border-[#C8B48A]/40 hover:bg-[#F5F0E6]/70'
@@ -384,7 +384,7 @@ export const FilterSidebar = ({
                 key={skill}
                 type="button"
                 onClick={() => handleSkillToggle(skill)}
-                className={`px-3 py-1.5 rounded-none text-xs font-medium transition-all ${
+                className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
                   isSelected
                     ? 'bg-[#1E3B2F] text-[#F5F0E6] shadow-xs'
                     : 'bg-white text-gray-700 border border-[#C8B48A]/40 hover:border-gray-300 hover:bg-gray-50'
@@ -397,7 +397,7 @@ export const FilterSidebar = ({
           <button
             type="button"
             onClick={() => setShowAllSkills(!showAllSkills)}
-            className="px-3 py-1.5 rounded-none text-xs font-semibold bg-[#F5F0E6] text-[#1E3B2F] hover:bg-[#EAE2D2] transition-colors"
+            className="px-3 py-1.5 rounded-full text-xs font-semibold bg-[#F5F0E6] text-[#1E3B2F] hover:bg-[#EAE2D2] transition-colors"
           >
             {showAllSkills ? 'Less' : '+ More'}
           </button>
@@ -409,7 +409,7 @@ export const FilterSidebar = ({
         <button
           type="button"
           onClick={onReset}
-          className="w-full py-2.5 px-4 text-xs font-semibold rounded-none border border-[#C8B48A]/40 text-[#1E3B2F] hover:bg-[#F5F0E6]/50 transition-all flex items-center justify-center gap-2 shadow-xs"
+          className="w-full py-2.5 px-4 text-xs font-semibold rounded-lg border border-[#C8B48A]/40 text-[#1E3B2F] hover:bg-[#F5F0E6]/50 transition-all flex items-center justify-center gap-2 shadow-xs"
         >
           <RotateCcw className="w-3.5 h-3.5 text-gray-500" /> Reset Filters
         </button>
@@ -421,7 +421,7 @@ export const FilterSidebar = ({
     <>
       {/* Desktop Sidebar Panel */}
       <aside className="hidden md:block w-64 lg:w-72 flex-shrink-0">
-        <div className="sticky top-20 bg-white rounded-none border border-[#C8B48A]/40/90 shadow-xs p-5">
+        <div className="sticky top-20 bg-white rounded-xl border border-[#C8B48A]/40/90 shadow-xs p-5">
           {content}
         </div>
       </aside>
