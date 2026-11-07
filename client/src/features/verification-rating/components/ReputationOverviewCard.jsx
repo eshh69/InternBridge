@@ -92,7 +92,7 @@ export const ReputationOverviewCard = ({
   ];
 
   return (
-    <div className="bg-white border border-slate-200 !rounded-none p-5 shadow-2xs space-y-6">
+    <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm space-y-6">
       {/* Header with Title and Prominent Reputation Score Badge */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 pb-4">
         <div>
@@ -104,11 +104,11 @@ export const ReputationOverviewCard = ({
 
         {/* Reputation Score & Verification Badges */}
         <div className="flex items-center gap-2">
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 !rounded-none bg-[#7F8C6A]/15 text-[#1E3B2F] border border-[#C8B48A]/40 text-xs font-black shadow-2xs">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#7F8C6A]/15 text-[#1E3B2F] border border-[#C8B48A]/40 text-xs font-black shadow-2xs">
             <Award className="w-3.5 h-3.5 text-[#1E3B2F]" />
             Reputation Score: {reputationScore100}/100
           </span>
-          <span className="inline-flex items-center gap-1 px-2.5 py-1 !rounded-none bg-[#1E3B2F]/10 text-[#1E3B2F] border border-[#1E3B2F]/20 text-xs font-bold shadow-2xs">
+          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-[#1E3B2F]/10 text-[#1E3B2F] border border-[#1E3B2F]/20 text-xs font-bold shadow-2xs">
             <ShieldCheck className="w-3.5 h-3.5 text-[#1E3B2F]" />
             Verified Endorsements
           </span>
@@ -144,9 +144,9 @@ export const ReputationOverviewCard = ({
                 <span className="w-6 text-slate-600 font-bold flex items-center justify-end gap-0.5">
                   {starNum} <Star className="w-3 h-3 fill-[#C8B48A] text-[#C8B48A] inline" />
                 </span>
-                <div className="flex-1 bg-slate-100 !rounded-none h-2.5 overflow-hidden border border-slate-200">
+                <div className="flex-1 bg-slate-100 rounded-full h-2.5 overflow-hidden border border-slate-200">
                   <div
-                    className="bg-[#C8B48A] h-full !rounded-none transition-all duration-500"
+                    className="bg-[#C8B48A] h-full rounded-full transition-all duration-500"
                     style={{ width: `${percentage}%` }}
                   />
                 </div>
@@ -176,7 +176,7 @@ export const ReputationOverviewCard = ({
             return (
               <div
                 key={crit.key}
-                className="p-3 bg-slate-50 !rounded-none border border-slate-200 space-y-2"
+                className="p-3 bg-slate-50 rounded-xl border border-slate-200 space-y-2"
               >
                 <div className="flex justify-between items-center text-xs">
                   <span className="text-slate-700 font-bold truncate" title={crit.label}>
@@ -186,9 +186,9 @@ export const ReputationOverviewCard = ({
                     {numericVal.toFixed(1)} <span className="text-slate-400 text-xs font-normal">/ 5</span>
                   </span>
                 </div>
-                <div className="w-full bg-slate-200 !rounded-none h-2 overflow-hidden">
+                <div className="w-full bg-slate-200 rounded-full h-2 overflow-hidden">
                   <div
-                    className="bg-[#1E3B2F] h-full !rounded-none transition-all duration-500"
+                    className="bg-[#1E3B2F] h-full rounded-full transition-all duration-500"
                     style={{ width: `${pct}%` }}
                   />
                 </div>

@@ -42,7 +42,7 @@ export const ReviewList = ({ reviews = [], emptyMessage = 'No verified evaluatio
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value)}
-            className="text-xs bg-white border border-slate-300 !rounded-none px-2.5 py-1 focus:outline-none focus:ring-1 focus:ring-[#1E3B2F] font-semibold"
+            className="text-xs bg-white border border-slate-300 rounded-lg px-2.5 py-1 focus:outline-none focus:ring-1 focus:ring-[#1E3B2F] font-semibold"
           >
             <option value="recent">Most Recent</option>
             <option value="highest">Highest Rating</option>
@@ -83,11 +83,11 @@ export const ReviewList = ({ reviews = [], emptyMessage = 'No verified evaluatio
           return (
             <div
               key={rev._id}
-              className="bg-white border border-slate-200 !rounded-none p-4 shadow-2xs space-y-3 hover:border-[#1E3B2F] transition-colors"
+              className="bg-white border border-slate-200 rounded-xl p-4 shadow-xs space-y-3 hover:border-[#1E3B2F] transition-colors"
             >
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-3">
                 <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 !rounded-none bg-[#7F8C6A]/15 text-[#1E3B2F] border border-[#C8B48A]/40 flex items-center justify-center font-bold text-xs flex-shrink-0">
+                  <div className="w-9 h-9 rounded-xl bg-[#7F8C6A]/15 text-[#1E3B2F] border border-[#C8B48A]/40 flex items-center justify-center font-bold text-xs flex-shrink-0">
                     {rev.reviewer?.name?.charAt(0) || 'R'}
                   </div>
                   <div>
@@ -95,7 +95,7 @@ export const ReviewList = ({ reviews = [], emptyMessage = 'No verified evaluatio
                       <h5 className="font-extrabold text-slate-900 text-sm">
                         {rev.reviewer?.name || 'Academic Reviewer'}
                       </h5>
-                      <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 !rounded-none bg-[#1E3B2F]/10 text-[#1E3B2F] border border-[#1E3B2F]/20 uppercase tracking-wider">
+                      <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#1E3B2F]/10 text-[#1E3B2F] border border-[#1E3B2F]/20 uppercase tracking-wider">
                         <ShieldCheck className="w-3 h-3 text-[#1E3B2F]" />
                         Verified Reviewer
                       </span>
@@ -121,7 +121,7 @@ export const ReviewList = ({ reviews = [], emptyMessage = 'No verified evaluatio
                 {criteriaPills.map((item) => (
                   <span
                     key={item.label}
-                    className="inline-flex items-center gap-1.5 text-xs px-2.5 py-1 bg-slate-100 text-slate-700 !rounded-none border border-slate-200 font-medium"
+                    className="inline-flex items-center gap-1.5 text-xs px-2.5 py-1 bg-slate-100 text-slate-700 rounded-full border border-slate-200 font-medium"
                   >
                     <span className="text-slate-600 font-semibold">{item.label}:</span>
                     <strong className="text-[#1E3B2F] font-bold">{item.val}/5</strong>
@@ -130,7 +130,7 @@ export const ReviewList = ({ reviews = [], emptyMessage = 'No verified evaluatio
               </div>
 
               {/* Qualitative Feedback Text */}
-              <p className="text-xs text-slate-700 leading-relaxed bg-slate-50 p-3 !rounded-none border border-slate-200">
+              <p className="text-xs text-slate-700 leading-relaxed bg-slate-50 p-3 rounded-lg border border-slate-200">
                 "{rev.comments}"
               </p>
             </div>

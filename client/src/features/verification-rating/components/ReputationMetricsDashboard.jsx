@@ -54,7 +54,7 @@ export const ReputationMetricsDashboard = ({
   const getTierBadge = (tier) => {
     if (tier === 'Platinum') {
       return (
-        <span className="inline-flex items-center gap-1 text-[10px] font-extrabold px-2 py-0.5 !rounded-none bg-[#1E3B2F]/15 text-[#1E3B2F] border border-[#1E3B2F]/30 uppercase tracking-wider">
+        <span className="inline-flex items-center gap-1 text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-[#1E3B2F]/15 text-[#1E3B2F] border border-[#1E3B2F]/30 uppercase tracking-wider">
           <Sparkles className="w-3 h-3 text-[#1E3B2F]" />
           Platinum Tier
         </span>
@@ -62,14 +62,14 @@ export const ReputationMetricsDashboard = ({
     }
     if (tier === 'Gold') {
       return (
-        <span className="inline-flex items-center gap-1 text-[10px] font-extrabold px-2 py-0.5 !rounded-none bg-[#C8B48A]/30 text-[#1E3B2F] border border-[#C8B48A]/60 uppercase tracking-wider">
+        <span className="inline-flex items-center gap-1 text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-[#C8B48A]/30 text-[#1E3B2F] border border-[#C8B48A]/60 uppercase tracking-wider">
           <Award className="w-3 h-3 text-[#C8B48A]" />
           Gold Tier
         </span>
       );
     }
     return (
-      <span className="inline-flex items-center gap-1 text-[10px] font-extrabold px-2 py-0.5 !rounded-none bg-slate-100 text-slate-700 border border-slate-300 uppercase tracking-wider">
+      <span className="inline-flex items-center gap-1 text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-slate-100 text-slate-700 border border-slate-300 uppercase tracking-wider">
         <ShieldCheck className="w-3 h-3 text-slate-600" />
         Verified Tier
       </span>
@@ -83,7 +83,7 @@ export const ReputationMetricsDashboard = ({
       {/* ======================================================== */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
         {/* Card 1: Average Reputation Score */}
-        <div className="p-4 bg-white !rounded-none border border-slate-200 border-l-4 border-l-[#1E3B2F] shadow-2xs">
+        <div className="p-4 bg-white rounded-xl border border-slate-200 border-l-4 border-l-[#1E3B2F] shadow-xs">
           <p className="text-xs font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1">
             <Award className="w-3.5 h-3.5 text-[#1E3B2F]" /> Average Reputation Score
           </p>
@@ -95,7 +95,7 @@ export const ReputationMetricsDashboard = ({
         </div>
 
         {/* Card 2: Platform Star Rating */}
-        <div className="p-4 bg-[#C8B48A]/10 !rounded-none border border-[#C8B48A]/40 border-l-4 border-l-[#C8B48A] shadow-2xs">
+        <div className="p-4 bg-[#C8B48A]/10 rounded-xl border border-[#C8B48A]/40 border-l-4 border-l-[#C8B48A] shadow-xs">
           <p className="text-xs font-bold text-[#1E3B2F] uppercase tracking-wider flex items-center gap-1">
             <Star className="w-3.5 h-3.5 fill-[#C8B48A] text-[#C8B48A]" /> Platform Star Rating
           </p>
@@ -107,7 +107,7 @@ export const ReputationMetricsDashboard = ({
         </div>
 
         {/* Card 3: Total Verified Reviews */}
-        <div className="p-4 bg-[#7F8C6A]/10 !rounded-none border border-[#7F8C6A]/30 border-l-4 border-l-[#1E3B2F] shadow-2xs">
+        <div className="p-4 bg-[#7F8C6A]/10 rounded-xl border border-[#7F8C6A]/30 border-l-4 border-l-[#1E3B2F] shadow-xs">
           <p className="text-xs font-bold text-[#1E3B2F] uppercase tracking-wider flex items-center gap-1">
             <ShieldCheck className="w-3.5 h-3.5 text-[#1E3B2F]" /> Total Verified Reviews
           </p>
@@ -119,7 +119,7 @@ export const ReputationMetricsDashboard = ({
         </div>
 
         {/* Card 4: High-Trust Profiles */}
-        <div className="p-4 bg-[#1E3B2F]/5 !rounded-none border border-[#1E3B2F]/20 border-l-4 border-l-[#1E3B2F] shadow-2xs">
+        <div className="p-4 bg-[#1E3B2F]/5 rounded-xl border border-[#1E3B2F]/20 border-l-4 border-l-[#1E3B2F] shadow-xs">
           <p className="text-xs font-bold text-[#1E3B2F] uppercase tracking-wider flex items-center gap-1">
             <Sparkles className="w-3.5 h-3.5 text-[#1E3B2F]" /> High-Trust Profiles (90%+)
           </p>
@@ -136,7 +136,7 @@ export const ReputationMetricsDashboard = ({
       {/* ======================================================== */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Section 2: Multi-Criteria Breakdown (7 Cols) */}
-        <div className="lg:col-span-7 bg-white border border-slate-200 !rounded-none p-5 shadow-2xs space-y-4">
+        <div className="lg:col-span-7 bg-white border border-slate-200 rounded-2xl p-5 shadow-sm space-y-4">
           <div className="flex items-center justify-between border-b border-slate-200 pb-3">
             <div>
               <h3 className="text-base font-extrabold text-slate-900 flex items-center gap-2">
@@ -147,7 +147,7 @@ export const ReputationMetricsDashboard = ({
                 Core competencies rated on a 1.0 to 5.0 scale by university lecturers & corporate supervisors
               </p>
             </div>
-            <span className="text-[10px] font-bold px-2 py-0.5 !rounded-none bg-[#7F8C6A]/15 text-[#1E3B2F] border border-[#C8B48A]/40 uppercase tracking-wider">
+            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#7F8C6A]/15 text-[#1E3B2F] border border-[#C8B48A]/40 uppercase tracking-wider">
               Normalized Standards
             </span>
           </div>
@@ -167,9 +167,9 @@ export const ReputationMetricsDashboard = ({
                   </div>
                 </div>
 
-                <div className="w-full bg-slate-100 !rounded-none h-2.5 overflow-hidden border border-slate-200">
+                <div className="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden border border-slate-200">
                   <div
-                    className="bg-[#1E3B2F] h-full transition-all duration-700 !rounded-none"
+                    className="bg-[#1E3B2F] h-full transition-all duration-700 rounded-full"
                     style={{ width: `${crit.percentage}%` }}
                   />
                 </div>
@@ -187,7 +187,7 @@ export const ReputationMetricsDashboard = ({
         </div>
 
         {/* Section 3: Algorithm & Trust Tiers Card (5 Cols) */}
-        <div className="lg:col-span-5 bg-white border border-slate-200 !rounded-none p-5 shadow-2xs space-y-4">
+        <div className="lg:col-span-5 bg-white border border-slate-200 rounded-2xl p-5 shadow-sm space-y-4">
           <div className="border-b border-slate-200 pb-3">
             <h3 className="text-base font-extrabold text-slate-900 flex items-center gap-2">
               <TrendingUp className="w-4 h-4 text-[#1E3B2F]" />
@@ -199,16 +199,16 @@ export const ReputationMetricsDashboard = ({
           </div>
 
           {/* Formula Callout Box */}
-          <div className="p-3.5 bg-slate-50 border border-slate-200 !rounded-none space-y-2">
+          <div className="p-3.5 bg-slate-50 border border-slate-200 rounded-xl space-y-2">
             <div className="flex items-center justify-between">
               <span className="text-[10px] font-extrabold text-slate-700 uppercase tracking-wider">
                 Scoring Formula
               </span>
-              <span className="text-[10px] font-bold text-[#1E3B2F] bg-[#7F8C6A]/20 px-1.5 py-0.2">
+              <span className="text-[10px] font-bold text-[#1E3B2F] bg-[#7F8C6A]/20 px-1.5 py-0.2 rounded-full">
                 0 – 100 Index
               </span>
             </div>
-            <div className="font-mono text-xs font-bold text-[#1E3B2F] bg-white p-2 border border-slate-200 text-center">
+            <div className="font-mono text-xs font-bold text-[#1E3B2F] bg-white p-2 border border-slate-200 rounded-lg text-center">
               Score = (Weighted Criteria Avg / 5.0) × 100 + Verification Bonus
             </div>
             <ul className="text-[11px] text-slate-600 space-y-1 list-disc list-inside">
@@ -226,7 +226,7 @@ export const ReputationMetricsDashboard = ({
             </span>
 
             <div className="space-y-2 text-xs">
-              <div className="p-2 border border-indigo-200 bg-indigo-50/50 flex items-center justify-between">
+              <div className="p-2 border border-indigo-200 bg-indigo-50/50 rounded-xl flex items-center justify-between">
                 <div>
                   <div className="flex items-center gap-1.5">
                     {getTierBadge('Platinum')}
@@ -238,7 +238,7 @@ export const ReputationMetricsDashboard = ({
                 </div>
               </div>
 
-              <div className="p-2 border border-amber-200 bg-amber-50/50 flex items-center justify-between">
+              <div className="p-2 border border-amber-200 bg-amber-50/50 rounded-xl flex items-center justify-between">
                 <div>
                   <div className="flex items-center gap-1.5">
                     {getTierBadge('Gold')}
@@ -250,7 +250,7 @@ export const ReputationMetricsDashboard = ({
                 </div>
               </div>
 
-              <div className="p-2 border border-slate-200 bg-slate-50 flex items-center justify-between">
+              <div className="p-2 border border-slate-200 bg-slate-50 rounded-xl flex items-center justify-between">
                 <div>
                   <div className="flex items-center gap-1.5">
                     {getTierBadge('Verified')}
@@ -269,7 +269,7 @@ export const ReputationMetricsDashboard = ({
       {/* ======================================================== */}
       {/* 4. Top Reputation Leaderboard & Quick Review Action */}
       {/* ======================================================== */}
-      <div className="bg-white border border-slate-200 !rounded-none p-5 shadow-2xs space-y-4">
+      <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm space-y-4">
         {/* Header & Quick Action */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 pb-3">
           <div>
@@ -284,11 +284,11 @@ export const ReputationMetricsDashboard = ({
 
           <div className="flex items-center gap-2">
             {/* Filter */}
-            <div className="inline-flex p-1 bg-slate-100 !rounded-none border border-slate-300 text-xs font-semibold">
+            <div className="inline-flex p-1 bg-slate-100 rounded-xl border border-slate-300 text-xs font-semibold">
               <button
                 type="button"
                 onClick={() => setLeaderboardFilter('all')}
-                className={`px-3 py-1 !rounded-none transition-all ${
+                className={`px-3 py-1 rounded-lg transition-all ${
                   leaderboardFilter === 'all'
                     ? 'bg-[#1E3B2F] text-[#F5F0E6] font-bold shadow-xs'
                     : 'text-slate-700 hover:text-slate-900'
@@ -299,7 +299,7 @@ export const ReputationMetricsDashboard = ({
               <button
                 type="button"
                 onClick={() => setLeaderboardFilter('student')}
-                className={`px-3 py-1 !rounded-none transition-all ${
+                className={`px-3 py-1 rounded-lg transition-all ${
                   leaderboardFilter === 'student'
                     ? 'bg-[#1E3B2F] text-[#F5F0E6] font-bold shadow-xs'
                     : 'text-slate-700 hover:text-slate-900'
@@ -310,7 +310,7 @@ export const ReputationMetricsDashboard = ({
               <button
                 type="button"
                 onClick={() => setLeaderboardFilter('company')}
-                className={`px-3 py-1 !rounded-none transition-all ${
+                className={`px-3 py-1 rounded-lg transition-all ${
                   leaderboardFilter === 'company'
                     ? 'bg-[#1E3B2F] text-[#F5F0E6] font-bold shadow-xs'
                     : 'text-slate-700 hover:text-slate-900'
@@ -324,7 +324,7 @@ export const ReputationMetricsDashboard = ({
               variant="primary"
               size="sm"
               onClick={onOpenReviewModal}
-              className="gap-1.5 text-xs !rounded-none !bg-[#1E3B2F] hover:!bg-[#152A22] !border-[#1E3B2F] text-[#F5F0E6] font-semibold shadow-xs"
+              className="gap-1.5 text-xs rounded-lg !bg-[#1E3B2F] hover:!bg-[#152A22] !border-[#1E3B2F] text-[#F5F0E6] font-semibold shadow-xs"
             >
               <PlusCircle className="w-3.5 h-3.5" /> Submit New Evaluation
             </Button>
@@ -332,7 +332,7 @@ export const ReputationMetricsDashboard = ({
         </div>
 
         {/* Leaderboard Table */}
-        <div className="overflow-x-auto border border-slate-200 !rounded-none">
+        <div className="overflow-x-auto border border-slate-200 rounded-xl">
           <table className="min-w-full divide-y divide-slate-200 text-left text-xs">
             <thead className="bg-slate-50 text-slate-600 font-bold uppercase tracking-wider text-[11px]">
               <tr>
@@ -351,7 +351,7 @@ export const ReputationMetricsDashboard = ({
                   {/* Rank */}
                   <td className="px-4 py-3 whitespace-nowrap">
                     <span
-                      className={`inline-flex items-center justify-center w-6 h-6 text-xs font-black !rounded-none ${
+                      className={`inline-flex items-center justify-center w-6 h-6 text-xs font-black rounded-lg ${
                         idx === 0
                           ? 'bg-[#C8B48A] text-[#1E3B2F] font-black'
                           : idx === 1
@@ -368,7 +368,7 @@ export const ReputationMetricsDashboard = ({
                   {/* Name & Subtitle */}
                   <td className="px-4 py-3 whitespace-nowrap">
                     <div className="flex items-center gap-2.5">
-                      <div className="w-8 h-8 !rounded-none bg-[#7F8C6A]/15 text-[#1E3B2F] border border-[#C8B48A]/40 flex items-center justify-center font-bold text-xs flex-shrink-0">
+                      <div className="w-8 h-8 rounded-xl bg-[#7F8C6A]/15 text-[#1E3B2F] border border-[#C8B48A]/40 flex items-center justify-center font-bold text-xs flex-shrink-0">
                         {item.name?.charAt(0)}
                       </div>
                       <div>
@@ -416,9 +416,9 @@ export const ReputationMetricsDashboard = ({
                   {/* Reputation Score out of 100 */}
                   <td className="px-4 py-3 whitespace-nowrap">
                     <div className="flex items-center gap-2">
-                      <div className="w-16 bg-slate-100 !rounded-none h-2 overflow-hidden border border-slate-200">
+                      <div className="w-16 bg-slate-100 rounded-full h-2 overflow-hidden border border-slate-200">
                         <div
-                          className="bg-[#1E3B2F] h-full !rounded-none"
+                          className="bg-[#1E3B2F] h-full rounded-full"
                           style={{ width: `${item.score100}%` }}
                         />
                       </div>
@@ -434,7 +434,7 @@ export const ReputationMetricsDashboard = ({
                     <button
                       type="button"
                       onClick={onOpenReviewModal}
-                      className="inline-flex items-center gap-1 text-xs font-semibold text-[#1E3B2F] hover:text-[#152A22] bg-[#7F8C6A]/15 hover:bg-[#7F8C6A]/25 px-2.5 py-1 !rounded-none border border-[#C8B48A]/40 transition-colors"
+                      className="inline-flex items-center gap-1 text-xs font-semibold text-[#1E3B2F] hover:text-[#152A22] bg-[#7F8C6A]/15 hover:bg-[#7F8C6A]/25 px-2.5 py-1 rounded-lg border border-[#C8B48A]/40 transition-colors"
                     >
                       <PlusCircle className="w-3 h-3 text-[#1E3B2F]" />
                       Evaluate

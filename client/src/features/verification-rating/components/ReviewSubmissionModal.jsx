@@ -166,7 +166,7 @@ export const ReviewSubmissionModal = ({
                 setTargetType('student');
                 setSelectedTarget(null);
               }}
-              className={`flex items-center justify-center gap-2 py-2 px-3 text-xs font-semibold !rounded-none border transition-all ${
+              className={`flex items-center justify-center gap-2 py-2 px-3 text-xs font-semibold rounded-lg border transition-all ${
                 targetType === 'student'
                   ? 'bg-[#7F8C6A]/15 border-[#1E3B2F] text-[#1E3B2F] font-bold shadow-xs'
                   : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50'
@@ -182,7 +182,7 @@ export const ReviewSubmissionModal = ({
                 setTargetType('company');
                 setSelectedTarget(null);
               }}
-              className={`flex items-center justify-center gap-2 py-2 px-3 text-xs font-semibold !rounded-none border transition-all ${
+              className={`flex items-center justify-center gap-2 py-2 px-3 text-xs font-semibold rounded-lg border transition-all ${
                 targetType === 'company'
                   ? 'bg-[#7F8C6A]/15 border-[#1E3B2F] text-[#1E3B2F] font-bold shadow-xs'
                   : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50'
@@ -201,9 +201,9 @@ export const ReviewSubmissionModal = ({
           </label>
 
           {selectedTarget ? (
-            <div className="flex items-center justify-between p-3 bg-[#7F8C6A]/15 border border-[#C8B48A]/40 !rounded-none">
+            <div className="flex items-center justify-between p-3 bg-[#7F8C6A]/15 border border-[#C8B48A]/40 rounded-xl">
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 !rounded-none bg-[#1E3B2F] text-[#F5F0E6] flex items-center justify-center font-bold text-xs">
+                <div className="w-8 h-8 rounded-lg bg-[#1E3B2F] text-[#F5F0E6] flex items-center justify-center font-bold text-xs">
                   {selectedTarget.name?.charAt(0) || 'T'}
                 </div>
                 <div>
@@ -219,7 +219,7 @@ export const ReviewSubmissionModal = ({
                 variant="ghost"
                 size="sm"
                 onClick={() => setSelectedTarget(null)}
-                className="text-xs text-[#1E3B2F] hover:text-[#152A22] !rounded-none font-semibold"
+                className="text-xs text-[#1E3B2F] hover:text-[#152A22] rounded-lg font-semibold"
               >
                 Change Target
               </Button>
@@ -233,12 +233,12 @@ export const ReviewSubmissionModal = ({
                   placeholder={`Search ${targetType === 'student' ? 'students by name or email...' : 'companies by name or industry...'}`}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-9 pr-3 py-1.5 text-xs border border-gray-300 !rounded-none focus:outline-none focus:ring-1 focus:ring-[#1E3B2F] font-medium"
+                  className="w-full pl-9 pr-3 py-1.5 text-xs border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#1E3B2F] font-medium"
                 />
               </div>
 
               {/* Target List Dropdown */}
-              <div className="max-h-40 overflow-y-auto border border-gray-200 !rounded-none divide-y divide-gray-100 bg-white">
+              <div className="max-h-40 overflow-y-auto border border-gray-200 rounded-xl divide-y divide-gray-100 bg-white">
                 {loadingTargets ? (
                   <div className="p-3 text-center text-xs text-gray-500">Loading directory...</div>
                 ) : targets.length === 0 ? (
@@ -254,7 +254,7 @@ export const ReviewSubmissionModal = ({
                       className="w-full text-left p-2.5 hover:bg-[#7F8C6A]/10 flex items-center justify-between transition-colors"
                     >
                       <div className="flex items-center gap-2">
-                        <div className="w-6 h-6 !rounded-none bg-slate-200 text-slate-700 flex items-center justify-center font-bold text-xs">
+                        <div className="w-6 h-6 rounded-lg bg-slate-200 text-slate-700 flex items-center justify-center font-bold text-xs">
                           {target.name?.charAt(0)}
                         </div>
                         <div>
@@ -266,7 +266,7 @@ export const ReviewSubmissionModal = ({
                           </p>
                         </div>
                       </div>
-                      <span className="text-[10px] font-bold px-2 py-0.5 bg-[#7F8C6A]/20 text-[#1E3B2F] uppercase tracking-wider">
+                      <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#7F8C6A]/20 text-[#1E3B2F] uppercase tracking-wider">
                         Select
                       </span>
                     </button>
@@ -278,7 +278,7 @@ export const ReviewSubmissionModal = ({
         </div>
 
         {/* Multi-Criteria Ratings Section */}
-        <div className="p-3.5 bg-slate-50 border border-slate-200 !rounded-none space-y-3">
+        <div className="p-3.5 bg-slate-50 border border-slate-200 rounded-xl space-y-3">
           <div className="flex items-center justify-between border-b border-slate-200 pb-2">
             <span className="text-xs font-bold text-slate-800 uppercase tracking-wider">
               Multi-Criteria Star Ratings
@@ -363,13 +363,13 @@ export const ReviewSubmissionModal = ({
             }
             value={comments}
             onChange={(e) => setComments(e.target.value)}
-            className="w-full px-3 py-2 text-xs border border-gray-300 !rounded-none shadow-2xs focus:outline-none focus:ring-1 focus:ring-[#1E3B2F]"
+            className="w-full px-3 py-2 text-xs border border-gray-300 rounded-lg shadow-2xs focus:outline-none focus:ring-1 focus:ring-[#1E3B2F]"
           />
         </div>
 
         {/* Modal Actions */}
         <div className="flex items-center justify-end gap-2.5 pt-4 border-t border-gray-200">
-          <Button variant="secondary" onClick={onClose} disabled={submitting} className="text-xs !rounded-none">
+          <Button variant="secondary" onClick={onClose} disabled={submitting} className="text-xs rounded-lg">
             Cancel
           </Button>
           <Button
@@ -377,7 +377,7 @@ export const ReviewSubmissionModal = ({
             variant="primary"
             isLoading={submitting}
             disabled={!selectedTarget}
-            className="text-xs !rounded-none !bg-[#1E3B2F] hover:!bg-[#152A22] !border-[#1E3B2F] text-[#F5F0E6] font-semibold shadow-xs"
+            className="text-xs rounded-lg !bg-[#1E3B2F] hover:!bg-[#152A22] !border-[#1E3B2F] text-[#F5F0E6] font-semibold shadow-xs"
           >
             Publish Verified Review
           </Button>
