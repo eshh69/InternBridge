@@ -59,7 +59,7 @@ const AnimatedNumber = ({ value }) => {
   return (
     <span
       className={`inline-block transition-transform duration-200 ${
-        pulse ? 'scale-110 text-indigo-600' : ''
+        pulse ? 'scale-110 text-[#1E3B2F]' : ''
       }`}
     >
       {display}
@@ -70,7 +70,7 @@ const AnimatedNumber = ({ value }) => {
 /* ============================================================
    MiniBar — decorative sparkline bars for KPI cards
    ============================================================ */
-const MiniBar = ({ color = 'bg-indigo-200', heights = [40, 60, 45, 70, 55, 80, 65] }) => (
+const MiniBar = ({ color = 'bg-[#7F8C6A]', heights = [40, 60, 45, 70, 55, 80, 65] }) => (
   <div className="flex items-end gap-0.5 h-6 opacity-60">
     {heights.map((h, i) => (
       <div
@@ -145,10 +145,10 @@ const InternshipRowCard = ({ item, onView, onEdit, onStatusChange, onDelete }) =
       : 'bg-slate-400';
 
   return (
-    <div className="flex items-start gap-3 p-4 rounded-xl border border-slate-200/80 bg-white hover:border-indigo-200 hover:shadow-md transition-all duration-200 group">
+    <div className="flex items-start gap-3 p-4 rounded-xl border border-[#C8B48A]/35 bg-white hover:border-[#7F8C6A]/30 hover:shadow-md transition-all duration-200 group">
       {/* Company Icon */}
-      <div className="flex-shrink-0 w-10 h-10 rounded-xl bg-indigo-50 border border-indigo-100 flex items-center justify-center">
-        <Briefcase className="w-5 h-5 text-indigo-500" />
+      <div className="flex-shrink-0 w-10 h-10 rounded-xl bg-[#7F8C6A]/15 border border-[#7F8C6A]/30 flex items-center justify-center">
+        <Briefcase className="w-5 h-5 text-[#1E3B2F]" />
       </div>
 
       {/* Content */}
@@ -156,7 +156,7 @@ const InternshipRowCard = ({ item, onView, onEdit, onStatusChange, onDelete }) =
         {/* Title row */}
         <div className="flex items-center gap-2 flex-wrap">
           <h4
-            className="font-bold text-slate-900 text-sm leading-snug group-hover:text-indigo-600 cursor-pointer transition-colors truncate"
+            className="font-bold text-slate-900 text-sm leading-snug group-hover:text-[#1E3B2F] cursor-pointer transition-colors truncate"
             onClick={() => onView(item)}
           >
             {item.title}
@@ -196,7 +196,7 @@ const InternshipRowCard = ({ item, onView, onEdit, onStatusChange, onDelete }) =
             {item.requiredSkills.slice(0, 3).map((sk) => (
               <span
                 key={sk}
-                className="px-1.5 py-0.5 bg-slate-100 text-slate-600 rounded text-[10px] font-medium lowercase border border-slate-200"
+                className="px-1.5 py-0.5 bg-slate-100 text-slate-600 rounded text-[10px] font-medium lowercase border border-[#C8B48A]/35"
               >
                 {sk}
               </span>
@@ -226,7 +226,7 @@ const InternshipRowCard = ({ item, onView, onEdit, onStatusChange, onDelete }) =
           </span>
           <button
             onClick={() => onView(item)}
-            className="flex items-center gap-1 text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition-colors px-2 py-1 rounded-lg hover:bg-indigo-50"
+            className="flex items-center gap-1 text-[11px] font-bold text-[#1E3B2F] hover:text-[#1E3B2F] transition-colors px-2 py-1 rounded-lg hover:bg-[#7F8C6A]/15"
           >
             Details <ArrowRight className="w-3 h-3" />
           </button>
@@ -243,10 +243,10 @@ const InternshipRowCard = ({ item, onView, onEdit, onStatusChange, onDelete }) =
             <MoreHorizontal className="w-4 h-4" />
           </button>
           {menuOpen && (
-            <div className="absolute right-0 top-7 z-20 w-40 bg-white rounded-xl border border-slate-200 shadow-lg py-1 animate-scale-in">
+            <div className="absolute right-0 top-7 z-20 w-40 bg-white rounded-xl border border-[#C8B48A]/35 shadow-lg py-1 animate-scale-in">
               <button
                 onClick={() => { setMenuOpen(false); onEdit(item); }}
-                className="w-full text-left px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 flex items-center gap-2"
+                className="w-full text-left px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-[#F5F0E6] flex items-center gap-2"
               >
                 <Edit3 className="w-3.5 h-3.5 text-slate-400" /> Edit
               </button>
@@ -301,11 +301,11 @@ export const CompanyDashboardStats = ({
     {
       title: 'Total Postings',
       value: stats?.total ?? 0,
-      icon: <Briefcase className="w-5 h-5 text-indigo-600" />,
-      iconBg: 'bg-indigo-50 border-indigo-100',
+      icon: <Briefcase className="w-5 h-5 text-[#1E3B2F]" />,
+      iconBg: 'bg-[#7F8C6A]/15 border-[#7F8C6A]/30',
       description: 'All internship listings',
-      barColor: 'bg-indigo-300',
-      arrowColor: 'text-indigo-400',
+      barColor: 'bg-[#7F8C6A]',
+      arrowColor: 'text-[#1E3B2F]',
       barHeights: [30, 50, 40, 65, 55, 75, 60],
     },
     {
@@ -332,7 +332,7 @@ export const CompanyDashboardStats = ({
       title: 'Closed Listings',
       value: stats?.closed ?? 0,
       icon: <Archive className="w-5 h-5 text-slate-500" />,
-      iconBg: 'bg-slate-100 border-slate-200',
+      iconBg: 'bg-slate-100 border-[#C8B48A]/35',
       description: 'Past recruitment posts',
       barColor: 'bg-slate-300',
       arrowColor: 'text-slate-400',
@@ -341,11 +341,11 @@ export const CompanyDashboardStats = ({
     {
       title: 'Total Applicants',
       value: stats?.totalApplicants ?? 0,
-      icon: <Users className="w-5 h-5 text-purple-600" />,
-      iconBg: 'bg-purple-50 border-purple-100',
+      icon: <Users className="w-5 h-5 text-[#1E3B2F]" />,
+      iconBg: 'bg-[#C8B48A]/20 border-[#C8B48A]/35',
       description: 'Candidate applications',
-      barColor: 'bg-purple-300',
-      arrowColor: 'text-purple-400',
+      barColor: 'bg-[#C8B48A]',
+      arrowColor: 'text-[#1E3B2F]',
       barHeights: [25, 45, 35, 60, 50, 70, 55],
     },
   ];
@@ -353,15 +353,15 @@ export const CompanyDashboardStats = ({
   /* ------ Quick Actions ------ */
   const quickActions = [
     {
-      icon: <PlusCircle className="w-5 h-5 text-indigo-600" />,
-      iconBg: 'bg-indigo-100',
+      icon: <PlusCircle className="w-5 h-5 text-[#1E3B2F]" />,
+      iconBg: 'bg-[#7F8C6A]/15',
       label: 'Post New Internship',
       subtitle: 'Reach talented students',
       onClick: onOpenCreateModal,
     },
     {
-      icon: <Users className="w-5 h-5 text-purple-600" />,
-      iconBg: 'bg-purple-100',
+      icon: <Users className="w-5 h-5 text-[#1E3B2F]" />,
+      iconBg: 'bg-[#C8B48A]/20',
       label: 'View Applicants',
       subtitle: 'Manage candidate applications',
       onClick: () => navigate('/applications'),
@@ -381,14 +381,14 @@ export const CompanyDashboardStats = ({
       {/* ==================================================================
           COMPANY HERO BANNER
           ================================================================== */}
-      <div className="relative overflow-hidden rounded-2xl shadow-lg border border-indigo-900/30"
+      <div className="relative overflow-hidden rounded-2xl shadow-lg border border-[#7F8C6A]/30"
         style={{
-          background: 'linear-gradient(135deg, #26236B 0%, #3730a3 40%, #5b21b6 75%, #4c1d95 100%)'
+          background: 'linear-gradient(135deg, #1E3B2F 0%, #183026 55%, #152A22 100%)'
         }}
       >
         {/* Decorative glows */}
-        <div className="absolute -top-16 -right-16 w-64 h-64 bg-indigo-400/20 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute -bottom-12 -left-12 w-56 h-56 bg-purple-600/25 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -top-16 -right-16 w-64 h-64 bg-[#C8B48A]/20 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -bottom-12 -left-12 w-56 h-56 bg-[#7F8C6A]/25 rounded-full blur-3xl pointer-events-none" />
         {/* Architectural illustration — pure CSS rings */}
         <div className="absolute right-0 top-0 h-full w-64 sm:w-80 pointer-events-none hidden sm:flex items-center justify-end pr-6 opacity-20">
           <div className="relative w-48 h-48">
@@ -434,7 +434,7 @@ export const CompanyDashboardStats = ({
               </div>
 
               {company?.description && (
-                <p className="text-indigo-200 text-sm leading-relaxed max-w-xl">
+                <p className="text-[#F5F0E6]/80 text-sm leading-relaxed max-w-xl">
                   {company.description.length > 100
                     ? `${company.description.substring(0, 100)}...`
                     : company.description}
@@ -442,22 +442,22 @@ export const CompanyDashboardStats = ({
               )}
 
               {!company && (
-                <p className="text-indigo-200 text-sm leading-relaxed">
+                <p className="text-[#F5F0E6]/80 text-sm leading-relaxed">
                   Welcome to your recruitment management portal. Set up your company profile to begin posting internships.
                 </p>
               )}
 
               {company && (
-                <div className="flex items-center gap-4 text-xs text-indigo-200 flex-wrap pt-0.5">
+                <div className="flex items-center gap-4 text-xs text-[#F5F0E6]/80 flex-wrap pt-0.5">
                   {company.location?.city && (
                     <span className="flex items-center gap-1.5">
-                      <MapPin className="w-3.5 h-3.5 text-indigo-300" />
+                      <MapPin className="w-3.5 h-3.5 text-[#F5F0E6]/80" />
                       {company.location.city}, {company.location.country || 'Sri Lanka'}
                     </span>
                   )}
                   {company.industry && (
                     <span className="flex items-center gap-1.5">
-                      <Building2 className="w-3.5 h-3.5 text-indigo-300" />
+                      <Building2 className="w-3.5 h-3.5 text-[#F5F0E6]/80" />
                       {company.industry}
                     </span>
                   )}
@@ -480,7 +480,7 @@ export const CompanyDashboardStats = ({
                 size="md"
                 className="gap-2 font-semibold shadow-md"
               >
-                <PlusCircle className="w-4 h-4 text-indigo-600" />
+                <PlusCircle className="w-4 h-4 text-[#1E3B2F]" />
                 Post Internship
               </Button>
               <Button
@@ -489,7 +489,7 @@ export const CompanyDashboardStats = ({
                 size="md"
                 className="gap-2 font-medium"
               >
-                <Edit3 className="w-4 h-4 text-indigo-200" />
+                <Edit3 className="w-4 h-4 text-[#F5F0E6]/80" />
                 Edit Profile
               </Button>
             </div>
@@ -509,7 +509,7 @@ export const CompanyDashboardStats = ({
             </div>
             <p className="text-xs text-slate-500 mt-0.5">A quick snapshot of your internship activity</p>
           </div>
-          <span className="flex items-center gap-1.5 text-xs text-slate-500 border border-slate-200 rounded-lg px-2.5 py-1.5 bg-white shadow-xs">
+          <span className="flex items-center gap-1.5 text-xs text-slate-500 border border-[#C8B48A]/35 rounded-lg px-2.5 py-1.5 bg-white shadow-xs">
             <Calendar className="w-3.5 h-3.5 text-slate-400" />
             This Month
           </span>
@@ -519,7 +519,7 @@ export const CompanyDashboardStats = ({
           {kpiCards.map((card) => (
             <Card
               key={card.title}
-              className="p-4 border border-slate-200/80 hover:border-indigo-200 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 group cursor-default"
+              className="p-4 border border-[#C8B48A]/35 hover:border-[#7F8C6A]/30 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 group cursor-default"
             >
               <div className="flex items-center justify-between mb-3">
                 <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider leading-tight">
@@ -566,15 +566,15 @@ export const CompanyDashboardStats = ({
             </div>
             <button
               onClick={() => onSwitchTab('internships')}
-              className="flex items-center gap-1.5 text-xs font-bold text-indigo-600 hover:text-indigo-800 px-3 py-1.5 rounded-lg hover:bg-indigo-50 transition-colors"
+              className="flex items-center gap-1.5 text-xs font-bold text-[#1E3B2F] hover:text-[#1E3B2F] px-3 py-1.5 rounded-lg hover:bg-[#7F8C6A]/15 transition-colors"
             >
               View All ({stats?.total || 0}) <ArrowRight className="w-3.5 h-3.5" />
             </button>
           </div>
 
           {recentInternships.length === 0 ? (
-            <div className="flex flex-col items-center justify-center p-10 rounded-2xl border-2 border-dashed border-slate-200 bg-white text-center">
-              <div className="w-12 h-12 bg-indigo-50 text-indigo-500 rounded-2xl flex items-center justify-center mb-3">
+            <div className="flex flex-col items-center justify-center p-10 rounded-2xl border-2 border-dashed border-[#C8B48A]/35 bg-white text-center">
+              <div className="w-12 h-12 bg-[#7F8C6A]/15 text-[#1E3B2F] rounded-2xl flex items-center justify-center mb-3">
                 <Briefcase className="w-6 h-6" />
               </div>
               <h4 className="text-sm font-bold text-slate-800">No internship postings yet</h4>
@@ -611,12 +611,12 @@ export const CompanyDashboardStats = ({
             <p className="text-xs text-slate-500 mt-0.5">Manage your recruitment process</p>
           </div>
 
-          <div className="bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden">
+          <div className="bg-white rounded-2xl border border-[#C8B48A]/35 shadow-sm overflow-hidden">
             {quickActions.map((action, idx) => (
               <button
                 key={action.label}
                 onClick={action.onClick}
-                className={`w-full flex items-center gap-3 px-4 py-4 text-left hover:bg-slate-50 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-inset group ${
+                className={`w-full flex items-center gap-3 px-4 py-4 text-left hover:bg-[#F5F0E6] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#1E3B2F]/20 focus-visible:ring-inset group ${
                   idx < quickActions.length - 1 ? 'border-b border-slate-100' : ''
                 }`}
               >
@@ -627,7 +627,7 @@ export const CompanyDashboardStats = ({
                   <p className="text-sm font-bold text-slate-900 leading-snug">{action.label}</p>
                   <p className="text-[11px] text-slate-500 font-medium mt-0.5">{action.subtitle}</p>
                 </div>
-                <ChevronRight className="w-4 h-4 text-slate-300 group-hover:text-indigo-400 transition-colors flex-shrink-0" />
+                <ChevronRight className="w-4 h-4 text-slate-300 group-hover:text-[#1E3B2F] transition-colors flex-shrink-0" />
               </button>
             ))}
           </div>
