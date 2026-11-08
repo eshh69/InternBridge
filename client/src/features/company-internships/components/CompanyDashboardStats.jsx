@@ -289,6 +289,7 @@ export const CompanyDashboardStats = ({
   recentInternships = [],
   onOpenCreateModal,
   onSwitchTab,
+  onViewListings,
   onViewInternship,
   onEditInternship,
   onStatusChange,
@@ -300,6 +301,7 @@ export const CompanyDashboardStats = ({
   const kpiCards = [
     {
       title: 'Total Postings',
+      onClick: () => onViewListings('all'),
       value: stats?.total ?? 0,
       icon: <Briefcase className="w-5 h-5 text-[#1E3B2F]" />,
       iconBg: 'bg-[#7F8C6A]/15 border-[#7F8C6A]/30',
@@ -310,6 +312,7 @@ export const CompanyDashboardStats = ({
     },
     {
       title: 'Active / Published',
+      onClick: () => onViewListings('published'),
       value: stats?.published ?? 0,
       icon: <CheckCircle className="w-5 h-5 text-emerald-600" />,
       iconBg: 'bg-emerald-50 border-emerald-100',
@@ -320,6 +323,7 @@ export const CompanyDashboardStats = ({
     },
     {
       title: 'Draft Postings',
+      onClick: () => onViewListings('draft'),
       value: stats?.draft ?? 0,
       icon: <FileText className="w-5 h-5 text-amber-600" />,
       iconBg: 'bg-amber-50 border-amber-100',
@@ -330,6 +334,7 @@ export const CompanyDashboardStats = ({
     },
     {
       title: 'Closed Listings',
+      onClick: () => onViewListings('closed'),
       value: stats?.closed ?? 0,
       icon: <Archive className="w-5 h-5 text-slate-500" />,
       iconBg: 'bg-slate-100 border-[#C8B48A]/35',
@@ -340,6 +345,7 @@ export const CompanyDashboardStats = ({
     },
     {
       title: 'Total Applicants',
+      onClick: () => navigate('/applications'),
       value: stats?.totalApplicants ?? 0,
       icon: <Users className="w-5 h-5 text-[#1E3B2F]" />,
       iconBg: 'bg-[#C8B48A]/20 border-[#C8B48A]/35',
@@ -519,8 +525,14 @@ export const CompanyDashboardStats = ({
           {kpiCards.map((card) => (
             <Card
               key={card.title}
-              className="p-4 border border-[#C8B48A]/35 hover:border-[#7F8C6A]/30 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 group cursor-default"
+              className="!p-0 border border-[#C8B48A]/35 hover:border-[#7F8C6A]/30 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 group"
             >
+              <button
+                type="button"
+                onClick={card.onClick}
+                aria-label={`View ${card.title.toLowerCase()}`}
+                className="block w-full h-full p-4 text-left rounded-2xl cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[#1E3B2F] focus-visible:ring-offset-2"
+              >
               <div className="flex items-center justify-between mb-3">
                 <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider leading-tight">
                   {card.title}
@@ -544,6 +556,7 @@ export const CompanyDashboardStats = ({
                   <MiniBar color={card.barColor} heights={card.barHeights} />
                 </div>
               </div>
+              </button>
             </Card>
           ))}
         </div>
