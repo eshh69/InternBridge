@@ -14,6 +14,7 @@ import {
   AlertCircle,
   Briefcase,
   Users,
+  MessageSquare,
 } from 'lucide-react';
 
 const formatSkillName = (s = '') => {
@@ -27,6 +28,7 @@ export const InternshipDetailModal = ({
   onClose,
   internship,
   onApply,
+  onChat,
   isStudent = false,
   isCompany = false,
 }) => {
@@ -91,6 +93,19 @@ export const InternshipDetailModal = ({
           <Button variant="secondary" onClick={onClose}>
             Close
           </Button>
+          {!isCompany && (
+            <button
+              type="button"
+              className="inline-flex items-center gap-1.5 px-4 py-2 border border-[#C8B48A]/40 rounded-lg text-xs font-semibold text-[#1E3B2F] hover:bg-[#F5F0E6]/60 transition-colors shadow-xs"
+              onClick={() => {
+                onClose();
+                onChat && onChat(internship);
+              }}
+            >
+              <MessageSquare className="w-4 h-4 text-[#1E3B2F]" />
+              Chat with Company
+            </button>
+          )}
           {!isCompany && (
             <Button
               variant="primary"

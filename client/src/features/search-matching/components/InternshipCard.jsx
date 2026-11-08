@@ -12,6 +12,7 @@ import {
   ArrowRight,
   Bookmark,
   Briefcase,
+  MessageSquare,
 } from 'lucide-react';
 
 // Proper casing mapping for tech skill pills
@@ -66,6 +67,7 @@ export const InternshipCard = ({
   internship,
   onViewDetails,
   onApply,
+  onChat,
   isStudent = false,
   isCompany = false,
   selectedSkills = '',
@@ -320,6 +322,16 @@ export const InternshipCard = ({
                 <Bookmark className="w-3.5 h-3.5 text-gray-500" />
                 Save
               </button>
+              {!isCompany && (
+                <button
+                  type="button"
+                  onClick={() => onChat && onChat(internship)}
+                  className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg border border-[#C8B48A]/40 text-xs font-semibold text-[#1E3B2F] hover:bg-[#F5F0E6]/60 transition-colors shadow-xs"
+                >
+                  <MessageSquare className="w-3.5 h-3.5 text-[#1E3B2F]" />
+                  Chat
+                </button>
+              )}
               {isCompany ? (
                 <button
                   type="button"
