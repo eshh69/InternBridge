@@ -57,3 +57,12 @@ This log records all formal architectural decisions, their justifications, affec
 - **Decision:** Socket.IO connections will authenticate using JWT during the handshake. Clients will join personal notification rooms (`user_{userId}`) and conversation rooms (`chat_{conversationId}`).
 - **Reason:** Enables targeted real-time message delivery and instant notification broadcasting without client-side polling.
 - **Affected Modules:** Module 1 (Student Portfolio & Real-time Chat), Module 4 (Applications), Module 5 (Verification).
+
+
+### ADR 007: Verify Google sessions before issuing application JWTs
+- **Date:** 2026-11-08
+- **Status:** Implemented for the user-requested Google sign-in fix; pending integration review.
+- **Decision:** The existing Supabase client verifies access tokens with auth.getUser before the Google login endpoint reads identity fields. Email and Supabase ID come from the verified Google identity. Client-supplied identity fields cannot authorize login.
+- **Contract:** POST /auth/supabase-login requires accessToken in the JSON body. Missing or invalid sessions return 401; missing server configuration returns 503. Local registration remains on /auth/register; Google registration uses the verified exchange. No demo authentication fallback. Logout clears the local Supabase session.
+- **Configuration:** Server SUPABASE_URL and SUPABASE_KEY must target the same project as frontend VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY. Enable Google in Supabase and allow the frontend /auth/callback redirect URL.
+- **Affected Modules:** Shared authentication and Google onboarding.
