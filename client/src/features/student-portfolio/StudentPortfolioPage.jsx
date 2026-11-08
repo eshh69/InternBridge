@@ -632,15 +632,13 @@ export const StudentPortfolioPage = () => {
 
           {/* 2-Column Responsive Layout Below KPI Cards */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-            {/* LEFT COLUMN (Wider 8/12): Main Sections in Exact 01-06 Sequence */}
-            <div className="lg:col-span-8 space-y-6">
-              {/* SECTION 01: EDUCATION & DEGREE PATHWAY */}
+            {/* LEFT COLUMN (Wider 9/12): Main Sections in Exact 01-06 Sequence */}
+            <div className="lg:col-span-9 space-y-6">
+              {/* EDUCATION & DEGREE PATHWAY */}
               <section className="space-y-3 bg-white border border-[#C8B48A]/35 rounded-2xl p-5 sm:p-6 shadow-2xs">
                 <div className="flex items-center justify-between border-b border-gray-100 pb-3">
                   <div className="flex items-center gap-2.5">
-                    <span className="text-xs font-mono font-bold text-[#1E3B2F] bg-[#7F8C6A]/15 px-2 py-0.5 rounded-lg border border-[#7F8C6A]/30">
-                      01
-                    </span>
+                    <GraduationCap className="w-4 h-4 text-[#1E3B2F]" />
                     <h3 className="text-base font-extrabold text-gray-900 tracking-tight">
                       Education &amp; Degree Pathway
                     </h3>
@@ -655,13 +653,11 @@ export const StudentPortfolioPage = () => {
                 />
               </section>
 
-              {/* SECTION 02: TECHNICAL SKILLS & STACK */}
+              {/* TECHNICAL SKILLS & STACK */}
               <section className="space-y-3 bg-white border border-[#C8B48A]/35 rounded-2xl p-5 sm:p-6 shadow-2xs">
                 <div className="flex items-center justify-between border-b border-gray-100 pb-3">
                   <div className="flex items-center gap-2.5">
-                    <span className="text-xs font-mono font-bold text-[#1E3B2F] bg-[#7F8C6A]/15 px-2 py-0.5 rounded-lg border border-[#7F8C6A]/30">
-                      02
-                    </span>
+                    <Sparkles className="w-4 h-4 text-[#1E3B2F]" />
                     <h3 className="text-base font-extrabold text-gray-900 tracking-tight">
                       Technical Skills &amp; Stack
                     </h3>
@@ -676,13 +672,11 @@ export const StudentPortfolioPage = () => {
                 />
               </section>
 
-              {/* SECTION 03: WORK & INTERNSHIP EXPERIENCE */}
+              {/* WORK & INTERNSHIP EXPERIENCE */}
               <section className="space-y-3 bg-white border border-[#C8B48A]/35 rounded-2xl p-5 sm:p-6 shadow-2xs">
                 <div className="flex items-center justify-between border-b border-gray-100 pb-3">
                   <div className="flex items-center gap-2.5">
-                    <span className="text-xs font-mono font-bold text-[#1E3B2F] bg-[#7F8C6A]/15 px-2 py-0.5 rounded-lg border border-[#7F8C6A]/30">
-                      03
-                    </span>
+                    <Clock className="w-4 h-4 text-[#1E3B2F]" />
                     <h3 className="text-base font-extrabold text-gray-900 tracking-tight">
                       Work &amp; Internship Experience
                     </h3>
@@ -697,13 +691,11 @@ export const StudentPortfolioPage = () => {
                 />
               </section>
 
-              {/* SECTION 04: FEATURED WORK & PROJECTS */}
+              {/* FEATURED WORK & PROJECTS */}
               <section className="space-y-3 bg-white border border-[#C8B48A]/35 rounded-2xl p-5 sm:p-6 shadow-2xs">
                 <div className="flex items-center justify-between border-b border-gray-100 pb-3">
                   <div className="flex items-center gap-2.5">
-                    <span className="text-xs font-mono font-bold text-[#1E3B2F] bg-[#7F8C6A]/15 px-2 py-0.5 rounded-lg border border-[#7F8C6A]/30">
-                      04
-                    </span>
+                    <Briefcase className="w-4 h-4 text-[#1E3B2F]" />
                     <h3 className="text-base font-extrabold text-gray-900 tracking-tight">
                       Featured Work &amp; Projects
                     </h3>
@@ -724,13 +716,11 @@ export const StudentPortfolioPage = () => {
                 />
               </section>
 
-              {/* SECTION 05: CERTIFICATES & DIGITAL BADGES */}
+              {/* CERTIFICATES & DIGITAL BADGES */}
               <section className="space-y-3 bg-white border border-[#C8B48A]/35 rounded-2xl p-5 sm:p-6 shadow-2xs">
                 <div className="flex items-center justify-between border-b border-gray-100 pb-3">
                   <div className="flex items-center gap-2.5">
-                    <span className="text-xs font-mono font-bold text-[#1E3B2F] bg-[#7F8C6A]/15 px-2 py-0.5 rounded-lg border border-[#7F8C6A]/30">
-                      05
-                    </span>
+                    <ShieldCheck className="w-4 h-4 text-[#1E3B2F]" />
                     <h3 className="text-base font-extrabold text-gray-900 tracking-tight">
                       Certificates &amp; Digital Badges
                     </h3>
@@ -747,39 +737,12 @@ export const StudentPortfolioPage = () => {
                   isLoading={isSaving}
                 />
               </section>
-
-              {/* SECTION 06: VERIFIED FACULTY EVALUATIONS & ENDORSEMENTS (REVIEWS) */}
-              <section className="space-y-3 bg-white border border-[#C8B48A]/35 rounded-2xl p-5 sm:p-6 shadow-2xs">
-                <div className="flex items-center justify-between border-b border-gray-100 pb-3">
-                  <div className="flex items-center gap-2.5">
-                    <span className="text-xs font-mono font-bold text-[#1E3B2F] bg-[#7F8C6A]/15 px-2 py-0.5 rounded-lg border border-[#7F8C6A]/30">
-                      06
-                    </span>
-                    <h3 className="text-base font-extrabold text-gray-900 tracking-tight">
-                      Verified Faculty Evaluations &amp; Endorsements
-                    </h3>
-                  </div>
-                  <span className="text-xs text-gray-400 font-medium">Academic Integrity &amp; Ratings</span>
-                </div>
-
-                {studentUserId ? (
-                  <ReputationAndReviewsCard
-                    targetId={studentUserId}
-                    targetType="student"
-                    title="Verified Academic Reputation &amp; Faculty Evaluations"
-                  />
-                ) : (
-                  <div className="py-8 text-center text-sm text-gray-500">
-                    Faculty evaluations and review history will display here.
-                  </div>
-                )}
-              </section>
             </div>
 
             {/* RIGHT COLUMN (4/12): Quick Actions & Portfolio Readiness Sidebar */}
-            <div className="lg:col-span-4 space-y-6">
+            <div className="lg:col-span-3 space-y-6">
               {/* Quick Actions Card (Exact Match with Company Dashboard Style) */}
-              <div className="bg-white border border-[#C8B48A]/40 rounded-2xl p-5 shadow-2xs space-y-3">
+              <div className="bg-white border border-[#C8B48A]/40 rounded-2xl p-4 sm:p-4.5 shadow-2xs space-y-3">
                 <div className="flex items-center justify-between pb-2 border-b border-gray-100">
                   <div className="flex items-center gap-2">
                     <Zap className="w-4 h-4 text-[#1E3B2F]" />
@@ -801,7 +764,7 @@ export const StudentPortfolioPage = () => {
                     >
                       <div className="flex items-center gap-3 min-w-0">
                         <div
-                          className={`w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 ${action.iconBg}`}
+                          className={`w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0 ${action.iconBg}`}
                         >
                           {action.icon}
                         </div>
@@ -899,42 +862,21 @@ export const StudentPortfolioPage = () => {
                 )}
               </div>
 
-              {/* Verified Faculty Ratings & Academic Integrity Preview */}
-              {studentUserId && (
-                <div className="bg-white border border-[#C8B48A]/40 rounded-2xl p-5 shadow-2xs space-y-3">
-                  <div className="flex items-center justify-between pb-2 border-b border-gray-100">
-                    <div className="flex items-center gap-2">
-                      <Star className="w-4 h-4 text-amber-500 fill-amber-500" />
-                      <h4 className="text-sm font-extrabold text-slate-900 tracking-tight">
-                        Faculty Endorsements
-                      </h4>
-                    </div>
-                    <button
-                      onClick={() => handleTabChange('credentials')}
-                      className="text-xs font-semibold text-[#1E3B2F] hover:underline"
-                    >
-                      View Details
-                    </button>
+                            {/* VERIFIED FACULTY EVALUATIONS & ENDORSEMENTS (REVIEWS) */}
+              <div className="space-y-3">
+                {studentUserId ? (
+                  <ReputationAndReviewsCard
+                    targetId={studentUserId}
+                    targetType="student"
+                    title="Verified Faculty Evaluations"
+                    className="border-[#C8B48A]/40 rounded-2xl shadow-2xs p-4 sm:p-5"
+                  />
+                ) : (
+                  <div className="py-8 bg-white border border-[#C8B48A]/40 rounded-2xl text-center text-xs text-gray-500">
+                    Faculty evaluations and review history will display here.
                   </div>
-
-                  <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 rounded-xl bg-amber-50 border border-amber-200 flex flex-col items-center justify-center flex-shrink-0">
-                      <span className="text-base font-black text-amber-800 leading-none">
-                        {profile?.reputationScore ? profile.reputationScore.toFixed(1) : '5.0'}
-                      </span>
-                      <span className="text-[9px] text-amber-700 font-bold uppercase mt-0.5">Stars</span>
-                    </div>
-                    <div className="min-w-0">
-                      <p className="text-xs font-bold text-slate-900">
-                        {profile?.reviewCount || 0} Verified Faculty Reviews
-                      </p>
-                      <p className="text-[11px] text-slate-500 leading-tight">
-                        Verified by departmental lecturers &amp; academic reviewers.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              )}
+                )}
+              </div>
             </div>
           </div>
         </div>
@@ -948,9 +890,7 @@ export const StudentPortfolioPage = () => {
           <section className="space-y-3 bg-white border border-[#C8B48A]/35 rounded-2xl p-5 sm:p-6 shadow-2xs">
             <div className="flex items-center justify-between border-b border-gray-100 pb-3">
               <div className="flex items-center gap-2.5">
-                <span className="text-xs font-mono font-bold text-[#1E3B2F] bg-[#7F8C6A]/15 px-2 py-0.5 rounded-lg border border-[#7F8C6A]/30">
-                  04
-                </span>
+                <Briefcase className="w-4 h-4 text-[#1E3B2F]" />
                 <h3 className="text-base font-extrabold text-gray-900 tracking-tight">
                   Featured Work &amp; Projects
                 </h3>
@@ -969,9 +909,7 @@ export const StudentPortfolioPage = () => {
           <section className="space-y-3 bg-white border border-[#C8B48A]/35 rounded-2xl p-5 sm:p-6 shadow-2xs">
             <div className="flex items-center justify-between border-b border-gray-100 pb-3">
               <div className="flex items-center gap-2.5">
-                <span className="text-xs font-mono font-bold text-[#1E3B2F] bg-[#7F8C6A]/15 px-2 py-0.5 rounded-lg border border-[#7F8C6A]/30">
-                  02
-                </span>
+                <Sparkles className="w-4 h-4 text-[#1E3B2F]" />
                 <h3 className="text-base font-extrabold text-gray-900 tracking-tight">
                   Technical Skills &amp; Stack
                 </h3>
@@ -996,9 +934,7 @@ export const StudentPortfolioPage = () => {
           <section className="space-y-3 bg-white border border-[#C8B48A]/35 rounded-2xl p-5 sm:p-6 shadow-2xs">
             <div className="flex items-center justify-between border-b border-gray-100 pb-3">
               <div className="flex items-center gap-2.5">
-                <span className="text-xs font-mono font-bold text-[#1E3B2F] bg-[#7F8C6A]/15 px-2 py-0.5 rounded-lg border border-[#7F8C6A]/30">
-                  01
-                </span>
+                <GraduationCap className="w-4 h-4 text-[#1E3B2F]" />
                 <h3 className="text-base font-extrabold text-gray-900 tracking-tight">
                   Education &amp; Degree Pathway
                 </h3>
@@ -1016,9 +952,7 @@ export const StudentPortfolioPage = () => {
           <section className="space-y-3 bg-white border border-[#C8B48A]/35 rounded-2xl p-5 sm:p-6 shadow-2xs">
             <div className="flex items-center justify-between border-b border-gray-100 pb-3">
               <div className="flex items-center gap-2.5">
-                <span className="text-xs font-mono font-bold text-[#1E3B2F] bg-[#7F8C6A]/15 px-2 py-0.5 rounded-lg border border-[#7F8C6A]/30">
-                  03
-                </span>
+                <Clock className="w-4 h-4 text-[#1E3B2F]" />
                 <h3 className="text-base font-extrabold text-gray-900 tracking-tight">
                   Work &amp; Internship Experience
                 </h3>
@@ -1043,9 +977,7 @@ export const StudentPortfolioPage = () => {
           <section className="space-y-3 bg-white border border-[#C8B48A]/35 rounded-2xl p-5 sm:p-6 shadow-2xs">
             <div className="flex items-center justify-between border-b border-gray-100 pb-3">
               <div className="flex items-center gap-2.5">
-                <span className="text-xs font-mono font-bold text-[#1E3B2F] bg-[#7F8C6A]/15 px-2 py-0.5 rounded-lg border border-[#7F8C6A]/30">
-                  05
-                </span>
+                <ShieldCheck className="w-4 h-4 text-[#1E3B2F]" />
                 <h3 className="text-base font-extrabold text-gray-900 tracking-tight">
                   Certificates &amp; Digital Badges
                 </h3>
@@ -1067,9 +999,7 @@ export const StudentPortfolioPage = () => {
             <section className="space-y-3 bg-white border border-[#C8B48A]/35 rounded-2xl p-5 sm:p-6 shadow-2xs">
               <div className="flex items-center justify-between border-b border-gray-100 pb-3">
                 <div className="flex items-center gap-2.5">
-                  <span className="text-xs font-mono font-bold text-[#1E3B2F] bg-[#7F8C6A]/15 px-2 py-0.5 rounded-lg border border-[#7F8C6A]/30">
-                    06
-                  </span>
+                  <Star className="w-4 h-4 text-amber-500 fill-amber-500" />
                   <h3 className="text-base font-extrabold text-gray-900 tracking-tight">
                     Verified Faculty Evaluations &amp; Endorsements
                   </h3>
@@ -1111,9 +1041,7 @@ export const StudentPortfolioPage = () => {
           <section className="space-y-3 bg-white border border-[#C8B48A]/35 rounded-2xl p-5 sm:p-6 shadow-2xs">
             <div className="flex items-center justify-between border-b border-gray-100 pb-3">
               <div className="flex items-center gap-2.5">
-                <span className="text-xs font-mono font-bold text-[#1E3B2F] bg-[#7F8C6A]/15 px-2 py-0.5 rounded-lg border border-[#7F8C6A]/30">
-                  01
-                </span>
+                <GraduationCap className="w-4 h-4 text-[#1E3B2F]" />
                 <h3 className="text-base font-extrabold text-gray-900 tracking-tight">
                   Education &amp; Degree Pathway
                 </h3>
@@ -1131,9 +1059,7 @@ export const StudentPortfolioPage = () => {
           <section className="space-y-3 bg-white border border-[#C8B48A]/35 rounded-2xl p-5 sm:p-6 shadow-2xs">
             <div className="flex items-center justify-between border-b border-gray-100 pb-3">
               <div className="flex items-center gap-2.5">
-                <span className="text-xs font-mono font-bold text-[#1E3B2F] bg-[#7F8C6A]/15 px-2 py-0.5 rounded-lg border border-[#7F8C6A]/30">
-                  02
-                </span>
+                <Sparkles className="w-4 h-4 text-[#1E3B2F]" />
                 <h3 className="text-base font-extrabold text-gray-900 tracking-tight">
                   Technical Skills &amp; Stack
                 </h3>
@@ -1151,9 +1077,7 @@ export const StudentPortfolioPage = () => {
           <section className="space-y-3 bg-white border border-[#C8B48A]/35 rounded-2xl p-5 sm:p-6 shadow-2xs">
             <div className="flex items-center justify-between border-b border-gray-100 pb-3">
               <div className="flex items-center gap-2.5">
-                <span className="text-xs font-mono font-bold text-[#1E3B2F] bg-[#7F8C6A]/15 px-2 py-0.5 rounded-lg border border-[#7F8C6A]/30">
-                  03
-                </span>
+                <Clock className="w-4 h-4 text-[#1E3B2F]" />
                 <h3 className="text-base font-extrabold text-gray-900 tracking-tight">
                   Work &amp; Internship Experience
                 </h3>
@@ -1171,9 +1095,7 @@ export const StudentPortfolioPage = () => {
           <section className="space-y-3 bg-white border border-[#C8B48A]/35 rounded-2xl p-5 sm:p-6 shadow-2xs">
             <div className="flex items-center justify-between border-b border-gray-100 pb-3">
               <div className="flex items-center gap-2.5">
-                <span className="text-xs font-mono font-bold text-[#1E3B2F] bg-[#7F8C6A]/15 px-2 py-0.5 rounded-lg border border-[#7F8C6A]/30">
-                  04
-                </span>
+                <Briefcase className="w-4 h-4 text-[#1E3B2F]" />
                 <h3 className="text-base font-extrabold text-gray-900 tracking-tight">
                   Featured Work &amp; Projects
                 </h3>
@@ -1192,9 +1114,7 @@ export const StudentPortfolioPage = () => {
           <section className="space-y-3 bg-white border border-[#C8B48A]/35 rounded-2xl p-5 sm:p-6 shadow-2xs">
             <div className="flex items-center justify-between border-b border-gray-100 pb-3">
               <div className="flex items-center gap-2.5">
-                <span className="text-xs font-mono font-bold text-[#1E3B2F] bg-[#7F8C6A]/15 px-2 py-0.5 rounded-lg border border-[#7F8C6A]/30">
-                  05
-                </span>
+                <ShieldCheck className="w-4 h-4 text-[#1E3B2F]" />
                 <h3 className="text-base font-extrabold text-gray-900 tracking-tight">
                   Certificates &amp; Digital Badges
                 </h3>
@@ -1216,9 +1136,7 @@ export const StudentPortfolioPage = () => {
             <section className="space-y-3 bg-white border border-[#C8B48A]/35 rounded-2xl p-5 sm:p-6 shadow-2xs">
               <div className="flex items-center justify-between border-b border-gray-100 pb-3">
                 <div className="flex items-center gap-2.5">
-                  <span className="text-xs font-mono font-bold text-[#1E3B2F] bg-[#7F8C6A]/15 px-2 py-0.5 rounded-lg border border-[#7F8C6A]/30">
-                    06
-                  </span>
+                  <Star className="w-4 h-4 text-amber-500 fill-amber-500" />
                   <h3 className="text-base font-extrabold text-gray-900 tracking-tight">
                     Verified Faculty Evaluations &amp; Endorsements
                   </h3>
