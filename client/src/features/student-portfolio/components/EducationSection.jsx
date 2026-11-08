@@ -54,11 +54,11 @@ export const EducationSection = ({
   };
 
   return (
-    <Card className="space-y-4 rounded-2xl shadow-xs border border-gray-200/90 p-5 bg-white">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
+    <Card className="space-y-4 rounded-2xl shadow-2xs border border-[#C8B48A]/40 p-5 sm:p-6 bg-white">
+      <div className="flex items-center justify-between pb-3 border-b border-gray-100">
+        <div className="flex items-center gap-2.5">
           <GraduationCap className="w-4 h-4 text-[#1E3B2F]" />
-          <h3 className="text-base font-bold text-gray-900">Education Background</h3>
+          <h3 className="text-base font-extrabold text-gray-900 tracking-tight">Education & Degree Pathway</h3>
           {education.length > 0 && (
             <span className="text-xs px-2.5 py-0.5 rounded-full bg-[#7F8C6A]/15 text-[#1E3B2F] font-semibold border border-[#C8B48A]/40">
               {education.length}

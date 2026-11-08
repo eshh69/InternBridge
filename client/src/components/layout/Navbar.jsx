@@ -73,6 +73,13 @@ export const Navbar = () => {
     return name.charAt(0).toUpperCase() || 'U';
   };
 
+  const getProfileLink = () => {
+    if (user?.role === 'student') return '/student/portfolio';
+    if (user?.role === 'company') return '/company/internships?tab=profile';
+    if (user?.role === 'reviewer' || user?.role === 'admin') return '/verifications';
+    return '/student/portfolio';
+  };
+
 
   return (
     <header className="bg-[#F5F0E6]/95 backdrop-blur-md border-b border-[#C8B48A]/40 sticky top-0 z-50 text-[#1E3B2F] transition-shadow">
@@ -172,33 +179,39 @@ export const Navbar = () => {
                 </Link>
 
                 <div className="flex items-center gap-2.5 pl-2 sm:pl-3 border-l border-[#C8B48A]/40">
-                  {/* Small Circular Profile Avatar */}
-                  <div className="relative shrink-0">
-                    {user.avatarUrl ? (
-                      <img
-                        src={user.avatarUrl}
-                        alt={getDisplayName()}
-                        className="w-8 h-8 rounded-full object-cover border border-[#C8B48A]/50 shadow-2xs"
-                      />
-                    ) : (
-                      <div className="w-8 h-8 rounded-full bg-[#1E3B2F] text-[#F5F0E6] text-xs font-black flex items-center justify-center border border-[#C8B48A]/50 shadow-2xs select-none">
-                        {getUserInitial()}
-                      </div>
-                    )}
-                  </div>
+                  {/* Small Circular Profile Avatar & User Info linked to Profile */}
+                  <Link
+                    to={getProfileLink()}
+                    className="flex items-center gap-2.5 p-1 -m-1 rounded-xl hover:bg-[#7F8C6A]/15 transition-all group focus:outline-none focus-visible:ring-1 focus-visible:ring-[#1E3B2F] cursor-pointer"
+                    title="Go to Profile / Portfolio"
+                  >
+                    <div className="relative shrink-0 transition-transform group-hover:scale-105">
+                      {user.avatarUrl ? (
+                        <img
+                          src={user.avatarUrl}
+                          alt={getDisplayName()}
+                          className="w-8 h-8 rounded-full object-cover border border-[#C8B48A]/50 shadow-2xs"
+                        />
+                      ) : (
+                        <div className="w-8 h-8 rounded-full bg-[#1E3B2F] text-[#F5F0E6] text-xs font-black flex items-center justify-center border border-[#C8B48A]/50 shadow-2xs select-none">
+                          {getUserInitial()}
+                        </div>
+                      )}
+                    </div>
 
-                  {/* Name & Role */}
-                  <div className="text-left hidden sm:block leading-tight">
-                    <p
-                      className="text-xs font-bold text-[#1E3B2F] tracking-tight truncate max-w-[130px]"
-                      title={user.name}
-                    >
-                      {getDisplayName()}
-                    </p>
-                    <span className="inline-block text-[9px] uppercase tracking-wider font-semibold text-[#7F8C6A]">
-                      {user.role}
-                    </span>
-                  </div>
+                    {/* Name & Role */}
+                    <div className="text-left hidden sm:block leading-tight">
+                      <p
+                        className="text-xs font-bold text-[#1E3B2F] tracking-tight truncate max-w-[130px] group-hover:text-[#152A22] transition-colors"
+                        title={user.name}
+                      >
+                        {getDisplayName()}
+                      </p>
+                      <span className="inline-block text-[9px] uppercase tracking-wider font-semibold text-[#7F8C6A]">
+                        {user.role}
+                      </span>
+                    </div>
+                  </Link>
 
                   {/* Compact Logout Icon Button */}
                   <button
@@ -329,7 +342,12 @@ export const Navbar = () => {
 
             {isAuthenticated && (
               <div className="pt-2.5 pb-1 px-3 border-t border-[#C8B48A]/40 mt-2 sm:hidden flex items-center justify-between">
-                <div className="flex items-center gap-2.5">
+                <Link
+                  to={getProfileLink()}
+                  onClick={closeMobileMenu}
+                  className="flex items-center gap-2.5 hover:opacity-85 transition-opacity"
+                  title="Go to Profile / Portfolio"
+                >
                   {user.avatarUrl ? (
                     <img
                       src={user.avatarUrl}
@@ -345,7 +363,7 @@ export const Navbar = () => {
                     <p className="text-xs font-bold text-[#1E3B2F]">{getDisplayName()}</p>
                     <p className="text-[9px] text-[#7F8C6A] uppercase tracking-wider font-semibold">{user.role}</p>
                   </div>
-                </div>
+                </Link>
                 <button
                   onClick={handleLogout}
                   className="text-xs uppercase tracking-wider text-rose-600 hover:text-rose-700 font-bold px-2 py-1"

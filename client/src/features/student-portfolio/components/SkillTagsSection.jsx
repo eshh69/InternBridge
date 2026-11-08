@@ -269,27 +269,22 @@ export const SkillTagsSection = ({ skills = [], onSaveSkills, isLoading }) => {
     SKILL_CAPABILITY_PRESETS[modalSkillName.trim().toLowerCase()] || [];
 
   return (
-    <Card className="space-y-5 rounded-2xl shadow-xs border border-[#C8B48A]/40 p-5 sm:p-6 bg-white">
+    <Card className="space-y-5 rounded-2xl shadow-2xs border border-[#C8B48A]/40 p-5 sm:p-6 bg-white">
       {/* Header */}
       <div className="flex items-center justify-between pb-3 border-b border-gray-100">
         <div className="flex items-center gap-2.5">
           <div className="w-8 h-8 rounded-xl bg-[#7F8C6A]/15 border border-[#7F8C6A]/30 flex items-center justify-center text-[#1E3B2F]">
             <Code2 className="w-4 h-4" />
           </div>
-          <div>
-            <div className="flex items-center gap-2">
-              <h3 className="text-sm sm:text-base font-extrabold text-gray-900 tracking-tight">
-                Skills & Technical Capabilities
-              </h3>
-              {currentSkills.length > 0 && (
-                <span className="text-xs px-2.5 py-0.5 rounded-full bg-[#1E3B2F] text-[#F5F0E6] font-bold">
-                  {currentSkills.length}
-                </span>
-              )}
-            </div>
-            <p className="text-[11px] text-gray-500 font-medium">
-              Detailed technical competencies with verified capability points
-            </p>
+          <div className="flex items-center gap-2">
+            <h3 className="text-base font-extrabold text-gray-900 tracking-tight">
+              Technical Skills & Stack
+            </h3>
+            {currentSkills.length > 0 && (
+              <span className="text-xs px-2.5 py-0.5 rounded-full bg-[#1E3B2F] text-[#F5F0E6] font-bold">
+                {currentSkills.length}
+              </span>
+            )}
           </div>
         </div>
 
