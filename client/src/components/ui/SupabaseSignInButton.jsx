@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { supabase, isSupabaseConfigured } from '../../services/supabaseClient';
-import { useAuth } from '../../hooks/useAuth';
 
 export const SupabaseSignInButton = ({
   role = 'student',
@@ -10,8 +8,6 @@ export const SupabaseSignInButton = ({
   onError,
 }) => {
   const [isLoading, setIsLoading] = useState(false);
-  const { loginWithSupabase } = useAuth();
-  const navigate = useNavigate();
 
   const handleSupabaseClick = async () => {
     try {
@@ -36,23 +32,7 @@ export const SupabaseSignInButton = ({
         return;
       }
 
-      // Seamless Development Mode Fallback:
-      // When Supabase keys are not configured yet, authenticate smoothly with dev Google user
-      const demoEmail = `google.${role}@internbridge.lk`;
-      const demoName = `Google User (${role.charAt(0).toUpperCase() + role.slice(1)})`;
-
-      const user = await loginWithSupabase({
-        email: demoEmail,
-        name: demoName,
-        avatarUrl: `https://api.dicebear.com/7.x/avataaars/svg?seed=${demoEmail}`,
-        role,
-        supabaseId: `dev_supabase_${role}_${Date.now()}`,
-      });
-
-      if (user.role === 'student') navigate('/student/portfolio');
-      else if (user.role === 'company') navigate('/company/internships');
-      else if (user.role === 'reviewer' || user.role === 'admin') navigate('/verifications');
-      else navigate('/search');
+      throw new Error('Google sign-in is not configured. Please use email and password.');
     } catch (err) {
       if (onError) {
         onError(err.message || 'Failed to initiate Google login.');

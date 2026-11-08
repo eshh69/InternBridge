@@ -19,6 +19,9 @@ export const AuthCallbackPage = () => {
       hasHandled.current = true;
 
       try {
+        const callbackError = searchParams.get('error_description') ||
+          new URLSearchParams(window.location.hash.slice(1)).get('error_description');
+        if (callbackError) throw new Error(callbackError);
         if (!supabase) {
           throw new Error('Supabase client is not configured.');
         }

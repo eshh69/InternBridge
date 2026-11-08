@@ -240,3 +240,7 @@ All API routes are served under `/api/v1/`. All request payloads and response bo
     "comments": "Consistently demonstrates high technical aptitude and teamwork."
   }
   ```
+
+
+### Google session exchange
+POST /api/v1/auth/supabase-login accepts a Supabase accessToken and optional onboarding fields. The server verifies the token with Supabase, requires a confirmed Google identity, and derives email and supabaseId from that identity. Existing account roles are preserved. Returns the standard success envelope containing user and token; 401 for missing/invalid sessions and 503 if server Supabase configuration is absent. Google onboarding uses this endpoint; /auth/register accepts local email/password registration only.
