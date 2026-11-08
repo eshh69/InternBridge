@@ -376,6 +376,11 @@ export const CompanyInternshipsPage = () => {
           recentInternships={internships}
           onOpenCreateModal={handleOpenCreateModal}
           onSwitchTab={handleTabChange}
+          onViewListings={(status) => {
+            setStatusFilter(status);
+            setSearchQuery('');
+            handleTabChange('internships');
+          }}
           onViewInternship={handleOpenViewModal}
           onEditInternship={handleOpenEditModal}
           onStatusChange={handleStatusToggle}
