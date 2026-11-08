@@ -632,31 +632,25 @@ export const StudentPortfolioPage = () => {
 
           {/* 2-Column Responsive Layout Below KPI Cards */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-            {/* LEFT COLUMN (Wider 8/12): Main Sections */}
+            {/* LEFT COLUMN (Wider 8/12): Main Sections in Exact 01-06 Sequence */}
             <div className="lg:col-span-8 space-y-6">
-              {/* SECTION 04: FEATURED WORK & PROJECTS */}
+              {/* SECTION 01: EDUCATION & DEGREE PATHWAY */}
               <section className="space-y-3 bg-white border border-[#C8B48A]/35 rounded-2xl p-5 sm:p-6 shadow-2xs">
                 <div className="flex items-center justify-between border-b border-gray-100 pb-3">
                   <div className="flex items-center gap-2.5">
                     <span className="text-xs font-mono font-bold text-[#1E3B2F] bg-[#7F8C6A]/15 px-2 py-0.5 rounded-lg border border-[#7F8C6A]/30">
-                      04
+                      01
                     </span>
                     <h3 className="text-base font-extrabold text-gray-900 tracking-tight">
-                      Featured Work &amp; Projects
+                      Education &amp; Degree Pathway
                     </h3>
                   </div>
-                  <button
-                    onClick={() => handleTabChange('projects')}
-                    className="text-xs font-semibold text-[#1E3B2F] hover:underline flex items-center gap-1"
-                  >
-                    View All ({projectsCount}) <ChevronRight className="w-3.5 h-3.5" />
-                  </button>
+                  <span className="text-xs text-gray-400 font-medium">Academic Qualifications</span>
                 </div>
 
-                <ProjectsSection
-                  projects={profile?.projects || []}
-                  githubProfileUrl={profile?.links?.github}
-                  onSaveProjects={(projects) => handleUpdateProfile({ projects })}
+                <EducationSection
+                  education={profile?.education || []}
+                  onSaveEducation={(education) => handleUpdateProfile({ education })}
                   isLoading={isSaving}
                 />
               </section>
@@ -703,25 +697,82 @@ export const StudentPortfolioPage = () => {
                 />
               </section>
 
-              {/* SECTION 01: EDUCATION & DEGREE PATHWAY */}
+              {/* SECTION 04: FEATURED WORK & PROJECTS */}
               <section className="space-y-3 bg-white border border-[#C8B48A]/35 rounded-2xl p-5 sm:p-6 shadow-2xs">
                 <div className="flex items-center justify-between border-b border-gray-100 pb-3">
                   <div className="flex items-center gap-2.5">
                     <span className="text-xs font-mono font-bold text-[#1E3B2F] bg-[#7F8C6A]/15 px-2 py-0.5 rounded-lg border border-[#7F8C6A]/30">
-                      01
+                      04
                     </span>
                     <h3 className="text-base font-extrabold text-gray-900 tracking-tight">
-                      Education &amp; Degree Pathway
+                      Featured Work &amp; Projects
                     </h3>
                   </div>
-                  <span className="text-xs text-gray-400 font-medium">Academic Qualifications</span>
+                  <button
+                    onClick={() => handleTabChange('projects')}
+                    className="text-xs font-semibold text-[#1E3B2F] hover:underline flex items-center gap-1"
+                  >
+                    View All ({projectsCount}) <ChevronRight className="w-3.5 h-3.5" />
+                  </button>
                 </div>
 
-                <EducationSection
-                  education={profile?.education || []}
-                  onSaveEducation={(education) => handleUpdateProfile({ education })}
+                <ProjectsSection
+                  projects={profile?.projects || []}
+                  githubProfileUrl={profile?.links?.github}
+                  onSaveProjects={(projects) => handleUpdateProfile({ projects })}
                   isLoading={isSaving}
                 />
+              </section>
+
+              {/* SECTION 05: CERTIFICATES & DIGITAL BADGES */}
+              <section className="space-y-3 bg-white border border-[#C8B48A]/35 rounded-2xl p-5 sm:p-6 shadow-2xs">
+                <div className="flex items-center justify-between border-b border-gray-100 pb-3">
+                  <div className="flex items-center gap-2.5">
+                    <span className="text-xs font-mono font-bold text-[#1E3B2F] bg-[#7F8C6A]/15 px-2 py-0.5 rounded-lg border border-[#7F8C6A]/30">
+                      05
+                    </span>
+                    <h3 className="text-base font-extrabold text-gray-900 tracking-tight">
+                      Certificates &amp; Digital Badges
+                    </h3>
+                  </div>
+                  <span className="text-xs text-gray-400 font-medium">Verified Credentials</span>
+                </div>
+
+                <CertificatesBadgesSection
+                  certificates={profile?.certificates || []}
+                  badges={profile?.badges || []}
+                  studentName={user?.name || profile?.user?.name}
+                  onSaveCertificates={(certificates) => handleUpdateProfile({ certificates })}
+                  onSaveBadges={(badges) => handleUpdateProfile({ badges })}
+                  isLoading={isSaving}
+                />
+              </section>
+
+              {/* SECTION 06: VERIFIED FACULTY EVALUATIONS & ENDORSEMENTS (REVIEWS) */}
+              <section className="space-y-3 bg-white border border-[#C8B48A]/35 rounded-2xl p-5 sm:p-6 shadow-2xs">
+                <div className="flex items-center justify-between border-b border-gray-100 pb-3">
+                  <div className="flex items-center gap-2.5">
+                    <span className="text-xs font-mono font-bold text-[#1E3B2F] bg-[#7F8C6A]/15 px-2 py-0.5 rounded-lg border border-[#7F8C6A]/30">
+                      06
+                    </span>
+                    <h3 className="text-base font-extrabold text-gray-900 tracking-tight">
+                      Verified Faculty Evaluations &amp; Endorsements
+                    </h3>
+                  </div>
+                  <span className="text-xs text-gray-400 font-medium">Academic Integrity &amp; Ratings</span>
+                </div>
+
+                {studentUserId ? (
+                  <ReputationAndReviewsCard
+                    targetId={studentUserId}
+                    targetType="student"
+                    title="Verified Academic Reputation &amp; Faculty Evaluations"
+                  />
+                ) : (
+                  <div className="py-8 text-center text-sm text-gray-500">
+                    Faculty evaluations and review history will display here.
+                  </div>
+                )}
               </section>
             </div>
 

@@ -137,7 +137,7 @@ export const ProfileHeader = ({
           <div className="flex flex-col sm:flex-row sm:items-start md:items-center gap-6">
             {/* Avatar / Photo with Hover Camera Controls */}
             <div className="relative group shrink-0">
-              <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl overflow-hidden border-2 border-white/30 shadow-lg bg-white/10 flex items-center justify-center">
+              <div className="w-28 h-28 sm:w-36 sm:h-36 rounded-2xl sm:rounded-3xl overflow-hidden border-2 border-white/35 shadow-xl bg-white/10 flex items-center justify-center">
                 {avatarUrl ? (
                   <img
                     src={avatarUrl}
@@ -145,19 +145,19 @@ export const ProfileHeader = ({
                     className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                   />
                 ) : (
-                  <span className="text-white text-3xl sm:text-4xl font-extrabold select-none">
+                  <span className="text-white text-4xl sm:text-5xl font-extrabold select-none">
                     {name?.charAt(0).toUpperCase() || 'S'}
                   </span>
                 )}
               </div>
 
               {/* Hover Camera Controls */}
-              <div className="absolute inset-0 bg-[#12261E]/75 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-1.5 p-1">
+              <div className="absolute inset-0 bg-[#12261E]/75 rounded-2xl sm:rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2 p-1.5">
                 <button
                   type="button"
                   disabled={isUploadingAvatar}
                   onClick={() => avatarInputRef.current?.click()}
-                  className="p-1.5 bg-white text-[#13261E] rounded-lg shadow-sm hover:bg-[#F5F0E6] transition-transform hover:scale-105 cursor-pointer"
+                  className="p-2 bg-white text-[#13261E] rounded-xl shadow-sm hover:bg-[#F5F0E6] transition-transform hover:scale-105 cursor-pointer"
                   title="Change photo"
                 >
                   {isUploadingAvatar ? (
@@ -171,7 +171,7 @@ export const ProfileHeader = ({
                     type="button"
                     disabled={isUploadingAvatar}
                     onClick={onDeleteAvatar}
-                    className="p-1.5 bg-red-600/90 text-white rounded-lg shadow-sm hover:bg-red-700 transition-transform hover:scale-105 cursor-pointer"
+                    className="p-2 bg-red-600/90 text-white rounded-xl shadow-sm hover:bg-red-700 transition-transform hover:scale-105 cursor-pointer"
                     title="Remove photo"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
