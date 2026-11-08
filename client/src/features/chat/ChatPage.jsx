@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { useLocation } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import { useSocket } from '../../hooks/useSocket';
 import chatService from './services/chatService';
@@ -25,6 +26,8 @@ import {
 export const ChatPage = () => {
   const { user } = useAuth();
   const socket = useSocket();
+  const location = useLocation();
+  const directCompanyId = location.state?.companyId;
 
   const [conversations, setConversations] = useState([]);
   const [activeConversation, setActiveConversation] = useState(null);
@@ -80,7 +83,11 @@ export const ChatPage = () => {
   };
 
   useEffect(() => {
-    loadConversations(true);
+    if (directCompanyId && isStudent) {
+      loadConversations(false);
+    } else {
+      loadConversations(true);
+    }
     if (isStudent) {
       loadCompanies();
     }
@@ -108,6 +115,33 @@ export const ChatPage = () => {
       setIsLoadingMessages(false);
     }
   };
+
+  // Start new chat with a company
+  const handleStartChatWithCompany = useCallback(async (companyId) => {
+    try {
+      setIsStartingChat(true);
+      const conversation = await chatService.startConversation({ companyId });
+      setIsNewChatModalOpen(false);
+      await loadConversations();
+      if (conversation) {
+        selectConversation(conversation);
+      }
+    } catch (err) {
+      console.error('Failed to start conversation:', err);
+    } finally {
+      setIsStartingChat(false);
+    }
+  }, [loadConversations, selectConversation]);
+
+  const handledCompanyIdRef = useRef(null);
+
+  // Auto-initiate conversation if arrived from Search & Matching with companyId
+  useEffect(() => {
+    if (directCompanyId && isStudent && handledCompanyIdRef.current !== directCompanyId) {
+      handledCompanyIdRef.current = directCompanyId;
+      handleStartChatWithCompany(directCompanyId);
+    }
+  }, [directCompanyId, isStudent, handleStartChatWithCompany]);
 
   // Join/leave conversation socket rooms
   useEffect(() => {
@@ -239,20 +273,7 @@ export const ChatPage = () => {
     }, 2000);
   };
 
-  // Start new chat with a company
-  const handleStartChatWithCompany = async (companyId) => {
-    try {
-      setIsStartingChat(true);
-      const conversation = await chatService.startConversation({ companyId });
-      setIsNewChatModalOpen(false);
-      await loadConversations();
-      selectConversation(conversation);
-    } catch (err) {
-      console.error('Failed to start conversation:', err);
-    } finally {
-      setIsStartingChat(false);
-    }
-  };
+
 
   // Helper to format conversation participant name & avatar
   const getParticipantInfo = (conv) => {
