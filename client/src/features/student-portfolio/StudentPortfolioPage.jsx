@@ -37,6 +37,8 @@ import {
   Edit3,
   Star,
   ExternalLink,
+  Share2,
+  Check,
 } from 'lucide-react';
 import { ReputationAndReviewsCard } from '../verification-rating';
 
@@ -113,10 +115,24 @@ export const StudentPortfolioPage = () => {
   const [isUploadingCv, setIsUploadingCv] = useState(false);
   const [isDeletingCv, setIsDeletingCv] = useState(false);
   const [feedback, setFeedback] = useState({ type: '', message: '' });
+  const [copiedShare, setCopiedShare] = useState(false);
 
   const showFeedback = (type, message) => {
     setFeedback({ type, message });
     setTimeout(() => setFeedback({ type: '', message: '' }), 4500);
+  };
+
+  const handleSharePortfolio = () => {
+    const studentId = studentUserId;
+    if (!studentId) {
+      showFeedback('error', 'Unable to determine your student ID for sharing.');
+      return;
+    }
+    const publicUrl = `${window.location.origin}/portfolio/${studentId}`;
+    navigator.clipboard.writeText(publicUrl);
+    setCopiedShare(true);
+    showFeedback('success', `Public portfolio link copied to clipboard: ${publicUrl}`);
+    setTimeout(() => setCopiedShare(false), 3000);
   };
 
   const handleTabChange = (newTab) => {
@@ -433,6 +449,13 @@ export const StudentPortfolioPage = () => {
       onClick: () => setIsEditModalOpen(true),
     },
     {
+      icon: <Share2 className="w-4 h-4 text-[#1E3B2F]" />,
+      iconBg: 'bg-[#C8B48A]/20',
+      label: 'Share Public Portfolio',
+      subtitle: 'Copy live portfolio link for CV or LinkedIn',
+      onClick: handleSharePortfolio,
+    },
+    {
       icon: <Search className="w-4 h-4 text-[#1E3B2F]" />,
       iconBg: 'bg-[#C8B48A]/20',
       label: 'Find Matching Internships',
@@ -492,7 +515,26 @@ export const StudentPortfolioPage = () => {
           </p>
         </div>
 
-        <div className="flex items-center gap-2.5 shrink-0">
+        <div className="flex items-center gap-2.5 shrink-0 flex-wrap">
+          <Button
+            onClick={handleSharePortfolio}
+            variant="secondary"
+            size="md"
+            className="gap-2 shadow-xs border-[#C8B48A]/50 text-[#1E3B2F] hover:bg-[#F5F0E6]"
+            title="Copy public link to share on CV or LinkedIn"
+          >
+            {copiedShare ? (
+              <>
+                <Check className="w-4 h-4 text-emerald-600" />
+                <span className="text-emerald-700 font-bold">Link Copied!</span>
+              </>
+            ) : (
+              <>
+                <Share2 className="w-4 h-4 text-[#1E3B2F]" />
+                <span>Share Portfolio</span>
+              </>
+            )}
+          </Button>
           <Button
             onClick={() => navigate('/search')}
             variant="secondary"

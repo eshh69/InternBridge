@@ -10,6 +10,7 @@ import { LoginPage } from '../features/auth/LoginPage';
 import { RegisterPage } from '../features/auth/RegisterPage';
 import { AuthCallbackPage } from '../features/auth/AuthCallbackPage';
 import { StudentPortfolioPage } from '../features/student-portfolio/StudentPortfolioPage';
+import { PublicPortfolioPage } from '../features/student-portfolio/PublicPortfolioPage';
 import { CompanyInternshipsPage } from '../features/company-internships/CompanyInternshipsPage';
 import { SearchMatchingPage } from '../features/search-matching/SearchMatchingPage';
 import { ApplicationsPage } from '../features/applications/ApplicationsPage';
@@ -50,6 +51,7 @@ export const AppRoutes = () => {
         <Route path="register" element={<RegisterPage />} />
         <Route path="auth/callback" element={<AuthCallbackPage />} />
         <Route path="search" element={<SearchMatchingPage />} />
+        <Route path="portfolio/:id" element={<PublicPortfolioPage />} />
 
         {/* Module 4: Application & Recruitment (Instantly testable & role-adaptive) */}
         <Route path="applications" element={<ApplicationsPage />} />
