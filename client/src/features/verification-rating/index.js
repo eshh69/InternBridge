@@ -8,6 +8,7 @@ export { StarRating } from './components/StarRating';
 export { VerificationStatusBadge } from './components/VerificationStatusBadge';
 export { VerificationRequestModal } from './components/VerificationRequestModal';
 export { ReviewSubmissionModal } from './components/ReviewSubmissionModal';
+export { CandidateProfilePreviewModal } from './components/CandidateProfilePreviewModal';
 export { ReviewList } from './components/ReviewList';
 export { ReputationMetricsDashboard } from './components/ReputationMetricsDashboard';
 export { VerificationRatingPage } from './VerificationRatingPage';

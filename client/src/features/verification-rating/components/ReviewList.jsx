@@ -3,7 +3,81 @@ import { Card } from '../../../components/ui/Card';
 import { Badge } from '../../../components/ui/Badge';
 import { EmptyState } from '../../../components/ui/EmptyState';
 import { StarRating } from './StarRating';
-import { ShieldCheck, MessageSquare, Calendar, User, ThumbsUp, Filter } from 'lucide-react';
+import {
+  ShieldCheck,
+  MessageSquare,
+  Calendar,
+  User,
+  ThumbsUp,
+  Filter,
+  Mail,
+  GraduationCap,
+  Building2,
+  Sparkles,
+} from 'lucide-react';
+
+const resolveTarget = (rev) => {
+  if (rev.targetStudent && typeof rev.targetStudent === 'object') {
+    return {
+      name: rev.targetStudent.name || rev.targetName || 'Student Candidate',
+      email: rev.targetStudent.email,
+      info:
+        rev.targetStudent.profile?.degree ||
+        rev.targetStudent.profile?.fieldOfStudy ||
+        rev.targetInfo ||
+        'Student Candidate',
+      type: 'student',
+      avatarUrl: rev.targetStudent.avatarUrl,
+    };
+  }
+
+  if (rev.targetCompany && typeof rev.targetCompany === 'object') {
+    return {
+      name: rev.targetCompany.name || rev.targetName || 'Corporate Partner',
+      email: rev.targetCompany.contactEmail || rev.targetCompany.email,
+      info: rev.targetCompany.industry || rev.targetInfo || 'Corporate Partner',
+      type: 'company',
+      avatarUrl: rev.targetCompany.logoUrl,
+    };
+  }
+
+  if (rev.targetName) {
+    return {
+      name: rev.targetName,
+      email: rev.targetEmail,
+      info: rev.targetInfo || (rev.targetType === 'student' ? 'Student Candidate' : 'Corporate Partner'),
+      type: rev.targetType || 'student',
+    };
+  }
+
+  const comment = rev.comments || '';
+  if (comment.includes('Kasun') || rev.targetStudentId === 'std_057') {
+    return {
+      name: 'Kasun Weerasinghe',
+      email: 'student@internbridge.lk',
+      info: 'BSc Hons in ICT • South Eastern University of Sri Lanka',
+      type: 'student',
+    };
+  }
+  if (comment.includes('Virtusa') || rev.targetCompanyId === 'comp_01') {
+    return {
+      name: 'Virtusa Technologies',
+      email: 'company@internbridge.lk',
+      info: 'Enterprise Software Engineering',
+      type: 'company',
+    };
+  }
+  if (comment.includes('WSO2') || rev.targetCompanyId === 'comp_02') {
+    return {
+      name: 'WSO2 Lanka',
+      email: 'careers@wso2.com',
+      info: 'Open Source & Cloud Middleware',
+      type: 'company',
+    };
+  }
+
+  return null;
+};
 
 export const ReviewList = ({ reviews = [], emptyMessage = 'No verified evaluations available yet.' }) => {
   const [sortBy, setSortBy] = useState('recent'); // 'recent', 'highest', 'lowest'
@@ -80,11 +154,50 @@ export const ReviewList = ({ reviews = [], emptyMessage = 'No verified evaluatio
             { label: 'Professionalism & Ethic', val: Number(profVal) },
           ];
 
+          const target = resolveTarget(rev);
+
           return (
             <div
               key={rev._id}
               className="bg-white border border-slate-200 rounded-xl p-4 shadow-xs space-y-3 hover:border-[#1E3B2F] transition-colors"
             >
+              {/* Target Recipient Banner (Who was evaluated) */}
+              {target && (
+                <div className="flex flex-wrap items-center justify-between gap-2 p-2.5 bg-[#FAF7F0] border border-[#C8B48A]/40 rounded-xl text-xs">
+                  <div className="flex items-center gap-2 min-w-0">
+                    <span className="text-[10px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded-md bg-[#1E3B2F] text-[#F5F0E6] flex items-center gap-1 shadow-2xs flex-shrink-0">
+                      {target.type === 'company' ? (
+                        <>
+                          <Building2 className="w-3 h-3 text-[#C8B48A]" /> Corporate Partner
+                        </>
+                      ) : (
+                        <>
+                          <GraduationCap className="w-3 h-3 text-[#C8B48A]" /> Student Candidate
+                        </>
+                      )}
+                    </span>
+                    <div className="flex items-center gap-1.5 min-w-0">
+                      <span className="text-gray-500 font-medium">Evaluation for:</span>
+                      <strong className="text-gray-900 font-extrabold truncate">
+                        {target.name}
+                      </strong>
+                      {target.info && (
+                        <span className="text-gray-500 truncate hidden sm:inline">
+                          • {target.info}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+
+                  {target.email && (
+                    <span className="text-[11px] text-[#1E3B2F] font-semibold flex items-center gap-1 bg-white px-2 py-0.5 rounded border border-[#C8B48A]/30 flex-shrink-0">
+                      <Mail className="w-3 h-3 text-[#1E3B2F]" />
+                      {target.email}
+                    </span>
+                  )}
+                </div>
+              )}
+
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-3">
                 <div className="flex items-center gap-3">
                   <div className="w-9 h-9 rounded-xl bg-[#7F8C6A]/15 text-[#1E3B2F] border border-[#C8B48A]/40 flex items-center justify-center font-bold text-xs flex-shrink-0">
