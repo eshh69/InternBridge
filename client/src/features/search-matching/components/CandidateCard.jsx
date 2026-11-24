@@ -40,9 +40,7 @@ export const CandidateCard = ({ candidate, queriedSkills = [] }) => {
   return (
     <Card className="hover:border-[#1E3B2F] hover:shadow-md transition-all duration-200 border-[#C8B48A]/35 bg-white rounded-2xl">
       <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
-        {/* Left: Avatar & Candidate Info */}
         <div className="flex items-start gap-3.5">
-          {/* Avatar */}
           <div className="w-12 h-12 rounded-full bg-[#1E3B2F] text-[#F5F0E6] font-bold text-lg flex items-center justify-center flex-shrink-0 shadow-sm overflow-hidden">
             {user?.avatarUrl ? (
               <img
@@ -80,7 +78,6 @@ export const CandidateCard = ({ candidate, queriedSkills = [] }) => {
           </div>
         </div>
 
-        {/* Right: Match Score & Rating */}
         <div className="flex sm:flex-col items-center sm:items-end justify-between sm:justify-start gap-2">
           {matchScore !== undefined && matchScore !== null && (
             <Badge
@@ -93,7 +90,6 @@ export const CandidateCard = ({ candidate, queriedSkills = [] }) => {
             </Badge>
           )}
 
-          {/* Reputation / Rating */}
           <div className="flex items-center gap-1.5 text-xs text-amber-600 font-medium">
             <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
             <span>{reputationScore ? reputationScore.toFixed(1) : '5.0'}</span>
@@ -102,7 +98,6 @@ export const CandidateCard = ({ candidate, queriedSkills = [] }) => {
         </div>
       </div>
 
-      {/* Skills list */}
       <div className="mt-4 pt-3 border-t border-gray-100">
         <div className="flex flex-wrap items-center gap-1.5">
           <span className="text-xs text-gray-400 mr-1 font-medium">Skills:</span>
@@ -132,7 +127,6 @@ export const CandidateCard = ({ candidate, queriedSkills = [] }) => {
         </div>
       </div>
 
-      {/* Footer Info & Message Button */}
       <div className="mt-4 pt-3 border-t border-gray-100 flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-4 text-xs text-gray-600">
           {gpa && (

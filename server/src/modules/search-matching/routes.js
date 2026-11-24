@@ -16,17 +16,10 @@ import {
 const router = express.Router();
 export const matchRoutes = express.Router();
 
-/**
- * Helper to safely escape regex special characters
- */
 const escapeRegex = (str = '') => {
   return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 };
 
-/**
- * Helper to extract student profile if a valid Bearer token is provided
- * Returns student profile or null
- */
 const getOptionalStudentProfile = async (req) => {
   try {
     let token;
@@ -56,9 +49,6 @@ const getOptionalStudentProfile = async (req) => {
   }
 };
 
-/**
- * Handler for GET /internships (Search & Filtering with optional student match calculation)
- */
 const handleSearchInternships = async (req, res) => {
   try {
     const {
@@ -76,7 +66,6 @@ const handleSearchInternships = async (req, res) => {
 
     const filter = { status: 'published' };
 
-    // Keyword search across title, description, area, and location
     if (keyword && keyword.trim()) {
       const escaped = escapeRegex(keyword.trim());
       const regex = new RegExp(escaped, 'i');
@@ -88,7 +77,6 @@ const handleSearchInternships = async (req, res) => {
       ];
     }
 
-    // Skills filter (comma-separated list)
     if (skills && skills.trim()) {
       const skillsArray = skills
         .split(',')
@@ -104,7 +92,6 @@ const handleSearchInternships = async (req, res) => {
               queryVariants.add(alias);
             }
           }
-          // Handle HTML/CSS joint skill variants
           if (['html', 'css', 'html5', 'css3', 'html & css'].includes(s)) {
             queryVariants.add('html & css');
             queryVariants.add('html');
@@ -112,37 +99,30 @@ const handleSearchInternships = async (req, res) => {
           }
         }
 
-        // Find internships that require any of the queried skills
         filter.requiredSkills = {
           $in: Array.from(queryVariants).map((s) => new RegExp(`^${escapeRegex(s)}$`, 'i')),
         };
       }
     }
 
-    // Location type filter
     if (locationType && locationType !== 'All' && ['On-site', 'Remote', 'Hybrid'].includes(locationType)) {
       filter.locationType = locationType;
     }
 
-    // Area / Discipline filter
     if (area && area !== 'All' && area.trim()) {
       filter.area = new RegExp(escapeRegex(area.trim()), 'i');
     }
 
-    // Duration filter
     if (durationMonths && !isNaN(Number(durationMonths))) {
       filter.durationMonths = { $lte: Number(durationMonths) };
     }
 
-    // Stipend filter
     if (isPaid === 'true') {
       filter['stipend.isPaid'] = true;
     }
 
-    // Optional student context for personalized match scoring
     const studentProfile = await getOptionalStudentProfile(req);
 
-    // Sorting definition
     let sortOptions = { createdAt: -1 };
     if (sort === 'deadline') {
       sortOptions = { deadline: 1 };
@@ -155,7 +135,6 @@ const handleSearchInternships = async (req, res) => {
     const pageNum = Math.max(1, parseInt(page, 10) || 1);
     const limitNum = Math.max(1, Math.min(50, parseInt(limit, 10) || 10));
 
-    // If sorting by highest match and student profile exists, score all matching docs in-memory
     if (sort === 'highest_match' && studentProfile) {
       const allInternships = await Internship.find(filter)
         .populate('company', 'name logoUrl location industry description website verificationStatus reputationScore reviewCount')
@@ -173,7 +152,6 @@ const handleSearchInternships = async (req, res) => {
         };
       });
 
-      // Filter by minMatch threshold if requested
       if (minMatch && !isNaN(Number(minMatch))) {
         const threshold = Number(minMatch);
         scoredItems = scoredItems.filter((item) => item.matchScore >= threshold);
@@ -196,7 +174,6 @@ const handleSearchInternships = async (req, res) => {
       });
     }
 
-    // Standard database pagination query
     const total = await Internship.countDocuments(filter);
     const pages = Math.ceil(total / limitNum) || 1;
 
@@ -207,7 +184,6 @@ const handleSearchInternships = async (req, res) => {
       .populate('company', 'name logoUrl location industry description website verificationStatus reputationScore reviewCount')
       .lean();
 
-    // Augment with match score if student is authenticated
     const items = rawInternships.map((item) => {
       if (studentProfile) {
         const matchResult = calculateInternshipMatch(studentProfile, item);
@@ -238,9 +214,6 @@ const handleSearchInternships = async (req, res) => {
   }
 };
 
-/**
- * Handler for Candidate Search
- */
 const handleSearchStudents = async (req, res) => {
   try {
     const {
@@ -348,9 +321,6 @@ const handleSearchStudents = async (req, res) => {
   }
 };
 
-/**
- * Handler for Student Ranked Match Recommendations
- */
 const handleStudentMatchRecommendations = async (req, res) => {
   try {
     const studentProfile = await StudentProfile.findOne({ user: req.user._id }).lean();
@@ -401,9 +371,6 @@ const handleStudentMatchRecommendations = async (req, res) => {
   }
 };
 
-/**
- * Handler for Internship Candidate Matching (Company post)
- */
 const handlePostCandidateMatching = async (req, res) => {
   try {
     const { id } = req.params;
@@ -470,17 +437,11 @@ const handlePostCandidateMatching = async (req, res) => {
   }
 };
 
-/**
- * Wire routes to router (mounted at /api/v1/search)
- */
 router.get('/internships', handleSearchInternships);
 router.get('/students', protect, authorize('company', 'admin'), handleSearchStudents);
 router.get('/match/internships', protect, authorize('student'), handleStudentMatchRecommendations);
 router.get('/match/internship/:id/candidates', protect, authorize('company', 'admin'), handlePostCandidateMatching);
 
-/**
- * Wire routes to matchRoutes (mounted at /api/v1/match)
- */
 matchRoutes.get('/internships', protect, authorize('student'), handleStudentMatchRecommendations);
 matchRoutes.get('/internship/:id/candidates', protect, authorize('company', 'admin'), handlePostCandidateMatching);
 

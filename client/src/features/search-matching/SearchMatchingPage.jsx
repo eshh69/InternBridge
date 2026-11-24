@@ -107,57 +107,45 @@ export const SearchMatchingPage = () => {
   const isStudent = user?.role === 'student';
   const isCompany = user?.role === 'company' || user?.role === 'admin';
 
-  // Logged-in student profile skills from Member 1 Portfolio
   const [studentSkills, setStudentSkills] = useState([]);
   const [studentProfileLoaded, setStudentProfileLoaded] = useState(false);
 
-  // Navigation tab state
-  // Navigation tab state - recruiters default to 'candidates' so they immediately see the talent pool
   const [activeTab, setActiveTab] = useState(() =>
     user?.role === 'company' ? 'candidates' : 'all_internships'
   );
 
-  // Auto-switch to candidates view if user role resolves as company
   useEffect(() => {
     if (user?.role === 'company' && activeTab === 'all_internships') {
       setActiveTab('candidates');
     }
   }, [user?.role]);
 
-  // View mode state: 'list' (default, stacked) or 'grid' (2 columns)
   const [viewMode, setViewMode] = useState('list');
 
-  // Search keyword state & debounced query
   const [searchTerm, setSearchTerm] = useState('');
   const debouncedSearchTerm = useDebounce(searchTerm, 350);
 
-  // Filters & sorting state
   const [filters, setFilters] = useState(INITIAL_FILTERS);
   const [sortOption, setSortOption] = useState(isStudent ? 'highest_match' : 'newest');
   const [page, setPage] = useState(1);
 
-  // Results & UI state
   const [items, setItems] = useState([]);
   const [pagination, setPagination] = useState({ total: 0, page: 1, limit: 10, pages: 1 });
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
 
-  // Modal inspection state
   const [selectedInternship, setSelectedInternship] = useState(null);
 
-  // Random hero image state (selects randomly on page load/refresh)
   const [currentHeroIndex] = useState(() =>
     Math.floor(Math.random() * HERO_IMAGES.length)
   );
 
-  // Handle individual filter changes
   const handleFilterChange = (key, value) => {
     setFilters((prev) => ({ ...prev, [key]: value }));
     setPage(1);
   };
 
-  // Reset all filters
   const handleResetFilters = () => {
     setFilters(INITIAL_FILTERS);
     setSearchTerm('');
@@ -165,12 +153,10 @@ export const SearchMatchingPage = () => {
     setSortOption(isStudent ? 'highest_match' : 'newest');
   };
 
-  // Remove single active filter
   const handleRemoveFilter = (key) => {
     handleFilterChange(key, INITIAL_FILTERS[key]);
   };
 
-  // Fetch results based on active tab and query options
   const fetchResults = useCallback(async () => {
     setIsLoading(true);
     setError(null);
@@ -229,7 +215,6 @@ export const SearchMatchingPage = () => {
     fetchResults();
   }, [fetchResults]);
 
-  // Load logged-in student's saved competencies from Member 1 StudentProfile
   useEffect(() => {
     if (isStudent && isAuthenticated) {
       apiClient
@@ -287,7 +272,6 @@ export const SearchMatchingPage = () => {
 
   return (
     <div className="space-y-6">
-      {/* Tab Switcher on Top */}
       <div className="flex items-center justify-between">
         <div className="flex items-center bg-gray-100 p-1 rounded-xl border border-[#C8B48A]/40">
           <button
@@ -340,7 +324,6 @@ export const SearchMatchingPage = () => {
           )}
         </div>
 
-        {/* Guest sign-in callout */}
         {!isAuthenticated && (
           <button
             onClick={() => navigate('/login')}
@@ -351,7 +334,6 @@ export const SearchMatchingPage = () => {
         )}
       </div>
 
-      {/* Student Profile Skills Quick-Match Banner */}
       {isStudent && studentSkills.length > 0 && (
         <div className="bg-gradient-to-r from-[#7F8C6A]/20 via-[#F5F0E6] to-white rounded-xl border border-[#C8B48A]/40 p-4 sm:p-5 flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-2xs">
           <div className="flex items-start gap-3.5">
@@ -435,9 +417,7 @@ export const SearchMatchingPage = () => {
         </div>
       )}
 
-      {/* Main Two-Column Layout */}
       <div className="flex flex-col md:flex-row gap-6 items-start">
-        {/* LEFT COLUMN: FILTER SIDEBAR */}
         <FilterSidebar
           mode={activeTab === 'candidates' ? 'candidates' : 'internships'}
           filters={filters}
@@ -456,11 +436,8 @@ export const SearchMatchingPage = () => {
           }}
         />
 
-        {/* RIGHT COLUMN: HERO BANNER + SEARCH ROW + OPPORTUNITY CARDS */}
         <div className="flex-1 w-full space-y-4">
-          {/* 1. HERO SECTION WITH MOTIVATION GRAPHIC */}
           <div className="bg-white rounded-2xl border border-[#C8B48A]/35 shadow-xs relative overflow-hidden flex flex-col md:flex-row md:items-stretch justify-between">
-            {/* Left Content */}
             <div className="p-6 md:py-6 md:pl-7 md:pr-4 flex-1 flex flex-col justify-center z-10 max-w-xl space-y-1.5">
               <span className="text-[11px] font-bold tracking-widest text-gray-400 uppercase">
                 YOUR SKILLS • OUR NETWORK • BETTER FUTURE
@@ -473,7 +450,6 @@ export const SearchMatchingPage = () => {
               </p>
             </div>
 
-            {/* Right Side Rotating Hero Gallery - Fits Entire Right Half of Card */}
             <div className="relative flex-shrink-0 w-full md:w-[360px] lg:w-[440px] xl:w-[480px] h-40 md:h-auto self-stretch overflow-hidden group select-none">
               {HERO_IMAGES.map((imgSrc, idx) => (
                 <img
@@ -489,14 +465,11 @@ export const SearchMatchingPage = () => {
                 />
               ))}
 
-              {/* Seamless soft gradient blend between white card and image */}
               <div className="hidden md:block absolute inset-y-0 left-0 w-16 bg-gradient-to-r from-white via-white/50 to-transparent pointer-events-none z-10" />
             </div>
           </div>
 
-          {/* 2. SEARCH BAR & CONTROLS ROW */}
           <div className="bg-white rounded-xl border border-[#C8B48A]/35 shadow-xs p-2.5 flex flex-col sm:flex-row items-center gap-2">
-            {/* Keyword Input */}
             <div className="relative flex-1 w-full">
               <Search className="w-4 h-4 text-gray-400 absolute left-3.5 top-3" />
               <input
@@ -520,7 +493,6 @@ export const SearchMatchingPage = () => {
               )}
             </div>
 
-            {/* Mobile Filter Toggle Button */}
             <button
               type="button"
               onClick={() => setIsMobileFiltersOpen(true)}
@@ -534,7 +506,6 @@ export const SearchMatchingPage = () => {
               )}
             </button>
 
-            {/* Location Dropdown */}
             <div className="relative w-full sm:w-44 border-t sm:border-t-0 sm:border-l border-[#C8B48A]/40 pt-2 sm:pt-0 sm:pl-2">
               <div className="relative">
                 <select
@@ -552,7 +523,6 @@ export const SearchMatchingPage = () => {
               </div>
             </div>
 
-            {/* Sort / Relevance Dropdown */}
             <div className="relative w-full sm:w-40 border-t sm:border-t-0 sm:border-l border-[#C8B48A]/40 pt-2 sm:pt-0 sm:pl-2">
               <div className="relative">
                 <select
@@ -573,13 +543,11 @@ export const SearchMatchingPage = () => {
             </div>
           </div>
 
-          {/* 3. RESULTS HEADER (Count & View Switcher) */}
           <div className="flex items-center justify-between text-xs text-gray-600 px-1 pt-1">
             <span className="font-bold text-gray-900 text-sm">
               {pagination.total} opportunities found
             </span>
 
-            {/* Grid vs List View Mode Toggle */}
             <div className="flex items-center gap-1 bg-gray-100 p-0.5 rounded-lg border border-[#C8B48A]/40">
               <button
                 type="button"
@@ -608,14 +576,12 @@ export const SearchMatchingPage = () => {
             </div>
           </div>
 
-          {/* Loading State */}
           {isLoading && (
             <div className="flex justify-center items-center py-24 bg-white rounded-xl border border-[#C8B48A]/40">
               <Spinner size="lg" />
             </div>
           )}
 
-          {/* Error State */}
           {error && !isLoading && (
             <Alert type="danger" title="Search Error">
               <p>{error}</p>
@@ -629,7 +595,6 @@ export const SearchMatchingPage = () => {
             </Alert>
           )}
 
-          {/* Empty State */}
           {!isLoading && !error && items.length === 0 && (
             <div className="bg-white rounded-xl border border-[#C8B48A]/40 p-10">
               <EmptyState
@@ -642,7 +607,6 @@ export const SearchMatchingPage = () => {
             </div>
           )}
 
-          {/* 4. OPPORTUNITY CARDS FEED (List View or Grid View) */}
           {!isLoading && !error && activeTab !== 'candidates' && items.length > 0 && (
             <div
               className={
@@ -666,7 +630,6 @@ export const SearchMatchingPage = () => {
             </div>
           )}
 
-          {/* Candidates Feed (For Recruiters) */}
           {!isLoading && !error && activeTab === 'candidates' && items.length > 0 && (
             <div className="space-y-4">
               {items.map((candidate) => (
@@ -683,10 +646,8 @@ export const SearchMatchingPage = () => {
             </div>
           )}
 
-          {/* 5. BOTTOM PAGINATION & HANDWRITTEN CALLOUT */}
           {!isLoading && items.length > 0 && (
             <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-[#C8B48A]/40">
-              {/* Left: Showing count */}
               <span className="text-xs text-gray-500 font-medium">
                 Showing{' '}
                 {pagination.total > 0
@@ -698,7 +659,6 @@ export const SearchMatchingPage = () => {
                 of {pagination.total} opportunities
               </span>
 
-              {/* Center: Pagination Buttons */}
               <div className="flex items-center gap-1.5">
                 <button
                   type="button"
@@ -733,7 +693,6 @@ export const SearchMatchingPage = () => {
                 </button>
               </div>
 
-              {/* Right: Handwritten Motivation Callout */}
               <div className="hidden sm:flex items-center gap-1 text-xs text-[#1E3B2F] font-bold select-none">
                 <span
                   style={{
@@ -749,7 +708,6 @@ export const SearchMatchingPage = () => {
         </div>
       </div>
 
-      {/* Internship Full Details Modal */}
       <InternshipDetailModal
         isOpen={Boolean(selectedInternship)}
         onClose={() => setSelectedInternship(null)}

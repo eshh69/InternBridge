@@ -96,7 +96,7 @@ const formatSkillName = (s = '') => {
 };
 
 export const FilterSidebar = ({
-  mode = 'internships', // 'internships' | 'candidates'
+  mode = 'internships', 
   filters,
   onChange,
   onReset,
@@ -131,7 +131,6 @@ export const FilterSidebar = ({
 
   const content = (
     <div className="space-y-6">
-      {/* Sidebar Header */}
       <div className="flex items-center justify-between pb-3 border-b border-gray-100">
         <div className="flex items-center gap-2">
           <Filter className="w-4 h-4 text-gray-700" />
@@ -155,7 +154,6 @@ export const FilterSidebar = ({
         </div>
       </div>
 
-      {/* 1. MATCH SCORE SLIDER */}
       <div className="space-y-2">
         <div className="flex items-center justify-between">
           <label className="text-xs font-semibold text-gray-800 flex items-center gap-1.5">
@@ -181,7 +179,6 @@ export const FilterSidebar = ({
         </div>
       </div>
 
-      {/* 2. OPPORTUNITY TYPE (WORKPLACE / EMPLOYMENT) */}
       {mode === 'internships' && (
         <div className="space-y-2.5">
           <label className="text-xs font-semibold text-gray-800 flex items-center gap-1.5">
@@ -232,7 +229,6 @@ export const FilterSidebar = ({
         </div>
       )}
 
-      {/* 3. LOCATION DROPDOWN */}
       <div className="space-y-1.5">
         <label className="text-xs font-semibold text-gray-800 flex items-center gap-1.5">
           <MapPin className="w-3.5 h-3.5 text-gray-500" /> Location
@@ -259,7 +255,6 @@ export const FilterSidebar = ({
         </div>
       </div>
 
-      {/* 4. STIPEND / SALARY RANGE */}
       <div className="space-y-1.5">
         <label className="text-xs font-semibold text-gray-800 flex items-center gap-1.5">
           <Banknote className="w-3.5 h-3.5 text-gray-500" /> Stipend / Salary Range
@@ -274,7 +269,6 @@ export const FilterSidebar = ({
         </select>
       </div>
 
-      {/* 5. DURATION PILL BUTTONS */}
       <div className="space-y-2">
         <label className="text-xs font-semibold text-gray-800 flex items-center gap-1.5">
           <Clock className="w-3.5 h-3.5 text-gray-500" /> Duration
@@ -305,7 +299,6 @@ export const FilterSidebar = ({
         </div>
       </div>
 
-      {/* 6. STUDENT PORTFOLIO SKILLS (1-Click Personalized Matching) */}
       {isStudent && studentSkills && studentSkills.length > 0 && (
         <div className="p-3 bg-gradient-to-br from-[#7F8C6A]/20 to-[#F5F0E6] rounded-xl border border-[#C8B48A]/40 space-y-2.5">
           <div className="flex items-center justify-between">
@@ -374,7 +367,6 @@ export const FilterSidebar = ({
         </div>
       )}
 
-      {/* 7. ALL SKILLS & TECHNOLOGIES */}
       <div className="space-y-2.5">
         <div className="flex items-center justify-between">
           <label className="text-xs font-semibold text-gray-800 flex items-center gap-1.5">
@@ -414,7 +406,6 @@ export const FilterSidebar = ({
         </div>
       </div>
 
-      {/* 7. RESET FILTERS BUTTON */}
       <div className="pt-2">
         <button
           type="button"
@@ -429,14 +420,12 @@ export const FilterSidebar = ({
 
   return (
     <>
-      {/* Desktop Sidebar Panel */}
       <aside className="hidden md:block w-64 lg:w-72 flex-shrink-0">
         <div className="sticky top-20 bg-white rounded-xl border border-[#C8B48A]/40/90 shadow-xs p-5">
           {content}
         </div>
       </aside>
 
-      {/* Mobile Drawer Panel */}
       {isMobileOpen && (
         <div className="fixed inset-0 z-50 md:hidden flex">
           <div

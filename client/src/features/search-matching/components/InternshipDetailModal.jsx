@@ -122,7 +122,6 @@ export const InternshipDetailModal = ({
       }
     >
       <div className="space-y-6">
-        {/* Header Block */}
         <div className="flex items-start justify-between gap-4">
           <div className="flex items-start gap-3.5">
             <div className="w-14 h-14 rounded-xl bg-[#F5F0E6] border border-[#C8B48A]/40 flex items-center justify-center flex-shrink-0 text-[#1E3B2F] font-bold text-xl overflow-hidden shadow-xs">
@@ -154,7 +153,6 @@ export const InternshipDetailModal = ({
             </div>
           </div>
 
-          {/* Match Score Badge */}
           {matchScore !== undefined && matchScore !== null && (
             <div className="text-right">
               <Badge
@@ -170,7 +168,6 @@ export const InternshipDetailModal = ({
           )}
         </div>
 
-        {/* Quick Facts Grid */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           <div className="bg-gray-50 p-3 rounded-xl border border-gray-100">
             <span className="text-[11px] font-medium text-gray-400 uppercase tracking-wider block mb-1">
@@ -213,7 +210,6 @@ export const InternshipDetailModal = ({
           </div>
         </div>
 
-        {/* Skill Gap Analysis (for student) */}
         {isStudent && matchScore !== undefined && (
           <div className="bg-gradient-to-br from-[#7F8C6A]/15 to-[#F5F0E6]/60 p-4 rounded-xl border border-[#C8B48A]/40 space-y-3">
             <div className="flex items-center justify-between">
@@ -225,7 +221,6 @@ export const InternshipDetailModal = ({
               </span>
             </div>
 
-            {/* Matched Skills */}
             {matchedSkills.length > 0 && (
               <div>
                 <span className="text-[11px] font-semibold text-gray-700 block mb-1">
@@ -244,7 +239,6 @@ export const InternshipDetailModal = ({
               </div>
             )}
 
-            {/* Missing Skills */}
             {missingSkills.length > 0 && (
               <div>
                 <span className="text-[11px] font-semibold text-amber-800 block mb-1">
@@ -265,7 +259,6 @@ export const InternshipDetailModal = ({
           </div>
         )}
 
-        {/* Description */}
         <div className="space-y-2">
           <h4 className="text-sm font-bold text-gray-900 flex items-center gap-1.5">
             <Briefcase className="w-4 h-4 text-[#1E3B2F]" /> Role Description
@@ -275,7 +268,6 @@ export const InternshipDetailModal = ({
           </p>
         </div>
 
-        {/* Qualifications */}
         {qualifications && qualifications.length > 0 && (
           <div className="space-y-2">
             <h4 className="text-sm font-bold text-gray-900">
@@ -295,7 +287,6 @@ export const InternshipDetailModal = ({
           </div>
         )}
 
-        {/* Company About */}
         {company?.description && (
           <div className="p-3.5 bg-gray-50 rounded-xl border border-gray-100 space-y-1">
             <h4 className="text-xs font-bold text-gray-900 flex items-center gap-1.5">

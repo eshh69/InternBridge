@@ -15,7 +15,6 @@ import {
   MessageSquare,
 } from 'lucide-react';
 
-// Proper casing mapping for tech skill pills
 const SKILL_DISPLAY_NAMES = {
   javascript: 'JavaScript',
   'express.js': 'Express.js',
@@ -89,7 +88,6 @@ export const InternshipCard = ({
     missingSkills = [],
   } = internship;
 
-  // Format deadline date (e.g. "Dec 30, 2024")
   const formattedDeadline = deadline
     ? new Date(deadline).toLocaleDateString('en-US', {
         month: 'short',
@@ -98,7 +96,6 @@ export const InternshipCard = ({
       })
     : 'Open';
 
-  // Format stipend display cleanly (handles hourly rates e.g. $35/hr and monthly rates)
   const formatStipend = (stipend) => {
     if (!stipend?.isPaid) return 'Unpaid';
     const curr = (stipend.currency || 'LKR').trim();
@@ -114,7 +111,6 @@ export const InternshipCard = ({
     return `${curr} ${amt} / mo`;
   };
 
-  // Compute match pill properties
   const getMatchPill = () => {
     if (matchScore === undefined || matchScore === null) return null;
 
@@ -141,7 +137,6 @@ export const InternshipCard = ({
     );
   };
 
-  // Location / Workplace badge
   const getLocationTypeBadge = () => {
     switch (locationType) {
       case 'Remote':
@@ -202,7 +197,6 @@ export const InternshipCard = ({
 
   const hasSelectionOrMatch = matchedSet.size > 0;
 
-  // Only show the skills that the student selected/matched; hide all others!
   const displaySkills = hasSelectionOrMatch
     ? requiredSkills.filter((skill) => isSkillSelectedOrMatched(skill))
     : requiredSkills.slice(0, 6);
@@ -210,7 +204,6 @@ export const InternshipCard = ({
   return (
     <div className="bg-white rounded-2xl border border-[#C8B48A]/35 shadow-xs hover:border-[#1E3B2F] hover:shadow-md transition-all duration-200 p-5">
       <div className="flex items-start gap-4">
-        {/* Left: Clean Monogram / Logo Box */}
         <div className="w-14 h-14 rounded-xl bg-[#F5F0E6] text-[#1E3B2F] font-bold text-xl flex items-center justify-center flex-shrink-0 border border-[#C8B48A]/40 shadow-xs overflow-hidden select-none">
           {company?.logoUrl ? (
             <img
@@ -223,9 +216,7 @@ export const InternshipCard = ({
           )}
         </div>
 
-        {/* Right: Content Body */}
         <div className="flex-1 min-w-0 space-y-2">
-          {/* Row 1: Title, Badges, and Top-Right Deadline */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
             <div className="flex flex-wrap items-center gap-2">
               <h3
@@ -238,14 +229,12 @@ export const InternshipCard = ({
               {getMatchPill()}
             </div>
 
-            {/* Top-Right Calendar Deadline */}
             <span className="text-xs text-gray-400 flex items-center gap-1.5 flex-shrink-0 font-medium">
               <Calendar className="w-3.5 h-3.5 text-gray-400" />
               {formattedDeadline}
             </span>
           </div>
 
-          {/* Row 2: Subtitle: Company • Location • Area */}
           <div className="flex flex-wrap items-center gap-2 text-xs text-gray-500">
             <span className="font-semibold text-gray-800 flex items-center gap-1">
               <Building2 className="w-3.5 h-3.5 text-gray-400" />
@@ -273,14 +262,12 @@ export const InternshipCard = ({
             )}
           </div>
 
-          {/* Row 3: Description Snippet (1-2 lines) */}
           {description && (
             <p className="text-xs text-gray-500 line-clamp-2 leading-relaxed">
               {description}
             </p>
           )}
 
-          {/* Row 4: Skill Pills (Only show student selected/matched skills, hide all others, no green color, no checkmark) */}
           {displaySkills.length > 0 && (
             <div className="flex flex-wrap items-center gap-1.5 pt-0.5">
               {displaySkills.map((skill, idx) => (
@@ -294,9 +281,7 @@ export const InternshipCard = ({
             </div>
           )}
 
-          {/* Row 5: Bottom Footer Bar */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-3 border-t border-gray-100">
-            {/* Left Meta: Stipend, Duration, Openings */}
             <div className="flex flex-wrap items-center gap-4 text-xs text-gray-600">
               <span className="flex items-center gap-1 font-semibold text-gray-800">
                 <Banknote className="w-3.5 h-3.5 text-gray-500" />
@@ -312,7 +297,6 @@ export const InternshipCard = ({
               </span>
             </div>
 
-            {/* Right Actions: Save/Details + Apply Now */}
             <div className="flex items-center gap-2 self-end sm:self-auto">
               <button
                 type="button"

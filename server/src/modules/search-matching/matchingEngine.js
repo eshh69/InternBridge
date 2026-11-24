@@ -1,13 +1,4 @@
-/**
- * InternBridge — Search & Matching Engine
- * Module 3 (SEU/IS/22/ICT/035 - W.M.E. Saumya)
- *
- * Algorithmic matching calculation engine for comparing student profiles
- * against internship requirements with normalization, synonym mapping,
- * domain relevance, and project tech analysis.
- */
 
-// Canonical alias dictionary for tech skills
 export const SKILL_SYNONYMS = {
   javascript: ['javascript', 'js', 'ecmascript'],
   typescript: ['typescript', 'ts'],
@@ -49,7 +40,6 @@ export const SKILL_SYNONYMS = {
   linux: ['linux', 'bash', 'shell scripting'],
 };
 
-// Map each synonym back to its canonical key
 const SYNONYM_TO_CANONICAL = new Map();
 for (const [canonical, aliases] of Object.entries(SKILL_SYNONYMS)) {
   for (const alias of aliases) {
@@ -57,11 +47,6 @@ for (const [canonical, aliases] of Object.entries(SKILL_SYNONYMS)) {
   }
 }
 
-/**
- * Clean and canonicalize a skill name
- * @param {string} skill
- * @returns {string}
- */
 export const normalizeSkill = (skill) => {
   if (!skill) return '';
   const skillStr = typeof skill === 'string' ? skill : skill?.name || skill?.skill || '';
@@ -75,11 +60,6 @@ export const normalizeSkill = (skill) => {
   return SYNONYM_TO_CANONICAL.get(cleaned) || cleaned;
 };
 
-/**
- * Extract canonical skill sets from an array of skill strings
- * @param {Array<string>} skills
- * @returns {Set<string>}
- */
 export const getCanonicalSkillSet = (skills = []) => {
   const set = new Set();
   if (!Array.isArray(skills)) return set;
@@ -94,22 +74,13 @@ export const getCanonicalSkillSet = (skills = []) => {
   return set;
 };
 
-/**
- * Check if a candidate skill matches a required skill (exact, synonym, or partial)
- * @param {string} reqSkill - Normalized required skill
- * @param {Set<string>} studentSkillsSet - Set of normalized student skills
- * @param {Array<string>} rawStudentSkills - Original array for substring checking
- * @returns {{ matched: boolean, weight: number }}
- */
 const checkSkillMatch = (reqSkill, studentSkillsSet, rawStudentSkills = []) => {
   if (!reqSkill) return { matched: false, weight: 0 };
 
-  // 1. Exact canonical match
   if (studentSkillsSet.has(reqSkill)) {
     return { matched: true, weight: 1.0 };
   }
 
-  // 2. Check synonyms
   const aliases = SKILL_SYNONYMS[reqSkill] || [reqSkill];
   for (const alias of aliases) {
     if (studentSkillsSet.has(alias)) {
@@ -117,7 +88,6 @@ const checkSkillMatch = (reqSkill, studentSkillsSet, rawStudentSkills = []) => {
     }
   }
 
-  // 3. Substring / partial match (e.g. 'react' matching 'react native', or 'api' matching 'rest api')
   const reqLower = (typeof reqSkill === 'string' ? reqSkill : reqSkill?.name || '').toLowerCase();
   for (const raw of rawStudentSkills) {
     if (!raw) continue;
@@ -132,10 +102,6 @@ const checkSkillMatch = (reqSkill, studentSkillsSet, rawStudentSkills = []) => {
   return { matched: false, weight: 0 };
 };
 
-/**
- * Calculate keyword domain relevance score (0.0 to 1.0)
- * between student background and internship area/title
- */
 const calculateDomainBonus = (studentProfile, internship) => {
   if (!studentProfile || !internship) return 0.5;
 
@@ -161,9 +127,6 @@ const calculateDomainBonus = (studentProfile, internship) => {
   return 0.4;
 };
 
-/**
- * Check if student has demonstrated required skills in their projects
- */
 const calculateProjectExperienceBonus = (studentProjects = [], requiredSkills = []) => {
   if (!Array.isArray(studentProjects) || studentProjects.length === 0 || requiredSkills.length === 0) {
     return 0.5;
@@ -189,13 +152,6 @@ const calculateProjectExperienceBonus = (studentProjects = [], requiredSkills = 
   return projectMatches > 0 ? Math.min(1.0, projectMatches / Math.max(1, requiredSkills.length / 2)) : 0.2;
 };
 
-/**
- * Main matching algorithm: compare a student against an internship
- *
- * @param {Object} studentProfile - Mongoose doc or plain object
- * @param {Object} internship - Mongoose doc or plain object
- * @returns {Object} { matchScore, matchedSkills, missingSkills, matchLevel, breakdown }
- */
 export const calculateInternshipMatch = (studentProfile, internship) => {
   if (!internship) {
     return {
@@ -212,7 +168,6 @@ export const calculateInternshipMatch = (studentProfile, internship) => {
   const requiredSkills = internship.requiredSkills || [];
 
   if (requiredSkills.length === 0) {
-    // If no specific skills required, baseline score based on general field
     const domainBonus = calculateDomainBonus(studentProfile, internship);
     const score = Math.round(75 + domainBonus * 25);
     return {
@@ -243,19 +198,15 @@ export const calculateInternshipMatch = (studentProfile, internship) => {
     }
   }
 
-  // 1. Skill Match Component (75% weight)
   const skillRatio = totalSkillWeight / requiredSkills.length;
   const skillComponent = skillRatio * 75;
 
-  // 2. Domain / Discipline Relevance Component (15% weight)
   const domainBonus = calculateDomainBonus(studentProfile, internship);
   const domainComponent = domainBonus * 15;
 
-  // 3. Hands-on Project Component (10% weight)
   const projectBonus = calculateProjectExperienceBonus(studentProfile?.projects, requiredSkills);
   const projectComponent = projectBonus * 10;
 
-  // Total Score (0 - 100)
   const rawScore = skillComponent + domainComponent + projectComponent;
   const matchScore = Math.min(100, Math.max(0, Math.round(rawScore)));
 
@@ -279,22 +230,12 @@ export const calculateInternshipMatch = (studentProfile, internship) => {
   };
 };
 
-/**
- * Candidate matching: evaluate a student profile against target skills and optional area
- * Used for recruiter candidate search ranking.
- *
- * @param {Object} studentProfile
- * @param {Array<string>} targetSkills
- * @param {string} targetArea
- * @returns {Object} { matchScore, matchedSkills, missingSkills }
- */
 export const calculateCandidateMatch = (studentProfile, targetSkills = [], targetArea = '') => {
   if (!studentProfile) {
     return { matchScore: 0, matchedSkills: [], missingSkills: [] };
   }
 
   if (!targetSkills || targetSkills.length === 0) {
-    // If no target skills queried, match score defaults to reputation/profile completeness
     const gpaFactor = studentProfile.gpa ? (studentProfile.gpa / 4.0) * 40 : 25;
     const repFactor = (studentProfile.reputationScore || 0) * 10;
     const skillsFactor = Math.min(30, (studentProfile.skills?.length || 0) * 5);
@@ -328,7 +269,6 @@ export const calculateCandidateMatch = (studentProfile, targetSkills = [], targe
 
   const skillScore = (totalWeight / targetSkills.length) * 80;
 
-  // Domain bonus
   let domainBonus = 0;
   if (targetArea) {
     const bg = `${studentProfile.degree || ''} ${studentProfile.fieldOfStudy || ''}`.toLowerCase();
