@@ -254,6 +254,24 @@ export const SearchMatchingPage = () => {
     }
   }, [isStudent, isAuthenticated]);
 
+  const handleChat = (internship) => {
+    if (!isAuthenticated) {
+      navigate('/login', { state: { from: '/search' } });
+      return;
+    }
+    const companyId = internship?.company?._id || internship?.company?.id || internship?.company;
+    if (companyId) {
+      navigate('/chat', {
+        state: {
+          companyId: typeof companyId === 'object' ? companyId.toString() : companyId,
+          companyName: internship?.company?.name || 'Company Partner',
+        },
+      });
+    } else {
+      navigate('/chat');
+    }
+  };
+
   const handleApply = (internship) => {
     if (!isAuthenticated) {
       navigate('/login');
@@ -642,6 +660,7 @@ export const SearchMatchingPage = () => {
                   selectedSkills={filters.skills}
                   onViewDetails={(item) => setSelectedInternship(item)}
                   onApply={handleApply}
+                  onChat={handleChat}
                 />
               ))}
             </div>
@@ -736,6 +755,7 @@ export const SearchMatchingPage = () => {
         onClose={() => setSelectedInternship(null)}
         internship={selectedInternship}
         onApply={handleApply}
+        onChat={handleChat}
         isStudent={isStudent}
         isCompany={isCompany}
       />

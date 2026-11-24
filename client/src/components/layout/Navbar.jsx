@@ -103,10 +103,13 @@ export const Navbar = () => {
 
             {/* Desktop Navigation Links */}
             <nav className="hidden md:flex items-center space-x-1.5 ml-8" aria-label="Main Navigation">
-              <Link to="/search" className={getLinkClass('/search')}>
-                <Search className="w-3.5 h-3.5 text-[#7F8C6A]" />
-                Find Internships
-              </Link>
+              {/* Public & Student Only: Internships */}
+              {(!isAuthenticated || user?.role === 'student') && (
+                <Link to="/search" className={getLinkClass('/search')}>
+                  <Search className="w-3.5 h-3.5 text-[#7F8C6A]" />
+                  Internships
+                </Link>
+              )}
 
               {/* Accessible directly in demo/preview mode */}
               {!isAuthenticated && (
@@ -118,7 +121,7 @@ export const Navbar = () => {
               {isAuthenticated && user?.role === 'student' && (
                 <>
                   <Link to="/student/portfolio" className={getLinkClass('/student/portfolio')}>
-                    My Portfolio
+                    Portfolio
                   </Link>
                   <Link to="/applications" className={getLinkClass('/applications')}>
                     Applications
@@ -140,14 +143,14 @@ export const Navbar = () => {
                     className={getLinkClass('/company/internships?tab=internships')}
                   >
                     <Briefcase className="w-3.5 h-3.5 text-[#7F8C6A]" />
-                    Manage Internships
+                    Listings
                   </Link>
                   <Link
                     to="/company/internships?tab=profile"
                     className={getLinkClass('/company/internships?tab=profile')}
                   >
                     <Building2 className="w-3.5 h-3.5 text-[#7F8C6A]" />
-                    Company Profile
+                    Profile
                   </Link>
                   <Link to="/applications" className={getLinkClass('/applications')}>
                     <Users className="w-3.5 h-3.5 text-[#7F8C6A]" />
@@ -159,7 +162,7 @@ export const Navbar = () => {
               {isAuthenticated && (user?.role === 'reviewer' || user?.role === 'admin' || user?.role === 'company') && (
                 <Link to="/verifications" className={getLinkClass('/verifications')}>
                   <ShieldCheck className="w-3.5 h-3.5 text-[#7F8C6A]" />
-                  {user.role === 'admin' ? 'Admin Moderation' : user?.role === 'reviewer' ? 'Reviewer Portal' : 'Verification & Ratings'}
+                  {user.role === 'admin' ? 'Moderation' : user?.role === 'reviewer' ? 'Reviews' : 'Verification'}
                 </Link>
               )}
             </nav>
@@ -254,14 +257,16 @@ export const Navbar = () => {
         {/* Mobile Dropdown Panel */}
         {isMobileMenuOpen && (
           <div className="md:hidden py-3 border-t border-[#C8B48A]/40 space-y-1 bg-[#F5F0E6] rounded-b-xl px-2 shadow-lg">
-            <Link
-              to="/search"
-              onClick={closeMobileMenu}
-              className={getMobileLinkClass('/search')}
-            >
-              <Search className="w-3.5 h-3.5 text-[#7F8C6A]" />
-              Find Internships
-            </Link>
+            {(!isAuthenticated || user?.role === 'student') && (
+              <Link
+                to="/search"
+                onClick={closeMobileMenu}
+                className={getMobileLinkClass('/search')}
+              >
+                <Search className="w-3.5 h-3.5 text-[#7F8C6A]" />
+                Internships
+              </Link>
+            )}
 
             {!isAuthenticated && (
               <Link
@@ -280,7 +285,7 @@ export const Navbar = () => {
                   onClick={closeMobileMenu}
                   className={getMobileLinkClass('/student/portfolio')}
                 >
-                  My Portfolio
+                  Portfolio
                 </Link>
                 <Link
                   to="/applications"
@@ -308,7 +313,7 @@ export const Navbar = () => {
                   className={getMobileLinkClass('/company/internships?tab=internships')}
                 >
                   <Briefcase className="w-3.5 h-3.5 text-[#7F8C6A]" />
-                  Manage Internships
+                  Listings
                 </Link>
                 <Link
                   to="/company/internships?tab=profile"
@@ -316,7 +321,7 @@ export const Navbar = () => {
                   className={getMobileLinkClass('/company/internships?tab=profile')}
                 >
                   <Building2 className="w-3.5 h-3.5 text-[#7F8C6A]" />
-                  Company Profile
+                  Profile
                 </Link>
                 <Link
                   to="/applications"
@@ -336,7 +341,7 @@ export const Navbar = () => {
                 className={getMobileLinkClass('/verifications')}
               >
                 <ShieldCheck className="w-3.5 h-3.5 text-[#7F8C6A]" />
-                {user.role === 'admin' ? 'Admin Moderation' : user?.role === 'reviewer' ? 'Reviewer Portal' : 'Verification & Ratings'}
+                {user.role === 'admin' ? 'Moderation' : user?.role === 'reviewer' ? 'Reviews' : 'Verification'}
               </Link>
             )}
 
