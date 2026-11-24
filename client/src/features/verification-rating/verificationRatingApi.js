@@ -113,11 +113,33 @@ const SEED_TARGETS = [
       degree: 'BSc Hons in Information & Communication Technology',
       fieldOfStudy: 'Software Systems & Web Architecture',
       academicYear: '3rd Year',
+      gpa: 3.85,
+      skills: ['React', 'Node.js', 'MongoDB', 'System Design', 'TailwindCSS', 'Express'],
+      bio: 'Full-stack software engineering undergraduate passionate about building scalable web platforms and distributed cloud systems.',
       reputationScore: 4.8,
       reviewCount: 3,
     },
     reputationScore: 4.8,
     reviewCount: 3,
+  },
+  {
+    _id: 'std_044',
+    name: 'Anupa Silva',
+    email: 'student_1792648888660@seu.ac.lk',
+    type: 'student',
+    profile: {
+      university: 'South Eastern University of Sri Lanka',
+      degree: 'BSc Hons in Information & Communication Technology',
+      fieldOfStudy: 'Cyber Security & Network Infrastructure',
+      academicYear: '3rd Year',
+      gpa: 3.78,
+      skills: ['Network Security', 'Linux Administration', 'Penetration Testing', 'Python', 'Docker'],
+      bio: 'ICT undergraduate specializing in network engineering and infrastructure security. Active participant in university cyber-defense competitions.',
+      reputationScore: 4.7,
+      reviewCount: 2,
+    },
+    reputationScore: 4.7,
+    reviewCount: 2,
   },
   {
     _id: 'std_032',
@@ -129,6 +151,9 @@ const SEED_TARGETS = [
       degree: 'BSc Hons in Information & Communication Technology',
       fieldOfStudy: 'Interactive Multimedia & Communications',
       academicYear: '3rd Year',
+      gpa: 3.65,
+      skills: ['UI/UX', 'Figma', 'React', 'TypeScript', 'Motion Design'],
+      bio: 'Creative technologist focusing on frontend architecture, accessibility standards, and responsive user interfaces.',
       reputationScore: 4.6,
       reviewCount: 2,
     },
@@ -145,6 +170,9 @@ const SEED_TARGETS = [
       degree: 'BSc Hons in Information & Communication Technology',
       fieldOfStudy: 'Cloud Systems & DevOps',
       academicYear: '3rd Year',
+      gpa: 3.72,
+      skills: ['AWS', 'Docker', 'Kubernetes', 'CI/CD Pipelines', 'Linux'],
+      bio: 'Cloud systems and DevOps engineer focusing on automated deployment pipelines and container orchestration.',
       reputationScore: 4.7,
       reviewCount: 2,
     },
@@ -161,6 +189,9 @@ const SEED_TARGETS = [
       degree: 'BSc Hons in Information & Communication Technology',
       fieldOfStudy: 'Algorithmic Search & Data Engineering',
       academicYear: '3rd Year',
+      gpa: 3.91,
+      skills: ['Python', 'Data Engineering', 'Machine Learning', 'SQL', 'FastAPI'],
+      bio: 'Data engineering undergraduate passionate about algorithmic search, recommendation systems, and data pipelines.',
       reputationScore: 4.9,
       reviewCount: 4,
     },
@@ -177,6 +208,9 @@ const SEED_TARGETS = [
       degree: 'BSc Hons in Information & Communication Technology',
       fieldOfStudy: 'Enterprise Applications & Management',
       academicYear: '3rd Year',
+      gpa: 3.68,
+      skills: ['Java', 'Spring Boot', 'PostgreSQL', 'Microservices', 'Enterprise Architecture'],
+      bio: 'Enterprise application developer with hands-on expertise in backend microservices and transactional database designs.',
       reputationScore: 4.5,
       reviewCount: 2,
     },
@@ -232,6 +266,13 @@ const SEED_REVIEWS = [
     },
     targetType: 'student',
     targetStudentId: 'std_057',
+    targetStudent: {
+      _id: 'std_057',
+      name: 'Kasun Weerasinghe',
+      email: 'student@internbridge.lk',
+    },
+    targetName: 'Kasun Weerasinghe',
+    targetInfo: 'BSc Hons in ICT • South Eastern University of Sri Lanka',
     ratings: {
       technicalSkills: 5,
       softSkills: 5,
@@ -251,6 +292,13 @@ const SEED_REVIEWS = [
     },
     targetType: 'student',
     targetStudentId: 'std_057',
+    targetStudent: {
+      _id: 'std_057',
+      name: 'Kasun Weerasinghe',
+      email: 'student@internbridge.lk',
+    },
+    targetName: 'Kasun Weerasinghe',
+    targetInfo: 'BSc Hons in ICT • South Eastern University of Sri Lanka',
     ratings: {
       technicalSkills: 5,
       softSkills: 4,
@@ -270,6 +318,13 @@ const SEED_REVIEWS = [
     },
     targetType: 'company',
     targetCompanyId: 'comp_01',
+    targetCompany: {
+      _id: 'comp_01',
+      name: 'Virtusa Technologies',
+      industry: 'Enterprise Software Engineering',
+    },
+    targetName: 'Virtusa Technologies',
+    targetInfo: 'Enterprise Software Engineering',
     ratings: {
       workEnvironment: 5,
       mentorship: 5,
@@ -289,6 +344,13 @@ const SEED_REVIEWS = [
     },
     targetType: 'company',
     targetCompanyId: 'comp_02',
+    targetCompany: {
+      _id: 'comp_02',
+      name: 'WSO2 Lanka',
+      industry: 'Open Source & Cloud Middleware',
+    },
+    targetName: 'WSO2 Lanka',
+    targetInfo: 'Open Source & Cloud Middleware',
     ratings: {
       workEnvironment: 5,
       mentorship: 5,
@@ -330,7 +392,51 @@ const getLocalReviews = () => {
       localStorage.setItem(REVIEWS_STORAGE_KEY, JSON.stringify(SEED_REVIEWS));
       return SEED_REVIEWS;
     }
-    return JSON.parse(raw);
+    const parsed = JSON.parse(raw);
+    // Auto-enrich reviews with target info if stored in legacy structure
+    return parsed.map((rev) => {
+      if (rev.targetName && rev.targetInfo) return rev;
+      if (rev.targetStudentId === 'std_057' || rev.comments?.includes('Kasun')) {
+        return {
+          ...rev,
+          targetName: 'Kasun Weerasinghe',
+          targetInfo: 'BSc Hons in ICT • South Eastern University of Sri Lanka',
+          targetType: 'student',
+          targetStudent: {
+            _id: 'std_057',
+            name: 'Kasun Weerasinghe',
+            email: 'student@internbridge.lk',
+          },
+        };
+      }
+      if (rev.targetCompanyId === 'comp_01' || rev.comments?.includes('Virtusa')) {
+        return {
+          ...rev,
+          targetName: 'Virtusa Technologies',
+          targetInfo: 'Enterprise Software Engineering',
+          targetType: 'company',
+          targetCompany: {
+            _id: 'comp_01',
+            name: 'Virtusa Technologies',
+            industry: 'Enterprise Software Engineering',
+          },
+        };
+      }
+      if (rev.targetCompanyId === 'comp_02' || rev.comments?.includes('WSO2')) {
+        return {
+          ...rev,
+          targetName: 'WSO2 Lanka',
+          targetInfo: 'Open Source & Cloud Middleware',
+          targetType: 'company',
+          targetCompany: {
+            _id: 'comp_02',
+            name: 'WSO2 Lanka',
+            industry: 'Open Source & Cloud Middleware',
+          },
+        };
+      }
+      return rev;
+    });
   } catch {
     return SEED_REVIEWS;
   }
@@ -628,6 +734,10 @@ export const verificationRatingApi = {
       targetType: payload.targetType,
       targetStudentId: payload.targetStudentId,
       targetCompanyId: payload.targetCompanyId,
+      targetStudent: payload.targetStudent,
+      targetCompany: payload.targetCompany,
+      targetName: payload.targetName || payload.targetStudent?.name || payload.targetCompany?.name,
+      targetInfo: payload.targetInfo,
       ratings: payload.ratings,
       overallRating: payload.overallRating,
       comments: payload.comments,
