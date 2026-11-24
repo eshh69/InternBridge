@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { X } from 'lucide-react';
 
 export const Modal = ({
@@ -23,9 +24,9 @@ export const Modal = ({
     };
   }, [isOpen, onClose]);
 
-  if (!isOpen) return null;
+  if (!isOpen || typeof document === 'undefined') return null;
 
-  return (
+  return createPortal(
     <div
       className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 bg-[#0D1C16]/65 backdrop-blur-xs animate-fade-in"
       role="dialog"
@@ -34,7 +35,7 @@ export const Modal = ({
       onClick={onClose}
     >
       <div
-        className={`bg-white rounded-2xl shadow-2xl w-full ${maxWidth} overflow-hidden transform transition-all animate-scale-in border border-[#C8B48A]/40`}
+        className={`bg-white rounded-2xl shadow-2xl w-full ${maxWidth} overflow-hidden transform transition-all animate-scale-in border border-[#C8B48A]/40 my-auto`}
         onClick={(e) => e.stopPropagation()}
       >
         {/* Modal Header */}
@@ -61,7 +62,8 @@ export const Modal = ({
           </div>
         )}
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };
 
