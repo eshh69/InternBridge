@@ -301,7 +301,7 @@ export const CertificatesBadgesSection = ({
           </button>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-3.5 sm:gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {displayedItems.map((item, idx) => {
             const hasPreview = Boolean(item.certificateFileUrl);
             const isBadge = item.type === 'badge';
@@ -310,85 +310,156 @@ export const CertificatesBadgesSection = ({
               <div
                 key={idx}
                 onClick={() => setSelectedItem(item)}
-                className="group relative p-3.5 rounded-xl border border-gray-200/80 bg-white hover:border-[#7F8C6A] hover:shadow-md transition-all cursor-pointer flex items-start gap-3 select-none"
-                title="Click to view details and preview"
+                className="bg-white border border-[#C8B48A]/40 rounded-2xl overflow-hidden hover:shadow-md hover:border-[#1E3B2F]/40 transition-all duration-200 flex flex-col justify-between group select-none cursor-pointer"
+                title="Click to view details and certificate preview"
               >
-                {/* Visual Thumbnail */}
-                <div className="w-12 h-12 shrink-0 border border-gray-200 bg-gray-50 rounded-xl overflow-hidden flex items-center justify-center relative">
+                {/* Certificate / Badge Overview Preview Banner (Matches Project Preview style) */}
+                <div className="relative w-full h-36 sm:h-40 bg-slate-50 border-b border-gray-100 overflow-hidden flex items-center justify-center group/preview">
                   {hasPreview && !isPdf(item.certificateFileUrl) ? (
                     <img
                       src={item.certificateFileUrl}
                       alt={item.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                      className="w-full h-full object-cover object-top transition-transform duration-300 group-hover:scale-105"
                       onError={(e) => {
                         e.target.style.display = 'none';
                       }}
                     />
                   ) : hasPreview && isPdf(item.certificateFileUrl) ? (
-                    <div className="flex flex-col items-center justify-center text-rose-600">
-                      <FileText className="w-5 h-5" />
-                      <span className="text-[8px] font-black uppercase">PDF</span>
-                    </div>
-                  ) : isBadge ? (
-                    <div className="w-full h-full bg-emerald-50 text-emerald-600 flex items-center justify-center">
-                      <ShieldCheck className="w-6 h-6" />
+                    /* PDF Document Preview Banner */
+                    <div className="w-full h-full bg-gradient-to-br from-slate-50 via-rose-50/20 to-slate-100 flex flex-col items-center justify-center p-3 text-center relative">
+                      <div className="w-11 h-11 bg-rose-50 border border-rose-200/80 rounded-xl flex items-center justify-center text-rose-600 shadow-2xs mb-1.5 group-hover:scale-105 transition-transform">
+                        <FileText className="w-6 h-6" />
+                      </div>
+                      <span className="text-[9px] font-black tracking-widest text-rose-700 uppercase bg-rose-100/70 px-2 py-0.5 rounded-full">
+                        PDF Certificate
+                      </span>
+                      <p className="text-xs font-bold text-slate-800 line-clamp-1 mt-1 max-w-[200px]">
+                        {item.title}
+                      </p>
                     </div>
                   ) : (
-                    <div className="w-full h-full bg-[#7F8C6A]/15 text-[#1E3B2F] flex items-center justify-center">
-                      <Award className="w-6 h-6" />
+                    /* Elegant Certificate / Badge Plaque Mockup (when no image file was uploaded) */
+                    <div className="w-full h-full bg-gradient-to-br from-[#FAF7F0] via-white to-[#F5F0E6] p-4 flex flex-col items-center justify-center text-center relative overflow-hidden">
+                      <div className="absolute -top-6 -right-6 w-20 h-20 bg-[#C8B48A]/15 rounded-full blur-xl pointer-events-none" />
+                      <div className="absolute -bottom-6 -left-6 w-20 h-20 bg-[#7F8C6A]/10 rounded-full blur-xl pointer-events-none" />
+
+                      <div className="relative z-10 flex flex-col items-center">
+                        <div className="w-10 h-10 bg-[#7F8C6A]/15 border border-[#C8B48A]/40 text-[#1E3B2F] flex items-center justify-center rounded-xl shadow-2xs mb-1.5 group-hover:scale-110 transition-transform">
+                          {isBadge ? <ShieldCheck className="w-5 h-5" /> : <Award className="w-5 h-5" />}
+                        </div>
+                        <p className="text-[9px] font-extrabold text-[#1E3B2F] uppercase tracking-widest">
+                          {isBadge ? 'Official Badge Award' : 'Certificate of Achievement'}
+                        </p>
+                        <h5 className="text-xs font-black text-slate-900 tracking-tight line-clamp-1 mt-0.5 max-w-[210px]">
+                          {item.title}
+                        </h5>
+                        <p className="text-[10px] text-slate-500 font-medium truncate max-w-[200px] mt-0.5">
+                          Issued by <span className="font-semibold text-slate-700">{item.issuer}</span>
+                        </p>
+                      </div>
                     </div>
                   )}
 
-                  {/* Quick hover eye icon */}
-                  <div className="absolute inset-0 bg-slate-900/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white">
-                    <Eye className="w-3.5 h-3.5" />
-                  </div>
-                </div>
-
-                {/* Content */}
-                <div className="min-w-0 flex-1 space-y-0.5">
-                  <div className="flex items-center gap-1.5">
+                  {/* Top Right Type Tag Pill */}
+                  <div className="absolute top-2.5 right-2.5 z-20">
                     <span
-                      className={`text-[9px] font-extrabold uppercase px-2 py-0.5 tracking-wider rounded-full ${
+                      className={`text-[9px] font-extrabold uppercase px-2 py-0.5 tracking-wider rounded-full shadow-2xs backdrop-blur-xs ${
                         isBadge
-                          ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                          : 'bg-[#7F8C6A]/15 text-[#1E3B2F] border border-[#C8B48A]/40'
+                          ? 'bg-emerald-600/90 text-white'
+                          : 'bg-[#1E3B2F]/90 text-[#F5F0E6]'
                       }`}
                     >
                       {isBadge ? 'Badge' : 'Certificate'}
                     </span>
-                    {item.issueDate && (
-                      <span className="text-[10px] text-gray-400">
-                        {formatDate(item.issueDate)}
+                  </div>
+
+                  {/* Interactive Hover Overlay with "View Credential" (Matches Project Preview style) */}
+                  <div className="absolute inset-0 z-30 bg-slate-900/60 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-1.5 text-white">
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#1E3B2F] hover:bg-[#152A22] text-white text-xs font-semibold rounded-xl shadow-lg transition-transform transform group-hover:scale-105">
+                      <Eye className="w-3.5 h-3.5" />
+                      <span>View Credential</span>
+                    </span>
+                  </div>
+                </div>
+
+                {/* Card Details Body */}
+                <div className="p-4 flex-1 flex flex-col justify-between space-y-2.5">
+                  <div className="space-y-1">
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="text-[10px] font-bold text-slate-400">
+                        {item.issueDate ? formatDate(item.issueDate) : 'Date unlisted'}
                       </span>
+                      {item.credentialId && (
+                        <span className="text-[10px] font-mono text-slate-400 truncate max-w-[120px]">
+                          ID: {item.credentialId}
+                        </span>
+                      )}
+                    </div>
+
+                    <h4 className="text-sm font-bold text-slate-900 group-hover:text-[#1E3B2F] transition-colors line-clamp-1">
+                      {item.title}
+                    </h4>
+
+                    <p className="text-xs text-slate-600 font-medium truncate flex items-center gap-1.5">
+                      <Building2 className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                      <span className="truncate">{item.issuer}</span>
+                    </p>
+
+                    {item.description && (
+                      <p className="text-xs text-slate-500 line-clamp-2 pt-0.5">
+                        {item.description}
+                      </p>
                     )}
                   </div>
 
-                  <h4 className="text-xs font-bold text-gray-900 group-hover:text-[#1E3B2F] transition-colors truncate">
-                    {item.title}
-                  </h4>
+                  {/* Card Footer: Action Links and Delete Button */}
+                  <div className="pt-2 border-t border-gray-100 flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-2">
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setSelectedItem(item);
+                        }}
+                        className="text-xs font-semibold text-[#1E3B2F] hover:underline flex items-center gap-1"
+                      >
+                        <span>View Details</span>
+                        <Eye className="w-3 h-3" />
+                      </button>
 
-                  <p className="text-xs text-gray-500 font-medium truncate flex items-center gap-1">
-                    <Building2 className="w-3 h-3 text-gray-400 shrink-0" />
-                    <span className="truncate">{item.issuer}</span>
-                  </p>
+                      {item.credentialUrl && (
+                        <a
+                          href={
+                            item.credentialUrl.startsWith('http')
+                              ? item.credentialUrl
+                              : `https://${item.credentialUrl}`
+                          }
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={(e) => e.stopPropagation()}
+                          className="text-xs font-semibold text-slate-500 hover:text-slate-800 flex items-center gap-1"
+                          title="Verify link"
+                        >
+                          <span>Verify</span>
+                          <ExternalLink className="w-3 h-3" />
+                        </a>
+                      )}
+                    </div>
 
-                  {item.credentialId && (
-                    <p className="text-[10px] font-mono text-gray-400 truncate">
-                      ID: {item.credentialId}
-                    </p>
-                  )}
+                    {/* Delete button */}
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDeleteItem(item, e);
+                      }}
+                      className="p-1.5 text-gray-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors shrink-0"
+                      title="Delete item"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
                 </div>
-
-                {/* Delete button */}
-                <button
-                  type="button"
-                  onClick={(e) => handleDeleteItem(item, e)}
-                  className="p-1 text-gray-300 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors shrink-0"
-                  title="Delete item"
-                >
-                  <Trash2 className="w-3.5 h-3.5" />
-                </button>
               </div>
             );
           })}
