@@ -647,6 +647,13 @@ export const StudentPortfolioPage = () => {
                 onSaveSkills={(skills) => handleUpdateProfile({ skills })}
                 isLoading={isSaving}
               />
+
+              {/* WORK & INTERNSHIP EXPERIENCE */}
+              <ExperienceSection
+                experience={profile?.experience || []}
+                onSaveExperience={(experience) => handleUpdateProfile({ experience })}
+                isLoading={isSaving}
+              />
             </div>
 
             {/* RIGHT COLUMN (4/12): Quick Actions & Portfolio Readiness Sidebar */}
@@ -774,14 +781,7 @@ export const StudentPortfolioPage = () => {
             </div>
           </div>
 
-          {/* DYNAMIC FULL-WIDTH SECTIONS BELOW SIDEBAR */}
-          {/* WORK & INTERNSHIP EXPERIENCE (Full Width) */}
-          <ExperienceSection
-            experience={profile?.experience || []}
-            onSaveExperience={(experience) => handleUpdateProfile({ experience })}
-            isLoading={isSaving}
-          />
-
+          {/* DYNAMIC FULL-WIDTH SECTIONS BELOW THE 2-COLUMN SIDEBAR */}
           {/* FEATURED WORK & PROJECTS (Full Width) */}
           <ProjectsSection
             projects={profile?.projects || []}
