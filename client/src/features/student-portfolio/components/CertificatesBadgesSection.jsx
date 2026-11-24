@@ -217,12 +217,12 @@ export const CertificatesBadgesSection = ({
   };
 
   return (
-    <Card className="space-y-4 rounded-2xl shadow-xs border border-gray-200/90 p-5 bg-white">
+    <Card className="space-y-4 rounded-2xl shadow-2xs border border-[#C8B48A]/40 p-5 sm:p-6 bg-white">
       {/* Header with Title, Tabs, and Minimal '+' Button */}
-      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-gray-100 pb-2.5">
-        <div className="flex items-center gap-2">
-          <Award className="w-4 h-4 text-[#1E3B2F]" />
-          <h3 className="text-base font-bold text-gray-900">Certificates & Badges</h3>
+      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-gray-100 pb-3">
+        <div className="flex items-center gap-2.5">
+          <ShieldCheck className="w-4 h-4 text-[#1E3B2F]" />
+          <h3 className="text-base font-extrabold text-gray-900 tracking-tight">Certificates & Digital Badges</h3>
           {allItems.length > 0 && (
             <span className="text-xs px-2.5 py-0.5 rounded-full bg-[#7F8C6A]/15 text-[#1E3B2F] font-semibold border border-[#C8B48A]/40">
               {allItems.length}
