@@ -120,13 +120,13 @@ export const ReputationAndReviewsCard = ({
       }
     });
 
-    if (counts.technicalSkills > 0 && !breakdown.technicalSkills) {
+    if (counts.technicalSkills > 0 && (!breakdown.technicalSkills || Number(breakdown.technicalSkills) === 0)) {
       breakdown.technicalSkills = Math.round((sums.technicalSkills / counts.technicalSkills) * 10) / 10;
     }
-    if (counts.communication > 0 && !breakdown.communication && !breakdown.softSkills) {
+    if (counts.communication > 0 && (!breakdown.communication || Number(breakdown.communication) === 0) && (!breakdown.softSkills || Number(breakdown.softSkills) === 0)) {
       breakdown.communication = Math.round((sums.communication / counts.communication) * 10) / 10;
     }
-    if (counts.professionalism > 0 && !breakdown.professionalism) {
+    if (counts.professionalism > 0 && (!breakdown.professionalism || Number(breakdown.professionalism) === 0)) {
       breakdown.professionalism = Math.round((sums.professionalism / counts.professionalism) * 10) / 10;
     }
   }

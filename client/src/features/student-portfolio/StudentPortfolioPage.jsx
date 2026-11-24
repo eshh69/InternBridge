@@ -797,24 +797,21 @@ export const StudentPortfolioPage = () => {
                 )}
               </div>
 
-                            {/* VERIFIED FACULTY EVALUATIONS & ENDORSEMENTS (REVIEWS) */}
-              <div className="space-y-3">
-                {studentUserId ? (
-                  <ReputationAndReviewsCard
-                    targetId={studentUserId}
-                    targetType="student"
-                    title="Faculty Evaluations"
-                    compact={true}
-                    className="border-[#C8B48A]/40 rounded-2xl shadow-2xs"
-                  />
-                ) : (
-                  <div className="py-8 bg-white border border-[#C8B48A]/40 rounded-2xl text-center text-xs text-gray-500">
-                    Faculty evaluations and review history will display here.
-                  </div>
-                )}
-              </div>
             </div>
           </div>
+
+          {/* VERIFIED FACULTY EVALUATIONS & ENDORSEMENTS (FULL-WIDTH AT BOTTOM) */}
+          {studentUserId ? (
+            <ReputationAndReviewsCard
+              targetId={studentUserId}
+              targetType="student"
+              title="Verified Academic Reputation & Faculty Evaluations"
+            />
+          ) : (
+            <div className="py-8 bg-white border border-[#C8B48A]/40 rounded-2xl text-center text-xs text-gray-500">
+              Faculty evaluations and review history will display here.
+            </div>
+          )}
         </div>
       )}
 
