@@ -7,6 +7,7 @@ import { Spinner } from '../../components/ui/Spinner';
 import { EmptyState } from '../../components/ui/EmptyState';
 import {
   Users,
+  User,
   Search,
   CheckCircle2,
   XCircle,
@@ -18,6 +19,7 @@ import {
 } from 'lucide-react';
 import applicationsApi from './applicationsApi';
 import apiClient from '../../services/apiClient';
+import StudentPortfolioModal from '../student-portfolio/components/StudentPortfolioModal';
 
 const FALLBACK_INTERNSHIPS = [
   { _id: 'int_01', title: 'Full Stack Engineering Intern' },
@@ -41,6 +43,10 @@ export const CompanyApplicantReview = ({ onStatusChange }) => {
   const [recruiterNotes, setRecruiterNotes] = useState('');
   const [isUpdating, setIsUpdating] = useState(false);
   const [updateError, setUpdateError] = useState('');
+
+  // Portfolio Inspection Modal State
+  const [viewingStudentId, setViewingStudentId] = useState(null);
+  const [isPortfolioModalOpen, setIsPortfolioModalOpen] = useState(false);
 
   // Load company's internships for dropdown filter (falls back to sample list if backend offline)
   useEffect(() => {
@@ -262,7 +268,7 @@ export const CompanyApplicantReview = ({ onStatusChange }) => {
                   <th className="px-5 py-3.5">Candidate Details</th>
                   <th className="px-5 py-3.5">Position Applied</th>
                   <th className="px-5 py-3.5">Match Fit</th>
-                  <th className="px-5 py-3.5">Submitted CV</th>
+                  <th className="px-5 py-3.5">Portfolio & CV</th>
                   <th className="px-5 py-3.5">Status</th>
                   <th className="px-5 py-3.5 text-right">Recruiter Action</th>
                 </tr>
@@ -301,20 +307,34 @@ export const CompanyApplicantReview = ({ onStatusChange }) => {
                       </td>
 
                       <td className="px-5 py-4">
-                        {app.resumeUrl ? (
-                          <a
-                            href={app.resumeUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-flex items-center gap-1 text-xs font-semibold text-[#1E3B2F] hover:text-[#152A22] hover:underline"
+                        <div className="flex flex-col gap-1.5 items-start">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const sId = app.student?._id || app.student?.id || app.student;
+                              setViewingStudentId(sId);
+                              setIsPortfolioModalOpen(true);
+                            }}
+                            className="inline-flex items-center gap-1 text-xs font-semibold text-[#1E3B2F] hover:text-[#152A22] hover:underline cursor-pointer"
                           >
-                            <FileText className="w-3.5 h-3.5 text-[#1E3B2F]" />
-                            <span>View CV</span>
-                            <ExternalLink className="w-3 h-3 text-[#C8B48A]" />
-                          </a>
-                        ) : (
-                          <span className="text-gray-400 text-xs">No attachment</span>
-                        )}
+                            <User className="w-3.5 h-3.5 text-[#1E3B2F]" />
+                            <span>View Portfolio</span>
+                          </button>
+                          {app.resumeUrl ? (
+                            <a
+                              href={app.resumeUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-1 text-xs font-semibold text-[#7F8C6A] hover:text-[#1E3B2F] hover:underline"
+                            >
+                              <FileText className="w-3.5 h-3.5 text-[#1E3B2F]" />
+                              <span>View CV</span>
+                              <ExternalLink className="w-3 h-3 text-[#C8B48A]" />
+                            </a>
+                          ) : (
+                            <span className="text-gray-400 text-[11px]">No CV attached</span>
+                          )}
+                        </div>
                       </td>
 
                       <td className="px-5 py-4">
@@ -378,7 +398,7 @@ export const CompanyApplicantReview = ({ onStatusChange }) => {
             )}
 
             {/* Candidate Summary */}
-            <div className="p-3.5 bg-[#F5F0E6]/80 rounded-xl border border-[#C8B48A]/40 border-l-4 border-l-[#1E3B2F] space-y-1.5">
+            <div className="p-3.5 bg-[#F5F0E6]/80 rounded-xl border border-[#C8B48A]/40 border-l-4 border-l-[#1E3B2F] space-y-2">
               <div className="flex justify-between items-start">
                 <div>
                   <h4 className="font-bold text-[#1E3B2F]">{selectedApplicant.student?.name}</h4>
@@ -390,8 +410,22 @@ export const CompanyApplicantReview = ({ onStatusChange }) => {
                   </Badge>
                 )}
               </div>
-              <div className="text-xs text-slate-600 pt-1 border-t border-[#C8B48A]/30">
-                Applied for: <strong className="text-[#1E3B2F]">{selectedApplicant.internship?.title}</strong>
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pt-2 border-t border-[#C8B48A]/30 text-xs text-slate-600">
+                <div>
+                  Applied for: <strong className="text-[#1E3B2F]">{selectedApplicant.internship?.title}</strong>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    const sId = selectedApplicant.student?._id || selectedApplicant.student?.id || selectedApplicant.student;
+                    setViewingStudentId(sId);
+                    setIsPortfolioModalOpen(true);
+                  }}
+                  className="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-semibold rounded-lg bg-white border border-[#C8B48A]/60 text-[#1E3B2F] hover:bg-[#F5F0E6] hover:border-[#1E3B2F] transition-colors cursor-pointer self-start sm:self-auto"
+                >
+                  <User className="w-3.5 h-3.5 text-[#1E3B2F]" />
+                  <span>Inspect Full Student Portfolio</span>
+                </button>
               </div>
             </div>
 
@@ -444,6 +478,16 @@ export const CompanyApplicantReview = ({ onStatusChange }) => {
           </form>
         </Modal>
       )}
+
+      {/* 5. Student Full Portfolio Modal */}
+      <StudentPortfolioModal
+        isOpen={isPortfolioModalOpen}
+        onClose={() => {
+          setIsPortfolioModalOpen(false);
+          setViewingStudentId(null);
+        }}
+        studentId={viewingStudentId}
+      />
     </div>
   );
 };
