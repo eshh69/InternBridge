@@ -103,7 +103,7 @@ export const studentPortfolioService = {
    */
   getPublicProfile: async (id) => {
     const response = await apiClient.get(`/students/${id}`);
-    return response.data?.profile;
+    return response.data?.profile || response.profile || response;
   },
 
   /**
