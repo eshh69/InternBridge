@@ -630,188 +630,204 @@ export const StudentPortfolioPage = () => {
             </div>
           </div>
 
-          {/* 2-Column Responsive Layout Below KPI Cards */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-            {/* LEFT COLUMN (Wider 9/12): Main Clean Single-Card Sections */}
-            <div className="lg:col-span-9 space-y-6">
-              {/* EDUCATION & DEGREE PATHWAY */}
-              <EducationSection
-                education={profile?.education || []}
-                onSaveEducation={(education) => handleUpdateProfile({ education })}
-                isLoading={isSaving}
-              />
+          {/* Dynamic Top Content:
+              If right-side cards exist (Quick Actions, Portfolio Readiness), the top row renders in a 2-column layout (75% left / 25% right).
+              If no right-side cards exist, the left section dynamically expands to 100% full width. */}
+          {(() => {
+            const hasSidebarCards = Boolean((quickActions && quickActions.length > 0) || strengthData);
 
-              {/* TECHNICAL SKILLS & STACK */}
-              <SkillTagsSection
-                skills={profile?.skills || []}
-                onSaveSkills={(skills) => handleUpdateProfile({ skills })}
-                isLoading={isSaving}
-              />
+            return (
+              <div className={hasSidebarCards ? 'grid grid-cols-1 lg:grid-cols-12 gap-6 items-start' : 'space-y-6 w-full'}>
+                {/* LEFT COLUMN: 75% (col-span-9) when sidebar exists, or 100% (w-full) when no sidebar */}
+                <div className={hasSidebarCards ? 'lg:col-span-9 space-y-6 w-full' : 'w-full space-y-6'}>
+                  {/* 1. EDUCATION & DEGREE PATHWAY */}
+                  <EducationSection
+                    education={profile?.education || []}
+                    onSaveEducation={(education) => handleUpdateProfile({ education })}
+                    isLoading={isSaving}
+                  />
 
-              {/* WORK & INTERNSHIP EXPERIENCE */}
-              <ExperienceSection
-                experience={profile?.experience || []}
-                onSaveExperience={(experience) => handleUpdateProfile({ experience })}
-                isLoading={isSaving}
-              />
-            </div>
+                  {/* 2. TECHNICAL SKILLS & STACK */}
+                  <SkillTagsSection
+                    skills={profile?.skills || []}
+                    onSaveSkills={(skills) => handleUpdateProfile({ skills })}
+                    isLoading={isSaving}
+                  />
 
-            {/* RIGHT COLUMN (4/12): Quick Actions & Portfolio Readiness Sidebar */}
-            <div className="lg:col-span-3 space-y-6">
-              {/* Quick Actions Card (Exact Match with Company Dashboard Style) */}
-              <div className="bg-white border border-[#C8B48A]/40 rounded-2xl p-4 sm:p-4.5 shadow-2xs space-y-3">
-                <div className="flex items-center justify-between pb-2 border-b border-gray-100">
-                  <div className="flex items-center gap-2">
-                    <Zap className="w-4 h-4 text-[#1E3B2F]" />
-                    <h4 className="text-sm font-extrabold text-slate-900 tracking-tight">
-                      Quick Actions
-                    </h4>
-                  </div>
-                  <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">
-                    Shortcuts
-                  </span>
-                </div>
-
-                <div className="space-y-2">
-                  {quickActions.map((action, idx) => (
-                    <button
-                      key={idx}
-                      onClick={action.onClick}
-                      className="w-full flex items-center justify-between p-3 rounded-xl border border-gray-100 hover:border-[#7F8C6A]/40 hover:bg-[#F5F0E6]/30 transition-all text-left group cursor-pointer"
-                    >
-                      <div className="flex items-center gap-3 min-w-0">
-                        <div
-                          className={`w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0 ${action.iconBg}`}
-                        >
-                          {action.icon}
-                        </div>
-                        <div className="min-w-0">
-                          <p className="text-xs font-bold text-slate-900 group-hover:text-[#1E3B2F] transition-colors truncate">
-                            {action.label}
-                          </p>
-                          <p className="text-[11px] text-slate-400 truncate">
-                            {action.subtitle}
-                          </p>
-                        </div>
-                      </div>
-                      <ChevronRight className="w-4 h-4 text-slate-300 group-hover:text-[#1E3B2F] group-hover:translate-x-0.5 transition-all flex-shrink-0" />
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Portfolio Strength & Readiness Card */}
-              <div className="bg-white border border-[#C8B48A]/40 rounded-2xl p-5 shadow-2xs space-y-4">
-                <div className="flex items-center justify-between pb-2 border-b border-gray-100">
-                  <div className="flex items-center gap-2">
-                    <Sparkles className="w-4 h-4 text-[#C8B48A]" />
-                    <h4 className="text-sm font-extrabold text-slate-900 tracking-tight">
-                      Portfolio Readiness
-                    </h4>
-                  </div>
-                  <span
-                    className={`text-[11px] px-2.5 py-0.5 rounded-full font-bold border ${strengthData.badgeStyle}`}
-                  >
-                    {strengthData.tier}
-                  </span>
-                </div>
-
-                {/* Big Score Header */}
-                <div className="flex items-baseline justify-between">
-                  <div>
-                    <span className="text-3xl font-black text-[#1E3B2F] tracking-tight">
-                      {strengthData.score}%
-                    </span>
-                    <span className="text-xs text-slate-400 font-medium ml-1.5">Completeness</span>
-                  </div>
-                  <span className="text-xs font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-100">
-                    High Visibility
-                  </span>
-                </div>
-
-                {/* Progress Bar */}
-                <div className="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden">
-                  <div
-                    className="bg-gradient-to-r from-[#7F8C6A] to-[#1E3B2F] h-2.5 rounded-full transition-all duration-700"
-                    style={{ width: `${strengthData.score}%` }}
+                  {/* 3. WORK & INTERNSHIP EXPERIENCE */}
+                  <ExperienceSection
+                    experience={profile?.experience || []}
+                    onSaveExperience={(experience) => handleUpdateProfile({ experience })}
+                    isLoading={isSaving}
                   />
                 </div>
 
-                {/* Score Breakdown List */}
-                <div className="space-y-2 pt-1 text-xs">
-                  <div className="flex justify-between items-center text-slate-600">
-                    <span>Featured Projects (3+ required)</span>
-                    <span className="font-bold text-slate-900">
-                      {strengthData.breakdown.projects}/25 pts
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-center text-slate-600">
-                    <span>Faculty Evaluations</span>
-                    <span className="font-bold text-slate-900">
-                      {strengthData.breakdown.faculty}/20 pts
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-center text-slate-600">
-                    <span>Academic GPA &amp; Degree</span>
-                    <span className="font-bold text-slate-900">
-                      {strengthData.breakdown.academic}/20 pts
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-center text-slate-600">
-                    <span>Technical Competencies</span>
-                    <span className="font-bold text-slate-900">
-                      {strengthData.breakdown.skills}/20 pts
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-center text-slate-600">
-                    <span>Certificates, Badges &amp; CV</span>
-                    <span className="font-bold text-slate-900">
-                      {strengthData.breakdown.credentials}/15 pts
-                    </span>
-                  </div>
-                </div>
+                {/* RIGHT COLUMN: 25% (col-span-3) - Only rendered when right-side cards exist */}
+                {hasSidebarCards && (
+                  <aside className="lg:col-span-3 space-y-6 w-full" aria-label="Sidebar Actions & Readiness">
+                    {/* Quick Actions Card (Exact Match with Company Dashboard Style) */}
+                    {quickActions && quickActions.length > 0 && (
+                      <div className="bg-white border border-[#C8B48A]/40 rounded-2xl p-4 sm:p-4.5 shadow-2xs space-y-3">
+                        <div className="flex items-center justify-between pb-2 border-b border-gray-100">
+                          <div className="flex items-center gap-2">
+                            <Zap className="w-4 h-4 text-[#1E3B2F]" />
+                            <h4 className="text-sm font-extrabold text-slate-900 tracking-tight">
+                              Quick Actions
+                            </h4>
+                          </div>
+                          <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">
+                            Shortcuts
+                          </span>
+                        </div>
 
-                {/* Dynamic Tip Box */}
-                {strengthData.tip && (
-                  <div className="p-3 bg-[#F5F0E6]/60 border border-[#C8B48A]/40 rounded-xl text-xs text-[#1E3B2F] leading-relaxed">
-                    {strengthData.tip}
-                  </div>
+                        <div className="space-y-2">
+                          {quickActions.map((action, idx) => (
+                            <button
+                              key={idx}
+                              onClick={action.onClick}
+                              className="w-full flex items-center justify-between p-3 rounded-xl border border-gray-100 hover:border-[#7F8C6A]/40 hover:bg-[#F5F0E6]/30 transition-all text-left group cursor-pointer"
+                            >
+                              <div className="flex items-center gap-3 min-w-0">
+                                <div
+                                  className={`w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0 ${action.iconBg}`}
+                                >
+                                  {action.icon}
+                                </div>
+                                <div className="min-w-0">
+                                  <p className="text-xs font-bold text-slate-900 group-hover:text-[#1E3B2F] transition-colors truncate">
+                                    {action.label}
+                                  </p>
+                                  <p className="text-[11px] text-slate-400 truncate">
+                                    {action.subtitle}
+                                  </p>
+                                </div>
+                              </div>
+                              <ChevronRight className="w-4 h-4 text-slate-300 group-hover:text-[#1E3B2F] group-hover:translate-x-0.5 transition-all flex-shrink-0" />
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Portfolio Strength & Readiness Card */}
+                    {strengthData && (
+                      <div className="bg-white border border-[#C8B48A]/40 rounded-2xl p-5 shadow-2xs space-y-4">
+                        <div className="flex items-center justify-between pb-2 border-b border-gray-100">
+                          <div className="flex items-center gap-2">
+                            <Sparkles className="w-4 h-4 text-[#C8B48A]" />
+                            <h4 className="text-sm font-extrabold text-slate-900 tracking-tight">
+                              Portfolio Readiness
+                            </h4>
+                          </div>
+                          <span
+                            className={`text-[11px] px-2.5 py-0.5 rounded-full font-bold border ${strengthData.badgeStyle}`}
+                          >
+                            {strengthData.tier}
+                          </span>
+                        </div>
+
+                        {/* Big Score Header */}
+                        <div className="flex items-baseline justify-between">
+                          <div>
+                            <span className="text-3xl font-black text-[#1E3B2F] tracking-tight">
+                              {strengthData.score}%
+                            </span>
+                            <span className="text-xs text-slate-400 font-medium ml-1.5">Completeness</span>
+                          </div>
+                          <span className="text-xs font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-100">
+                            High Visibility
+                          </span>
+                        </div>
+
+                        {/* Progress Bar */}
+                        <div className="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden">
+                          <div
+                            className="bg-gradient-to-r from-[#7F8C6A] to-[#1E3B2F] h-2.5 rounded-full transition-all duration-700"
+                            style={{ width: `${strengthData.score}%` }}
+                          />
+                        </div>
+
+                        {/* Score Breakdown List */}
+                        <div className="space-y-2 pt-1 text-xs">
+                          <div className="flex justify-between items-center text-slate-600">
+                            <span>Featured Projects (3+ required)</span>
+                            <span className="font-bold text-slate-900">
+                              {strengthData.breakdown.projects}/25 pts
+                            </span>
+                          </div>
+                          <div className="flex justify-between items-center text-slate-600">
+                            <span>Faculty Evaluations</span>
+                            <span className="font-bold text-slate-900">
+                              {strengthData.breakdown.faculty}/20 pts
+                            </span>
+                          </div>
+                          <div className="flex justify-between items-center text-slate-600">
+                            <span>Academic GPA &amp; Degree</span>
+                            <span className="font-bold text-slate-900">
+                              {strengthData.breakdown.academic}/20 pts
+                            </span>
+                          </div>
+                          <div className="flex justify-between items-center text-slate-600">
+                            <span>Technical Competencies</span>
+                            <span className="font-bold text-slate-900">
+                              {strengthData.breakdown.skills}/20 pts
+                            </span>
+                          </div>
+                          <div className="flex justify-between items-center text-slate-600">
+                            <span>Certificates, Badges &amp; CV</span>
+                            <span className="font-bold text-slate-900">
+                              {strengthData.breakdown.credentials}/15 pts
+                            </span>
+                          </div>
+                        </div>
+
+                        {/* Dynamic Tip Box */}
+                        {strengthData.tip && (
+                          <div className="p-3 bg-[#F5F0E6]/60 border border-[#C8B48A]/40 rounded-xl text-xs text-[#1E3B2F] leading-relaxed">
+                            {strengthData.tip}
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </aside>
                 )}
               </div>
-            </div>
-          </div>
+            );
+          })()}
 
           {/* DYNAMIC FULL-WIDTH SECTIONS BELOW THE 2-COLUMN SIDEBAR */}
-          {/* FEATURED WORK & PROJECTS (Full Width) */}
-          <ProjectsSection
-            projects={profile?.projects || []}
-            githubProfileUrl={profile?.links?.github}
-            onSaveProjects={(projects) => handleUpdateProfile({ projects })}
-            isLoading={isSaving}
-          />
-
-          {/* CERTIFICATES & DIGITAL BADGES (Full Width) */}
-          <CertificatesBadgesSection
-            certificates={profile?.certificates || []}
-            badges={profile?.badges || []}
-            studentName={user?.name || profile?.user?.name}
-            onSaveCertificates={(certificates) => handleUpdateProfile({ certificates })}
-            onSaveBadges={(badges) => handleUpdateProfile({ badges })}
-            isLoading={isSaving}
-          />
-
-          {/* VERIFIED FACULTY EVALUATIONS & ENDORSEMENTS (FULL-WIDTH AT BOTTOM) */}
-          {studentUserId ? (
-            <ReputationAndReviewsCard
-              targetId={studentUserId}
-              targetType="student"
-              title="Verified Academic Reputation & Faculty Evaluations"
+          <div className="space-y-6 w-full">
+            {/* 4. FEATURED WORK & PROJECTS (Full Width) */}
+            <ProjectsSection
+              projects={profile?.projects || []}
+              githubProfileUrl={profile?.links?.github}
+              onSaveProjects={(projects) => handleUpdateProfile({ projects })}
+              isLoading={isSaving}
             />
-          ) : (
-            <div className="py-8 bg-white border border-[#C8B48A]/40 rounded-2xl text-center text-xs text-gray-500">
-              Faculty evaluations and review history will display here.
-            </div>
-          )}
+
+            {/* 5. CERTIFICATES & DIGITAL BADGES (Full Width) */}
+            <CertificatesBadgesSection
+              certificates={profile?.certificates || []}
+              badges={profile?.badges || []}
+              studentName={user?.name || profile?.user?.name}
+              onSaveCertificates={(certificates) => handleUpdateProfile({ certificates })}
+              onSaveBadges={(badges) => handleUpdateProfile({ badges })}
+              isLoading={isSaving}
+            />
+
+            {/* 6. VERIFIED FACULTY EVALUATIONS & ENDORSEMENTS (FULL-WIDTH AT BOTTOM) */}
+            {studentUserId ? (
+              <ReputationAndReviewsCard
+                targetId={studentUserId}
+                targetType="student"
+                title="Verified Academic Reputation & Faculty Evaluations"
+              />
+            ) : (
+              <div className="py-8 bg-white border border-[#C8B48A]/40 rounded-2xl text-center text-xs text-gray-500">
+                Faculty evaluations and review history will display here.
+              </div>
+            )}
+          </div>
         </div>
       )}
 

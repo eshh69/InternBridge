@@ -217,7 +217,7 @@ export const CertificatesBadgesSection = ({
   };
 
   return (
-    <Card className="space-y-4 rounded-2xl shadow-2xs border border-[#C8B48A]/40 p-5 sm:p-6 bg-white">
+    <Card className="space-y-4 rounded-2xl shadow-2xs border border-[#C8B48A]/40 p-5 sm:p-6 bg-white w-full">
       {/* Header with Title, Tabs, and Minimal '+' Button */}
       <div className="flex flex-wrap items-center justify-between gap-2 border-b border-gray-100 pb-3">
         <div className="flex items-center gap-2.5">
@@ -301,7 +301,7 @@ export const CertificatesBadgesSection = ({
           </button>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 gap-3.5 sm:gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-3.5 sm:gap-4">
           {displayedItems.map((item, idx) => {
             const hasPreview = Boolean(item.certificateFileUrl);
             const isBadge = item.type === 'badge';

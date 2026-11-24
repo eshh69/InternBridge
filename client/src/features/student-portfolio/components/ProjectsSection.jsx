@@ -346,7 +346,7 @@ export const ProjectsSection = ({
   };
 
   return (
-    <Card className="space-y-4 rounded-2xl shadow-2xs border border-[#C8B48A]/40 p-5 sm:p-6 bg-white">
+    <Card className="space-y-4 rounded-2xl shadow-2xs border border-[#C8B48A]/40 p-5 sm:p-6 bg-white w-full">
       <div className="flex items-center justify-between pb-3 border-b border-gray-100">
         <div className="flex items-center gap-2.5">
           <FolderGit2 className="w-4 h-4 text-[#1E3B2F]" />
