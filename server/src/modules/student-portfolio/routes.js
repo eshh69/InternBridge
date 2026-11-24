@@ -539,10 +539,10 @@ router.get('/companies/search', protect, async (req, res, next) => {
   }
 });
 
-// @desc    View public student profile
+// @desc    View public student profile (Shareable portfolio link)
 // @route   GET /api/v1/students/:id
-// @access  Private (any authenticated role)
-router.get('/:id', protect, async (req, res, next) => {
+// @access  Public (Recruiters, Companies, and Guests with link)
+router.get('/:id', async (req, res, next) => {
   try {
     const { id } = req.params;
 
