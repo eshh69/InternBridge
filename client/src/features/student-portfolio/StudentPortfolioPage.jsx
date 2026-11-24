@@ -647,31 +647,6 @@ export const StudentPortfolioPage = () => {
                 onSaveSkills={(skills) => handleUpdateProfile({ skills })}
                 isLoading={isSaving}
               />
-
-              {/* WORK & INTERNSHIP EXPERIENCE */}
-              <ExperienceSection
-                experience={profile?.experience || []}
-                onSaveExperience={(experience) => handleUpdateProfile({ experience })}
-                isLoading={isSaving}
-              />
-
-              {/* FEATURED WORK & PROJECTS */}
-              <ProjectsSection
-                projects={profile?.projects || []}
-                githubProfileUrl={profile?.links?.github}
-                onSaveProjects={(projects) => handleUpdateProfile({ projects })}
-                isLoading={isSaving}
-              />
-
-              {/* CERTIFICATES & DIGITAL BADGES */}
-              <CertificatesBadgesSection
-                certificates={profile?.certificates || []}
-                badges={profile?.badges || []}
-                studentName={user?.name || profile?.user?.name}
-                onSaveCertificates={(certificates) => handleUpdateProfile({ certificates })}
-                onSaveBadges={(badges) => handleUpdateProfile({ badges })}
-                isLoading={isSaving}
-              />
             </div>
 
             {/* RIGHT COLUMN (4/12): Quick Actions & Portfolio Readiness Sidebar */}
@@ -796,9 +771,34 @@ export const StudentPortfolioPage = () => {
                   </div>
                 )}
               </div>
-
             </div>
           </div>
+
+          {/* DYNAMIC FULL-WIDTH SECTIONS BELOW SIDEBAR */}
+          {/* WORK & INTERNSHIP EXPERIENCE (Full Width) */}
+          <ExperienceSection
+            experience={profile?.experience || []}
+            onSaveExperience={(experience) => handleUpdateProfile({ experience })}
+            isLoading={isSaving}
+          />
+
+          {/* FEATURED WORK & PROJECTS (Full Width) */}
+          <ProjectsSection
+            projects={profile?.projects || []}
+            githubProfileUrl={profile?.links?.github}
+            onSaveProjects={(projects) => handleUpdateProfile({ projects })}
+            isLoading={isSaving}
+          />
+
+          {/* CERTIFICATES & DIGITAL BADGES (Full Width) */}
+          <CertificatesBadgesSection
+            certificates={profile?.certificates || []}
+            badges={profile?.badges || []}
+            studentName={user?.name || profile?.user?.name}
+            onSaveCertificates={(certificates) => handleUpdateProfile({ certificates })}
+            onSaveBadges={(badges) => handleUpdateProfile({ badges })}
+            isLoading={isSaving}
+          />
 
           {/* VERIFIED FACULTY EVALUATIONS & ENDORSEMENTS (FULL-WIDTH AT BOTTOM) */}
           {studentUserId ? (
