@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import apiClient from '../services/apiClient';
+import { supabase } from '../services/supabaseClient';
 
 const AuthContext = createContext(null);
 
@@ -65,7 +66,11 @@ export const AuthProvider = ({ children }) => {
   };
 
   const loginWithSupabase = async (payload) => {
-    const res = await apiClient.post('/auth/supabase-login', payload);
+    if (!supabase) throw new Error('Google sign-in is not configured.');
+    const { data: { session }, error } = await supabase.auth.getSession();
+    if (error) throw error;
+    if (!session?.access_token) throw new Error('Google session expired. Please sign in again.');
+    const res = await apiClient.post('/auth/supabase-login', { ...payload, accessToken: session.access_token });
     const { user: loggedInUser, token: authToken } = res.data;
     setUser(loggedInUser);
     setToken(authToken);
@@ -79,6 +84,10 @@ export const AuthProvider = ({ children }) => {
     setToken(null);
     localStorage.removeItem('internbridge_token');
     localStorage.removeItem('internbridge_user');
+    sessionStorage.removeItem('pending_google_reg');
+    if (supabase) {
+      void supabase.auth.signOut({ scope: 'local' }).catch((error) => console.warn('Google sign-out failed:', error.message));
+    }
   };
 
   return (

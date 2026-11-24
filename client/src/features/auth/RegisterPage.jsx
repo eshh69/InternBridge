@@ -366,14 +366,19 @@ export const RegisterPage = () => {
               </div>
             </div>
 
-            {/* Supabase Google 1-Click Signup */}
+            {/* Manual Email/Password Option (On Top) */}
             <div className="pt-1">
-              <SupabaseSignInButton
-                role={role}
-                intent="register"
-                buttonText={`Sign up with Google (${role.charAt(0).toUpperCase() + role.slice(1)})`}
-                onError={(msg) => setError(msg)}
-              />
+              <button
+                type="button"
+                className="w-full justify-center py-3.5 px-4 bg-[#1E3B2F] hover:bg-[#152A22] text-[#F5F0E6] font-extrabold text-xs uppercase tracking-widest rounded-xl transition-all shadow-xs flex items-center cursor-pointer"
+                onClick={() => {
+                  setAuthMode('manual');
+                  setGoogleProfile(null);
+                  setCurrentStep(2);
+                }}
+              >
+                Sign up with Email & Password
+              </button>
             </div>
 
             {/* Divider */}
@@ -383,23 +388,20 @@ export const RegisterPage = () => {
               </div>
               <div className="relative flex justify-center text-xs uppercase">
                 <span className="bg-white px-3 text-[10px] uppercase tracking-widest font-semibold text-[#1E3B2F]/60">
-                  Or continue manually
+                  Or continue with Google
                 </span>
               </div>
             </div>
 
-            {/* Manual Email/Password Option */}
-            <button
-              type="button"
-              className="w-full justify-center py-3.5 px-4 bg-[#1E3B2F] hover:bg-[#152A22] text-[#F5F0E6] font-extrabold text-xs uppercase tracking-widest rounded-xl transition-all shadow-xs flex items-center"
-              onClick={() => {
-                setAuthMode('manual');
-                setGoogleProfile(null);
-                setCurrentStep(2);
-              }}
-            >
-              Sign up with Email & Password
-            </button>
+            {/* Supabase Google 1-Click Signup (Below) */}
+            <div>
+              <SupabaseSignInButton
+                role={role}
+                intent="register"
+                buttonText="Sign up with Google"
+                onError={(msg) => setError(msg)}
+              />
+            </div>
           </div>
         )}
 
