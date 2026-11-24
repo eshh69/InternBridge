@@ -105,6 +105,16 @@ export const studentPortfolioService = {
     const response = await apiClient.get(`/students/${id}`);
     return response.data?.profile;
   },
+
+  /**
+   * Search registered companies on InternBridge
+   */
+  searchCompanies: async (query = '') => {
+    const response = await apiClient.get('/students/companies/search', {
+      params: { query },
+    });
+    return response.data?.data?.companies || response.data?.companies || [];
+  },
 };
 
 export default studentPortfolioService;

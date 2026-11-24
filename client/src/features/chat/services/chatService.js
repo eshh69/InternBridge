@@ -27,7 +27,7 @@ export const chatService = {
    */
   startConversation: async (payload) => {
     const response = await apiClient.post('/conversations', payload);
-    return response.data?.conversation;
+    return response.data?.conversation || response.conversation;
   },
 
   /**

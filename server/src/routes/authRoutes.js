@@ -4,6 +4,7 @@ import { User } from '../models/User.js';
 import { StudentProfile } from '../models/StudentProfile.js';
 import { Company } from '../models/Company.js';
 import { protect } from '../middleware/auth.js';
+import { supabase } from '../config/supabase.js';
 import { sendSuccess, sendError } from '../utils/apiResponse.js';
 
 const router = express.Router();
@@ -68,7 +69,13 @@ router.post('/register', async (req, res, next) => {
     const effectiveCompanyDetails = companyDetails || companyData || {};
     const effectiveReviewerDetails = reviewerDetails || reviewerData || {};
 
-    const isOAuth = authProvider === 'supabase' || authProvider === 'google';
+    // OAuth accounts must use the verified session exchange endpoint.
+    if (req.body.authProvider && req.body.authProvider !== 'local') {
+      return sendError(res, 400, 'Use Google sign-in to register with Google');
+    }
+    const isOAuth = false;
+    const supabaseId = null;
+    const avatarUrl = null;
 
     if (!name || !email || (!isOAuth && !password)) {
       return sendError(res, 400, isOAuth ? 'Please provide name and email' : 'Please provide name, email, and password');
@@ -246,12 +253,21 @@ router.post('/login', async (req, res, next) => {
 // @access  Public
 router.post('/supabase-login', async (req, res, next) => {
   try {
+    if (!supabase) return sendError(res, 503, 'Google sign-in is not configured on the server');
+    const accessToken = req.body.accessToken;
+    if (typeof accessToken !== 'string' || !accessToken) return sendError(res, 401, 'A valid Google session is required');
+    const { data, error } = await supabase.auth.getUser(accessToken);
+    const identity = data?.user;
+    if (error || !identity?.email || !identity.email_confirmed_at ||
+        !identity.identities?.some((item) => item.provider === 'google')) {
+      return sendError(res, 401, 'Google session is invalid or expired. Please sign in again.');
+    }
+    const email = identity.email;
+    const supabaseId = identity.id;
+    const name = identity.user_metadata?.full_name || identity.user_metadata?.name;
+    const avatarUrl = identity.user_metadata?.avatar_url || null;
     const {
-      email,
-      name,
-      avatarUrl,
       role,
-      supabaseId,
       age,
       phone,
       studentDetails,
@@ -413,33 +429,6 @@ router.post('/supabase-login', async (req, res, next) => {
       token,
     });
   } catch (error) {
-    // Handle race conditions where multiple requests created the user concurrently
-    if (error.code === 11000) {
-      try {
-        const normalizedEmail = req.body.email ? req.body.email.toLowerCase().trim() : '';
-        const user = await User.findOne({
-          $or: [
-            { email: normalizedEmail },
-            ...(req.body.supabaseId ? [{ supabaseId: req.body.supabaseId }] : []),
-          ],
-        });
-        if (user) {
-          const token = generateToken(user._id);
-          return sendSuccess(res, 200, 'Supabase authentication successful', {
-            user: {
-              id: user._id,
-              name: user.name,
-              email: user.email,
-              role: user.role,
-              avatarUrl: user.avatarUrl,
-            },
-            token,
-          });
-        }
-      } catch (innerErr) {
-        return next(innerErr);
-      }
-    }
     next(error);
   }
 });

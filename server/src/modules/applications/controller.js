@@ -16,15 +16,21 @@ import { sendSuccess, sendError } from '../../utils/apiResponse.js';
 export const submitApplication = async (req, res, next) => {
   try {
     const studentId = req.user._id;
-    const { internshipId, resumeUrl, coverLetter } = req.body;
+    let { internshipId, resumeUrl, coverLetter } = req.body;
 
     // 1. Validate required fields
     if (!internshipId) {
       return sendError(res, 400, 'Internship ID is required to apply.');
     }
 
+    // Auto-fallback: if resumeUrl is not provided in req.body, load student's profile CV
     if (!resumeUrl || !resumeUrl.trim()) {
-      return sendError(res, 400, 'A valid Resume/CV URL or document is required.');
+      const studentProfile = await StudentProfile.findOne({ user: studentId });
+      if (studentProfile?.cvUrl && studentProfile.cvUrl.trim()) {
+        resumeUrl = studentProfile.cvUrl.trim();
+      } else {
+        return sendError(res, 400, 'Please upload a resume or provide a resume link.');
+      }
     }
 
     // 2. Validate internship existence
